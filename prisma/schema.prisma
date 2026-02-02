@@ -1,0 +1,518 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/**
+ * ===================== USERS =====================
+ */
+
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  role          Role     @default(REGISTRAR)
+  createdAt     DateTime @default(now())
+  username      String   @unique
+  avatarUrl     String?
+  passwordHash  String?
+  isVerified    Boolean? @default(false)
+  isWelcomed    Boolean? @default(false)
+  emailVerified Boolean  @default(false)
+
+  emailVerificationTokens EmailVerificationToken[]
+  sessions                Session[]
+
+  inspections    Inspection[]    @relation("InspectionTeam")
+  documents      Document[]
+  signatures     Signature[]
+  workflowStages WorkflowStage[]
+  feeAssessments FeeAssessment[]
+  payments       Payment[]
+  appeals        Appeal[]
+  applicants     Applicant[]
+}
+
+model EmailVerificationToken {
+  id      String @id @default(uuid())
+  userId  String
+  expires BigInt
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("email_verifications")
+}
+
+model Session {
+  id             String   @id @default(uuid())
+  userId         String
+  expiresAt      DateTime
+  createdAt      DateTime @default(now())
+  lastVerifiedAt DateTime @default(now())
+  secretHash     String   @default(uuid())
+  role           Role     @default(REGISTRAR)
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+/**
+ * ===================== APPLICANT =====================
+ */
+
+model Applicant {
+  id        String   @id @default(uuid())
+  name      String
+  address   String
+  contact   String
+  email     String?
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  applications  Application[]
+  appeals       Appeal[]
+  resubmissions Resubmission[]
+  userId        String
+}
+
+/**
+ * ===================== ADDRESS =====================
+ */
+
+model Address {
+  id                   String                @id @default(uuid())
+  location             String?
+  cell                 String?
+  village              String?
+  parish               String?
+  subCounty            String?
+  district             String
+  town                 String?
+  street               String?
+  size                 String?
+  landApplications     LandApplication[]
+  buildingApplications BuildingApplication[]
+}
+
+/**
+ * ===================== APPLICATION CORE =====================
+ */
+
+model Application {
+  id            String            @id @default(uuid())
+  applicationNo Int
+  year          Int
+  type          ApplicationType
+  status        ApplicationStatus
+  owners        String
+
+  applicantId String
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+
+  landApplication     LandApplication?
+  buildingApplication BuildingApplication?
+
+  inspections    Inspection[]
+  workflowStages WorkflowStage[]
+  documents      Document[]
+  feeAssessments FeeAssessment[]
+  appeals        Appeal[]
+  resubmissions  Resubmission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([applicationNo, year])
+}
+
+/**
+ * ===================== LAND APPLICATION =====================
+ */
+model PpaForm1 {
+  id                String          @id @default(uuid())
+  landApplicationId String          @unique
+  landApplication   LandApplication @relation(fields: [landApplicationId], references: [id])
+
+  applicationNumber       Int
+  year                    Int
+  previousApplicationNo   Int?
+  shouldHaveNewRoadAccess Boolean
+
+  utilityId String
+  utility   Utility @relation(fields: [utilityId], references: [id])
+}
+
+model LandApplication {
+  id            String      @id @default(uuid())
+  applicationId String      @unique
+  application   Application @relation(fields: [applicationId], references: [id])
+
+  natureOfInterest NatureOfInterestInLand
+  addressId        String
+  address          Address                @relation(fields: [addressId], references: [id])
+
+  landUseId String
+  landUse   LandUse @relation(fields: [landUseId], references: [id])
+
+  parcel   Parcel?   @relation(fields: [parcelId], references: [id])
+  ppaForm1 PpaForm1?
+  site     Site?     @relation(fields: [siteId], references: [id])
+  parcelId String?   @unique
+  siteId   String?
+}
+
+/**
+ * ===================== BUILDING APPLICATION =====================
+ */
+model Utility {
+  id                         String                @id @default(uuid())
+  waterSupplyMethod          String
+  sewageDisposalMethod       String
+  refuseDisposalMethod       String
+  surfaceWaterDisposalMethod String
+  ppaForm1s                  PpaForm1[]
+  buildingApplications       BuildingApplication[]
+}
+
+model Access {
+  id                     String                @id @default(uuid())
+  pedestrian             Boolean
+  vehicular              Boolean
+  openAccessForNeighbors Boolean
+  existingPath           Boolean
+  structures             Boolean
+  fence                  Boolean
+  buildingApplications   BuildingApplication[]
+}
+
+model BuildingApplication {
+  id            String      @id @default(uuid())
+  applicationId String      @unique
+  application   Application @relation(fields: [applicationId], references: [id])
+
+  addressId String
+  address   Address @relation(fields: [addressId], references: [id])
+
+  utilities Utility? @relation(fields: [utilityId], references: [id])
+  access    Access?  @relation(fields: [accessId], references: [id])
+  utilityId String?
+  accessId  String?
+}
+
+/**
+ * ===================== LAND USE & SITE =====================
+ */
+
+model LandUse {
+  id                      String            @id @default(uuid())
+  acreage                 String?
+  doesNotInvolveBuilding  Boolean
+  changeOfUse             String?
+  doesItAbutRoadJunction  Boolean
+  roadJunctionDescription String?
+  proposedDevelopment     String?
+  landUseType             LandUseType
+  otherLandUseType        String?
+  landApplications        LandApplication[]
+}
+
+model Site {
+  id                                     String  @id @default(uuid())
+  sunDirection                           String?
+  prevailingWinds                        String?
+  currentUseAndSurrounding               String?
+  percentageSizeOfBuildingAvailableSpace Int?
+
+  distanceFromFeatures   DistanceFromFeatures? @relation(fields: [distanceFromFeaturesId], references: [id])
+  distanceFromFeaturesId String?
+
+  hasNationalWater Boolean
+  hasElectricity   Boolean
+  landApplications LandApplication[]
+}
+
+model DistanceFromFeatures {
+  id            String @id @default(uuid())
+  fromRoad      Float?
+  fromWetland   Float?
+  fromReserve   Float?
+  fromGreenBelt Float?
+  fromOthers    Float?
+  sites         Site[]
+}
+
+/**
+ * ===================== INSPECTIONS =====================
+ */
+
+model Inspection {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id])
+
+  carriedOn   DateTime
+  visitReport String
+  decision    ApplicationDecision
+
+  inspectors User[]     @relation("InspectionTeam")
+  documents  Document[]
+}
+
+/**
+ * ===================== DOCUMENTS =====================
+ */
+
+model Document {
+  id            String  @id @default(uuid())
+  applicationId String?
+  inspectionId  String?
+
+  type    DocumentType
+  title   String
+  fileUrl String
+  version Int            @default(1)
+  status  DocumentStatus
+
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  signatures Signature[]
+
+  createdAt   DateTime     @default(now())
+  application Application? @relation(fields: [applicationId], references: [id])
+  inspection  Inspection?  @relation(fields: [inspectionId], references: [id])
+}
+
+model Signature {
+  id         String   @id @default(uuid())
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id])
+
+  signedById String
+  signedBy   User   @relation(fields: [signedById], references: [id])
+
+  roleAtSigning Role
+  signatureHash String
+  signedAt      DateTime @default(now())
+}
+
+/**
+ * ===================== WORKFLOW =====================
+ */
+
+model WorkflowStage {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id])
+
+  stage    WorkflowStageType
+  status   WorkflowStageStatus
+  decision ApplicationDecision?
+  remarks  String?
+
+  decidedById String?
+  decidedBy   User?   @relation(fields: [decidedById], references: [id])
+
+  startedAt DateTime  @default(now())
+  decidedAt DateTime?
+}
+
+/**
+ * ===================== FEES & PAYMENTS =====================
+ */
+
+model FeeAssessment {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id])
+
+  assessmentType FeeAssessmentType
+  amountAssessed Float
+  currency       String            @default("UGX")
+
+  assessedById String
+  assessedBy   User   @relation(fields: [assessedById], references: [id])
+
+  payments   Payment[]
+  assessedAt DateTime  @default(now())
+}
+
+model Payment {
+  id              String        @id @default(uuid())
+  feeAssessmentId String
+  feeAssessment   FeeAssessment @relation(fields: [feeAssessmentId], references: [id])
+
+  amountPaid      Float
+  paymentMethod   PaymentMethod
+  receiptNumber   Int           @unique @default(autoincrement())
+  referenceNumber String
+
+  receivedById String
+  receivedBy   User   @relation(fields: [receivedById], references: [id])
+
+  paidAt DateTime @default(now())
+}
+
+/**
+ * ===================== APPEALS =====================
+ */
+
+model Appeal {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id])
+
+  appealReason String
+  status       AppealStatus
+
+  submittedById String
+  submittedBy   Applicant @relation(fields: [submittedById], references: [id])
+
+  decidedById String?
+  decidedBy   User?   @relation(fields: [decidedById], references: [id])
+
+  decisionRemarks String?
+  createdAt       DateTime @default(now())
+}
+
+/**
+ * ===================== RESUBMISSIONS =====================
+ */
+
+model Resubmission {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id])
+
+  reason          String
+  resubmittedById String
+  resubmittedBy   Applicant @relation(fields: [resubmittedById], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+/**
+ * ===================== GIS =====================
+ */
+
+model Parcel {
+  id          String  @id @default(uuid())
+  blockNumber String
+  plotNumber  String
+  sheetNumber String?
+
+  geometry     String? // GeoJSON (polygon, multipolygon)
+  areaSqMeters Float?
+
+  landApplication LandApplication?
+
+  createdAt DateTime @default(now())
+
+  @@unique([blockNumber, plotNumber])
+}
+
+/**
+ * ===================== ENUMS =====================
+ */
+
+enum Role {
+  SUPER_ADMIN
+  IT_OFFICER
+  CHAIRMAN_PPC
+  CHAIRMAN_BC
+  PHYSICAL_PLANNER
+  ARCHITECT
+  SURVEYOR
+  ENVIRONMENT_OFFICER
+  ENGINEER
+  REGISTRAR
+  APPLICANT
+}
+
+enum ApplicationType {
+  LAND
+  BUILDING
+  JOINT
+}
+
+enum ApplicationStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  INSPECTED
+  APPROVED
+  DEFERRED
+  REJECTED
+}
+
+enum ApplicationDecision {
+  APPROVED
+  DEFERRED
+  REJECTED
+}
+
+enum WorkflowStageType {
+  SUBMISSION
+  TECHNICAL_REVIEW
+  PPC_REVIEW
+  BC_REVIEW
+  COUNCIL_APPROVAL
+}
+
+enum WorkflowStageStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum DocumentType {
+  PPA_FORM_1
+  LAND_INSPECTION_REPORT
+  BUILDING_INSPECTION_REPORT
+  APPROVAL_NOTICE
+}
+
+enum DocumentStatus {
+  DRAFT
+  FINAL
+  SIGNED
+}
+
+enum FeeAssessmentType {
+  LAND_APPLICATION
+  BUILDING_APPLICATION
+  INSPECTION
+  PENALTY
+}
+
+enum PaymentMethod {
+  CASH
+  BANK
+  MOBILE_MONEY
+}
+
+enum AppealStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  UPHELD
+  DISMISSED
+}
+
+enum NatureOfInterestInLand {
+  REGISTERED_OWNER
+  LEASE
+  TENANT_BY_OCCUPANCY
+  FREEHOLD
+  CUSTOMARY_TENANT
+}
+
+enum LandUseType {
+  COMMERCIAL
+  RESIDENTIAL
+  INDUSTRIAL
+  RECREATIONAL
+  GREENING
+  OTHERS
+}
