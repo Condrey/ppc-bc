@@ -22,7 +22,7 @@ import { PaymentSchema, paymentSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
-import FieldPaymentMethod from "./field-payment-method";
+import FieldPaymentMethod from "../../land-application/fees-assessment/payments/field-payment-method";
 import { useUpsertPaymentMutation } from "./mutations";
 
 interface Props {
