@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import LoadingButton from "@/components/ui/loading-button";
 import { PasswordInput } from "@/components/ui/password-input";
-import { User } from "@/lib/generated/prisma";
+import { User } from "@/lib/generated/prisma/client";
 import { verifyUserSchema, VerifyUserSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";

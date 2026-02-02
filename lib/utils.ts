@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { formatDuration, intervalToDuration } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import { applicationTypes } from "./enums";
-import { ApplicationType } from "./generated/prisma";
+import { ApplicationType } from "./generated/prisma/enums";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
