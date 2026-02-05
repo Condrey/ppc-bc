@@ -1,9 +1,12 @@
 "use server";
 
+import { validateRequest } from "@/app/(auth)/auth";
+import { myPrivileges } from "@/lib/enums";
 import {
   ApplicationStatus,
   ApplicationType,
   FeeAssessmentType,
+  Role,
 } from "@/lib/generated/prisma/enums";
 import prisma from "@/lib/prisma";
 import { ppaForm1DataInclude } from "@/lib/types";
@@ -26,22 +29,13 @@ export async function upsertPpaForm1(input: LandApplicationSchema) {
     ppaForm1,
     site,
   } = landApplicationSchema.parse(input);
-  // apply auth
+
   const currentYear = new Date().getFullYear();
-  const [lastLandApplicationNumber, lastPpa1ApplicationNumber] =
-    await Promise.all([
-      await prisma.application.aggregate({
-        where: { type: ApplicationType.LAND },
-        _max: { applicationNo: true },
-      }),
-      await prisma.ppaForm1.aggregate({
-        _max: { applicationNumber: true },
-      }),
-    ]);
-  const landApplicationNumber =
-    (lastPpa1ApplicationNumber._max.applicationNumber ?? 0) + 1;
-  const ppa1ApplicationNumber =
-    (lastLandApplicationNumber._max.applicationNo ?? 0) + 1;
+  const { user } = await validateRequest();
+  const isAuthorized =
+    !!user && myPrivileges[user.role].includes(Role.REGISTRAR);
+  if (!isAuthorized) throw Error("Unauthorized");
+
   if (!id) {
     await prisma.$transaction(
       async (tx) => {
@@ -61,7 +55,6 @@ export async function upsertPpaForm1(input: LandApplicationSchema) {
             application: {
               create: {
                 ...application,
-                applicationNo: landApplicationNumber,
                 year: application?.year ?? currentYear,
                 type: ApplicationType.LAND,
                 status: ApplicationStatus.SUBMITTED,
@@ -81,7 +74,8 @@ export async function upsertPpaForm1(input: LandApplicationSchema) {
             ppaForm1: {
               create: {
                 ...ppaForm1,
-                applicationNumber: ppa1ApplicationNumber,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+                applicationNumber: ppaForm1?.applicationNumber!,
                 year: ppaForm1?.year ?? currentYear,
                 shouldHaveNewRoadAccess:
                   ppaForm1?.shouldHaveNewRoadAccess ?? false,

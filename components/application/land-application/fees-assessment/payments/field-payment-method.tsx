@@ -29,7 +29,10 @@ export default function FieldPaymentMethod({ form }: Props) {
       render={({ field }) => (
         <FormItem>
           <FormLabel required>Payment method</FormLabel>
-          <Select onValueChange={(v) => field.onChange(v)}>
+          <Select
+            defaultValue={field.value}
+            onValueChange={(v) => field.onChange(v)}
+          >
             <SelectTrigger className="w-full">
               <FormControl>
                 <SelectValue

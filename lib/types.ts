@@ -2,6 +2,7 @@ import { Prisma } from "./generated/prisma/client";
 
 // Applicant
 export const userDataSelect = {
+  id: true,
   name: true,
   avatarUrl: true,
   email: true,
@@ -39,10 +40,58 @@ export type PaymentData = Prisma.PaymentGetPayload<{
   include: typeof paymentDataInclude;
 }>;
 
+// Inspection
+export const inspectionDataInclude = {
+  inspectors: { select: userDataSelect },
+  documents: true,
+} satisfies Prisma.InspectionInclude;
+export type InspectionData = Prisma.InspectionGetPayload<{
+  include: typeof inspectionDataInclude;
+}>;
+
+//Inspection Land application
+export const inspectionLandApplicationDataInclude = {
+  application: { include: { applicant: { include: applicantDataInclude } } },
+  address: true,
+  landUse: true,
+  parcel: true,
+  ppaForm1: { include: { utility: true, landApplication: true } },
+  site: {
+    include: { distanceFromFeatures: true },
+  },
+} satisfies Prisma.LandApplicationInclude;
+export type InspectionLandApplicationData = Prisma.LandApplicationGetPayload<{
+  include: typeof inspectionLandApplicationDataInclude;
+}>;
+
 // Application
 export const applicationDataInclude = {
   applicant: { include: applicantDataInclude },
   feeAssessments: { include: { payments: true } },
+  inspections: { include: inspectionDataInclude },
+  landApplication: {
+    include: inspectionLandApplicationDataInclude,
+  },
+  buildingApplication: {
+    select: {
+      address: true,
+      access: true,
+      utilities: true,
+      natureOfInterest: true,
+      site: {
+        select: {
+          distanceFromFeatures: true,
+          currentUseAndSurrounding: true,
+          percentageSizeOfBuildingAvailableSpace: true,
+          hasElectricity: true,
+          hasNationalWater: true,
+          prevailingWinds: true,
+          sunDirection: true,
+        },
+      },
+      landUse: true,
+    },
+  },
 } satisfies Prisma.ApplicationInclude;
 export type ApplicationData = Prisma.ApplicationGetPayload<{
   include: typeof applicationDataInclude;

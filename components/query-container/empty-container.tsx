@@ -28,7 +28,7 @@ export function EmptyContainer({
 }: Props) {
   return (
     <Empty className={cn("", className)}>
-      <EmptyMedia variant={"icon"}>
+      <EmptyMedia variant={"default"}>
         <Icon
           className={cn(
             "size-20 fill-accent text-accent-foreground",

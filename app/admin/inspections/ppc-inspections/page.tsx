@@ -1,4 +1,4 @@
-import ListOfPpcInspectionApplications from "@/components/application/inspections/ppc-incpections/list-of-ppc-inspection-applications";
+import ListOfPpcInspectionApplications from "@/components/application/inspections/ppc-inspections/list-of-ppc-inspection-applications";
 import { getAllLandApplications } from "@/components/application/land-application/actions";
 import Container from "@/components/container";
 import { TypographyH2 } from "@/components/headings";

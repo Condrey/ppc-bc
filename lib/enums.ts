@@ -1,4 +1,5 @@
 import {
+  ApplicationDecision,
   ApplicationStatus,
   ApplicationType,
   FeeAssessmentType,
@@ -9,7 +10,10 @@ import {
 } from "@/lib/generated/prisma/enums";
 import {
   BuildingIcon,
-  LinkIcon,
+  FileExclamationPointIcon,
+  FileScanIcon,
+  FileTextIcon,
+  FileXIcon,
   LucideIcon,
   MapPinnedIcon,
 } from "lucide-react";
@@ -28,11 +32,6 @@ export const applicationTypes: Record<
     title: "Building Application",
     icon: BuildingIcon,
     regIdentifier: "Building",
-  },
-  JOINT: {
-    title: "Joint Application",
-    icon: LinkIcon,
-    regIdentifier: "Joint",
   },
 };
 
@@ -76,6 +75,42 @@ export const applicationStatuses: Record<
   },
 };
 
+export const allApplicationDecisions = Object.values(ApplicationDecision);
+export const applicationDecisions: Record<
+  ApplicationDecision,
+  {
+    title: string;
+    formTitle: string;
+    icon: LucideIcon;
+    className: string;
+  }
+> = {
+  APPROVED: {
+    title: "was approved",
+    icon: FileTextIcon,
+    className: "text-success fill-success/20",
+    formTitle: "Should be approved",
+  },
+  DEFERRED: {
+    title: "was deferred",
+    icon: FileExclamationPointIcon,
+    className: "text-destructive fill-destructive/20",
+    formTitle: "Defer it",
+  },
+  REJECTED: {
+    title: "was rejected",
+    icon: FileXIcon,
+    className: "text-destructive fill-destructive/20",
+    formTitle: "Reject application",
+  },
+  PENDING: {
+    title: "is pending",
+    icon: FileScanIcon,
+    className: "text-warning fill-warning/20",
+    formTitle: "still pending",
+  },
+};
+
 export const allNaturesOfInterestInLand = Object.values(NatureOfInterestInLand);
 export const naturesOfInterestInLand: Record<
   NatureOfInterestInLand,
@@ -97,7 +132,7 @@ export const naturesOfInterestInLand: Record<
     variant: "outline",
   },
   LEASE: {
-    title: "Lease",
+    title: "Leasehold",
     formDesc: "I want for lease",
     variant: "outline",
   },
@@ -194,7 +229,9 @@ export const feesAssessmentTypes: Record<
 };
 
 // role
-export const allRoles = Object.values(Role);
+export const allRoles = Object.values(Role).filter(
+  (r) => r !== Role.SUPER_ADMIN,
+);
 export const roles: Record<Role, { title: string; hierarchy: number }> = {
   SUPER_ADMIN: {
     title: "Super Administrator",
@@ -202,7 +239,7 @@ export const roles: Record<Role, { title: string; hierarchy: number }> = {
   },
   IT_OFFICER: {
     title: "IT officer",
-    hierarchy: 1,
+    hierarchy: 2,
   },
   CHAIRMAN_PPC: {
     title: "Chairman PPC",
@@ -243,10 +280,10 @@ export const roles: Record<Role, { title: string; hierarchy: number }> = {
 };
 export const myPrivileges: Record<Role, Role[]> = {
   SUPER_ADMIN: allRoles,
-  CHAIRMAN_BC: allRoles.filter((role) => role !== Role.SUPER_ADMIN),
-  IT_OFFICER: allRoles.filter((role) => role !== Role.SUPER_ADMIN),
-  PHYSICAL_PLANNER: [],
+  CHAIRMAN_BC: allRoles,
+  IT_OFFICER: allRoles,
   CHAIRMAN_PPC: [
+    Role.CHAIRMAN_PPC,
     Role.PHYSICAL_PLANNER,
     Role.ENGINEER,
     Role.SURVEYOR,
@@ -255,10 +292,11 @@ export const myPrivileges: Record<Role, Role[]> = {
     Role.REGISTRAR,
     Role.APPLICANT,
   ],
-  ENGINEER: [Role.APPLICANT],
-  SURVEYOR: [Role.APPLICANT],
-  ENVIRONMENT_OFFICER: [Role.APPLICANT],
-  ARCHITECT: [Role.APPLICANT],
-  REGISTRAR: [Role.APPLICANT],
+  PHYSICAL_PLANNER: [Role.PHYSICAL_PLANNER, Role.APPLICANT],
+  ENGINEER: [Role.ENGINEER, Role.APPLICANT],
+  SURVEYOR: [Role.SURVEYOR, Role.APPLICANT],
+  ENVIRONMENT_OFFICER: [Role.ENVIRONMENT_OFFICER, Role.APPLICANT],
+  ARCHITECT: [Role.ARCHITECT, Role.APPLICANT],
+  REGISTRAR: [Role.REGISTRAR, Role.APPLICANT],
   APPLICANT: [],
 };

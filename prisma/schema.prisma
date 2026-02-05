@@ -103,7 +103,7 @@ model Address {
 
 model Application {
   id            String            @id @default(uuid())
-  applicationNo Int
+  applicationNo Int               @default(autoincrement())
   year          Int
   type          ApplicationType
   status        ApplicationStatus
@@ -193,6 +193,14 @@ model BuildingApplication {
   applicationId String      @unique
   application   Application @relation(fields: [applicationId], references: [id])
 
+  natureOfInterest NatureOfInterestInLand
+
+  site   Site?   @relation(fields: [siteId], references: [id])
+  siteId String?
+
+  landUseId String
+  landUse   LandUse @relation(fields: [landUseId], references: [id])
+
   addressId String
   address   Address @relation(fields: [addressId], references: [id])
 
@@ -207,7 +215,7 @@ model BuildingApplication {
  */
 
 model LandUse {
-  id                      String            @id @default(uuid())
+  id                      String                @id @default(uuid())
   acreage                 String?
   doesNotInvolveBuilding  Boolean
   changeOfUse             String?
@@ -217,6 +225,7 @@ model LandUse {
   landUseType             LandUseType
   otherLandUseType        String?
   landApplications        LandApplication[]
+  buildingApplications    BuildingApplication[]
 }
 
 model Site {
@@ -229,18 +238,22 @@ model Site {
   distanceFromFeatures   DistanceFromFeatures? @relation(fields: [distanceFromFeaturesId], references: [id])
   distanceFromFeaturesId String?
 
-  hasNationalWater Boolean
-  hasElectricity   Boolean
-  landApplications LandApplication[]
+  hasNationalWater     Boolean
+  hasElectricity       Boolean
+  landApplications     LandApplication[]
+  buildingApplications BuildingApplication[]
 }
 
 model DistanceFromFeatures {
-  id            String @id @default(uuid())
-  fromRoad      Float?
-  fromWetland   Float?
-  fromReserve   Float?
-  fromGreenBelt Float?
-  fromOthers    Float?
+  id            String  @id @default(uuid())
+  fromRoad      String?
+  fromWetland   String?
+  fromReserve   String?
+  fromGreenBelt String?
+  fromPowerLine String?
+  fromLagoon    String?
+  fromHills     String?
+  fromOthers    String?
   sites         Site[]
 }
 
@@ -253,7 +266,7 @@ model Inspection {
   applicationId String
   application   Application @relation(fields: [applicationId], references: [id])
 
-  carriedOn   DateTime
+  carriedOn   DateTime            @default(now())
   visitReport String
   decision    ApplicationDecision
 
@@ -435,7 +448,6 @@ enum Role {
 enum ApplicationType {
   LAND
   BUILDING
-  JOINT
 }
 
 enum ApplicationStatus {
@@ -448,6 +460,7 @@ enum ApplicationStatus {
 }
 
 enum ApplicationDecision {
+  PENDING
   APPROVED
   DEFERRED
   REJECTED

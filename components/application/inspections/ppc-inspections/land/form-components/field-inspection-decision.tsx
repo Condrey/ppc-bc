@@ -14,21 +14,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { allApplicationStatuses, applicationStatuses } from "@/lib/enums";
+import { allApplicationDecisions, applicationDecisions } from "@/lib/enums";
+import { cn } from "@/lib/utils";
 import { LandApplicationSchema } from "@/lib/validation";
 import { UseFormReturn } from "react-hook-form";
 
 interface Props {
   form: UseFormReturn<LandApplicationSchema>;
 }
-export default function FieldApplicationStatus({ form }: Props) {
+export default function FieldInspectionDecision({ form }: Props) {
   return (
     <FormField
       control={form.control}
-      name="application.status"
+      name="inspection.decision"
       render={({ field }) => (
         <FormItem>
-          <FormLabel required>Application status</FormLabel>
+          <FormLabel required>Inspection decision</FormLabel>
           <Select
             defaultValue={field.value}
             onValueChange={(v) => field.onChange(v)}
@@ -36,22 +37,26 @@ export default function FieldApplicationStatus({ form }: Props) {
             <SelectTrigger className="w-full">
               <FormControl>
                 <SelectValue
-                  placeholder={"Please choose an application status"}
+                  placeholder={"Please choose a decision "}
                   className="w-full"
                 />
               </FormControl>
             </SelectTrigger>
             <SelectContent position="popper">
               <SelectGroup>
-                <SelectLabel>Allowed Application Statuses</SelectLabel>
-                {allApplicationStatuses.map((applicationStatus) => {
-                  const { title } = applicationStatuses[applicationStatus];
+                <SelectLabel>Allowed decisions</SelectLabel>
+                {allApplicationDecisions.map((decision) => {
+                  const {
+                    icon: Icon,
+                    className,
+                    formTitle,
+                  } = applicationDecisions[decision];
                   return (
-                    <SelectItem
-                      key={applicationStatus}
-                      value={applicationStatus}
-                    >
-                      {title}
+                    <SelectItem key={decision} value={decision}>
+                      <Icon
+                        className={cn("inline [&_svg]:size-4", className)}
+                      />{" "}
+                      {formTitle}
                     </SelectItem>
                   );
                 })}

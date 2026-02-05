@@ -1,3 +1,5 @@
+"use client";
+
 import TipTapViewer from "@/components/tip-tap-editor/tip-tap-viewer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -19,6 +21,7 @@ interface Props {
   className?: string;
   variant?: "default" | "muted" | "outline";
   isChecked: boolean;
+  title?: string;
 }
 export default function CommandItemApplicant({
   applicant: {
@@ -31,6 +34,7 @@ export default function CommandItemApplicant({
   isChecked,
   className,
   variant,
+  title,
 }: Props) {
   const { color2: BG_GRADIENT } = getColorsFromText(name);
   return (
@@ -55,6 +59,7 @@ export default function CommandItemApplicant({
         </Avatar>
       </ItemMedia>
       <ItemContent className="gap-0">
+        {title && <ItemTitle className="font-bold">{title}</ItemTitle>}
         <ItemTitle className="line-clamp-1">{name}</ItemTitle>
         <ItemTitle className="line-clamp-1 text-xs">{contact}</ItemTitle>
         <div className="flex gap-0.5  items-center">

@@ -91,16 +91,16 @@ export default function FormAddEditLandApplication({
         side="top"
         className="w-full overflow-y-auto scroll-smooth h-dvh"
       >
+        <SheetHeader className="w-full bg-card max-w-7xl mx-auto z-50 sticky top-0">
+          <SheetTitle>
+            {landApplication ? "Update" : "Create a new"} PPA1 Form
+          </SheetTitle>
+          <SheetDescription>
+            Application for Development Permission (THE PHYSICAL PLANNING ACT,
+            2010)
+          </SheetDescription>
+        </SheetHeader>
         <div className="max-w-7xl space-y-6 mx-auto w-full  ">
-          <SheetHeader className="w-full">
-            <SheetTitle>
-              {landApplication ? "Update" : "Create a new"} PPA1 Form
-            </SheetTitle>
-            <SheetDescription>
-              Application for Development Permission (THE PHYSICAL PLANNING ACT,
-              2010)
-            </SheetDescription>
-          </SheetHeader>
           {status === "error" ? (
             <ErrorContainer
               errorMessage="Error occurred while fetching applicants"
@@ -127,33 +127,31 @@ export default function FormAddEditLandApplication({
               <form onSubmit={form.handleSubmit(handleFormSubmit)}>
                 {/* <pre>{JSON.stringify(form.watch(), null, 2)}</pre> */}
                 {/* <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre> */}
-                <div>
-                  <div className="grid lg:grid-cols-2 gap-6">
-                    <div className="space-y-6">
-                      <ApplicationSection
-                        form={form}
-                        isNewApplication={!landApplication}
-                      />
-                      <ApplicantSection form={form} applicants={applicants} />
-                    </div>
-
-                    <AddressSection form={form} />
-                    <LandUseSection form={form} />
-                    <UtilitySection form={form} />
-                    {!landApplication && (
-                      <Item variant={"muted"} className="col-span-2">
-                        <ItemContent>
-                          <Label>
-                            <Checkbox checked disabled />
-                            <ItemTitle>
-                              By submitting, applicant shall be subjected to a
-                              charge of <strong>UGX 59,000</strong>
-                            </ItemTitle>
-                          </Label>
-                        </ItemContent>
-                      </Item>
-                    )}
+                <div className="grid lg:grid-cols-2 gap-6">
+                  <div className="space-y-6">
+                    <ApplicationSection
+                      form={form}
+                      isNewApplication={!landApplication}
+                    />
+                    <ApplicantSection form={form} applicants={applicants} />
                   </div>
+
+                  <AddressSection form={form} />
+                  <LandUseSection form={form} />
+                  <UtilitySection form={form} />
+                  {!landApplication && (
+                    <Item variant={"muted"} className="col-span-2">
+                      <ItemContent>
+                        <Label>
+                          <Checkbox checked disabled />
+                          <ItemTitle>
+                            By submitting, applicant shall be subjected to a
+                            charge of <strong>UGX 59,000</strong>
+                          </ItemTitle>
+                        </Label>
+                      </ItemContent>
+                    </Item>
+                  )}
                 </div>
                 <FormFooter className="my-6">
                   <LoadingButton type="submit" loading={isPending} size={"lg"}>

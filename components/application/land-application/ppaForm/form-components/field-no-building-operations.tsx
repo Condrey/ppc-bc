@@ -45,7 +45,7 @@ export default function FieldNoBuildingOperations({ form }: Props) {
                     }}
                   />
                   <ItemTitle>
-                    {"This site does not involve building operations"}
+                    {"This site will not involve building operations"}
                   </ItemTitle>
                 </Label>
               </FormControl>

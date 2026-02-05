@@ -109,3 +109,29 @@ export const getApplicationNumber = (
     "LCC/" + regIdentifier + "/" + String(appNo).padStart(3, "0") + "/" + year
   );
 };
+
+// export const getAuthorizedUser = async (minRole: Role) => {
+//   const { user } = await validateRequest();
+//   const isAuthorized = !!user && myPrivileges[user.role].includes(minRole);
+//   if (!isAuthorized) throw Error("Unauthorized");
+//   return user;
+// };
+
+export const formatPersonName = (value: string) =>
+  value
+    .trim()
+    .replace(/\s+/g, " ") // normalize spaces
+    .split(" ")
+    .map((word) =>
+      word
+        .split(/[-']/) // split on hyphen or apostrophe
+        .filter(Boolean)
+        .map(
+          (part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase(),
+        )
+        .reduce((acc, part, i) => {
+          const separator = word.match(/[-']/g)?.[i - 1];
+          return i === 0 ? part : acc + separator + part;
+        }, ""),
+    )
+    .join(" ");

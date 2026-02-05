@@ -1,5 +1,7 @@
 import {
+  BubblesIcon,
   CoinsIcon,
+  FilesIcon,
   FormIcon,
   HatGlassesIcon,
   LandPlotIcon,
@@ -8,11 +10,14 @@ import {
   Users2Icon,
 } from "lucide-react";
 import {
+  allApplicationTypes,
   allFeesAssessmentTypes,
   allRoles,
+  applicationTypes,
   feesAssessmentTypes,
   roles,
 } from "./enums";
+import { Role } from "./generated/prisma/enums";
 
 export const MAX_ATTACHMENTS = 5;
 export const REDIRECT_TO_URL_SEARCH_PARAMS = "redirectToUrl";
@@ -33,10 +38,32 @@ export type NavLinkGroup = {
 export const navLinks: NavLinkGroup[] = [
   {
     title: "Dashboard",
-    href: "/",
+    href: "/admin",
     description: "",
     icon: LayoutDashboard,
     children: [],
+    showOnMediumScreen: true,
+  },
+  {
+    title: "Applications",
+    href: "/admin/applications",
+    description: "View Inspections and reports",
+    icon: FilesIcon,
+    children: [
+      {
+        href: "/admin/applications/",
+        description: "Viewing all the applications",
+        title: "All applications",
+      },
+      ...allApplicationTypes.map((applicationType) => {
+        const { title, regIdentifier } = applicationTypes[applicationType];
+        return {
+          description: regIdentifier,
+          title: title + "s",
+          href: `/admin/applications/${applicationType}`,
+        };
+      }),
+    ],
     showOnMediumScreen: true,
   },
   {
@@ -59,10 +86,17 @@ export const navLinks: NavLinkGroup[] = [
     href: "/admin/fees-assessments",
     description: "View fees assessment and payment.",
     icon: CoinsIcon,
-    children: allFeesAssessmentTypes.map((fa) => {
-      const { title, description } = feesAssessmentTypes[fa];
-      return { href: `/admin/fees-assessments/${fa}`, description, title };
-    }),
+    children: [
+      {
+        title: "All fees and payments",
+        href: "/admin/fees-assessments",
+        description: "All fees and payments",
+      },
+      ...allFeesAssessmentTypes.map((fa) => {
+        const { title, description } = feesAssessmentTypes[fa];
+        return { href: `/admin/fees-assessments/${fa}`, description, title };
+      }),
+    ],
     showOnMediumScreen: true,
   },
   {
@@ -91,7 +125,7 @@ export const navLinks: NavLinkGroup[] = [
     title: "Meetings",
     href: "/admin/meetings",
     description: "View Inspections and reports",
-    icon: Users2Icon,
+    icon: BubblesIcon,
     children: [
       {
         href: "/admin/meetings/ppc",
@@ -106,18 +140,20 @@ export const navLinks: NavLinkGroup[] = [
     ],
     showOnMediumScreen: true,
   },
+
   {
     title: "Users & Mg't",
-    href: "/admin/users/",
+    href: "/admin/users",
     description: "View all staffs of Lira City council",
     icon: Users2Icon,
     children: [
       {
         title: "All users and managers",
-        href: "/managements/",
+        href: "/admin/users",
         description: "",
       },
       ...(allRoles
+        .filter((r) => r !== Role.APPLICANT)
         .map((a) => {
           const { title, hierarchy } = roles[a];
           if (hierarchy >= 2) {

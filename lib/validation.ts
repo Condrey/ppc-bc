@@ -1,5 +1,6 @@
 import z from "zod";
 import {
+  ApplicationDecision,
   ApplicationStatus,
   ApplicationType,
   LandUseType,
@@ -7,22 +8,21 @@ import {
   PaymentMethod,
   Role,
 } from "./generated/prisma/enums";
+import { formatPersonName } from "./utils";
 const requiredString = z.string().trim();
 
 // Signup
 export const signUpSchema = z.object({
+  id: z.string().optional().describe("a random UUIDv4"),
   email: z
     .email()
     .min(1, "Please an email is required")
     .describe("Email for signing up"),
-  name: requiredString.min(1, "Please provide a name"),
-  username: requiredString
-    .min(1, "You need a username")
-    .describe("User username for the user.")
-    .regex(/^[a-zA-Z0-9_-]+$/, "Only letters, numbers, - and _ are allowed"),
-  password: requiredString
-    .min(8, "Password must be at least 8 characters")
-    .describe("Password for the user."),
+  name: requiredString
+    .min(1, "Please provide a name")
+    .transform(formatPersonName),
+  username: requiredString.optional().describe("User username for the user."),
+  password: z.string().optional().describe("Password for the user."),
   role: z.enum(Role, { error: "Please choose a correct role." }),
 });
 export type SignUpSchema = z.infer<typeof signUpSchema>;
@@ -42,9 +42,7 @@ export type LoginSchema = z.infer<typeof loginSchema>;
 export const verifyUserSchema = z.object({
   name: requiredString
     .min(1, "Name must be provided.")
-    .transform((val) =>
-      val.trim().replace(/\b\w/g, (char) => char.toUpperCase()),
-    ),
+    .transform(formatPersonName),
   id: requiredString.min(1, "User id is missing"),
   username: requiredString
     .min(1, "Please add a user name")
@@ -107,13 +105,30 @@ export type PaymentSchema = z.infer<typeof paymentSchema>;
 // Applicant
 export const applicantSchema = z.object({
   id: z.string().optional().describe("a random UUIDv4"),
-  name: requiredString.min(1, "Please, name is missing."),
+  name: requiredString
+    .min(1, "Please, name is missing.")
+    .transform(formatPersonName),
   address: requiredString.min(1, "Address is missing"),
   contact: requiredString.min(1, "Address is missing"),
   email: z.string().optional().nullable(),
   userId: z.string().optional(),
 });
 export type ApplicantSchema = z.infer<typeof applicantSchema>;
+
+// Inspection
+export const inspectionSchema = z.object({
+  id: z.string().optional().describe("a random UUIDv4"),
+  applicationId: requiredString.min(1, "Application can not be empty"),
+  carriedOn: z.date({ error: "Put a valid date" }),
+  visitReport: requiredString.min(1, "Please add a visit report"),
+  decision: z.enum(ApplicationDecision),
+  inspectorsIds: z.array(
+    z.object({
+      userId: requiredString.min(1, "Missing user id"),
+    }),
+  ),
+});
+export type InspectionSchema = z.infer<typeof inspectionSchema>;
 
 // Application
 export const applicationSchema = z.object({
@@ -209,11 +224,14 @@ export type ParcelSchema = z.infer<typeof parcelSchema>;
 // distance from feature
 export const distanceFromFeaturesSchema = z.object({
   id: z.string().optional().describe("a random UUIDv4"),
-  fromRoad: z.number(),
-  fromWetland: z.number(),
-  fromReserve: z.number(),
-  fromGreenBelt: z.number(),
-  fromOthers: z.number(),
+  fromRoad: z.string().optional().nullable(),
+  fromWetland: z.string().optional().nullable(),
+  fromReserve: z.string().optional().nullable(),
+  fromGreenBelt: z.string().optional().nullable(),
+  fromOthers: z.string().optional().nullable(),
+  fromPowerLine: z.string().optional().nullable(),
+  fromLagoon: z.string().optional().nullable(),
+  fromHills: z.string().optional().nullable(),
 });
 export type DistanceFromFeaturesSchema = z.infer<
   typeof distanceFromFeaturesSchema
@@ -233,42 +251,84 @@ export const siteSchema = z.object({
 export type SiteSchema = z.infer<typeof siteSchema>;
 
 // Land application
-export const landApplicationSchema = z.object({
-  id: z.string().optional().describe("a random UUIDv4"),
-  application: applicationSchema.optional(),
-  natureOfInterest: z.enum(NatureOfInterestInLand, {
-    error: "Please indicate the nature of interest of the land.",
-  }),
-  address: addressSchema,
-  parcel: parcelSchema.optional().nullable(),
-  ppaForm1: ppaForm1Schema.optional().nullable(),
-  site: siteSchema.optional().nullable(),
-  landUse: landUseSchema.superRefine((data, ctx) => {
-    if (
-      data.doesItAbutRoadJunction === true &&
-      (!data.roadJunctionDescription ||
-        data.roadJunctionDescription.trim() === "")
-    ) {
-      ctx.addIssue({
-        path: ["roadJunctionDescription"],
-        message:
-          "Please describe the road junction since the land abuts a road junction.",
-        code: "custom",
-      });
+export const landApplicationSchema = z
+  .object({
+    id: z.string().optional().describe("a random UUIDv4"),
+    application: applicationSchema.optional(),
+    natureOfInterest: z.enum(NatureOfInterestInLand, {
+      error: "Please indicate the nature of interest of the land.",
+    }),
+    address: addressSchema,
+    parcel: parcelSchema.optional().nullable(),
+    ppaForm1: ppaForm1Schema.optional().nullable(),
+    site: siteSchema.optional().nullable(),
+    landUse: landUseSchema.superRefine((data, ctx) => {
+      if (
+        data.doesItAbutRoadJunction === true &&
+        (!data.roadJunctionDescription ||
+          data.roadJunctionDescription.trim() === "")
+      ) {
+        ctx.addIssue({
+          path: ["roadJunctionDescription"],
+          message:
+            "Please describe the road junction since the land abuts a road junction.",
+          code: "custom",
+        });
+      }
+      if (
+        data.doesNotInvolveBuilding === true &&
+        (!data.changeOfUse || data.changeOfUse.trim() === "")
+      ) {
+        ctx.addIssue({
+          path: ["changeOfUse"],
+          message:
+            "State the nature of land use since it will not involve building operations.",
+          code: "custom",
+        });
+      }
+    }),
+    inspection: inspectionSchema.optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (!!data.inspection?.id) {
+      if (!data.inspection.visitReport) {
+        ctx.addIssue({
+          path: ["inspection.visitReport"],
+          message: "Missing visit report from Surveyor",
+          code: "custom",
+        });
+      }
+      if (!data.inspection.carriedOn) {
+        ctx.addIssue({
+          path: ["inspection.carriedOn"],
+          message: "Include the date of inspection",
+          code: "custom",
+        });
+      }
+      if (!data.inspection.decision) {
+        ctx.addIssue({
+          path: ["inspection.decision"],
+          message: "Decision made by inspectors is missing",
+          code: "custom",
+        });
+      }
+      if (data.inspection.decision === ApplicationDecision.PENDING) {
+        ctx.addIssue({
+          path: ["inspection.decision"],
+          message:
+            "The inspection decision can not now be pending, please change",
+          code: "custom",
+        });
+      }
+      if (data.inspection.inspectorsIds.length < 2) {
+        ctx.addIssue({
+          path: ["inspection.inspectorsIds"],
+          message: "Please, indicate all the inspectors who visited site. ",
+          code: "custom",
+        });
+      }
     }
-    if (
-      data.doesNotInvolveBuilding === true &&
-      (!data.changeOfUse || data.changeOfUse.trim() === "")
-    ) {
-      ctx.addIssue({
-        path: ["changeOfUse"],
-        message:
-          "State the nature of land use since it does not involve building operations.",
-        code: "custom",
-      });
-    }
-  }),
-});
+  });
 export type LandApplicationSchema = z.infer<typeof landApplicationSchema>;
 
 // miscellaneous
