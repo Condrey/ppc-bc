@@ -10,8 +10,8 @@ import { generateSessionToken, setSessionTokenCookie } from "../../lib/tokens";
 export async function signUp(
   credentials: SignUpSchema,
 ): Promise<{ error: string }> {
-  const { username, email, password } = signUpSchema.parse(credentials);
-  const passwordHash = await hash(password, {
+  const { username, email, password, name } = signUpSchema.parse(credentials);
+  const passwordHash = await hash(password!, {
     memoryCost: 19456,
     timeCost: 2,
     outputLen: 32,
@@ -47,8 +47,8 @@ export async function signUp(
 
   const user = await prisma.user.create({
     data: {
-      username,
-      name: username,
+      username: username!,
+      name,
       email,
       passwordHash,
     },

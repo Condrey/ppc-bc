@@ -70,20 +70,23 @@ export function PageClient({ application: initialData }: Props) {
     <Tabs
       defaultValue={inspections[0].id}
       orientation={manyInspections ? "vertical" : "horizontal"}
+      className="gap-6"
     >
-      <TypographyH4
-        text={`${formatNumber(numberOfInspections)} inspection${numberOfInspections === 1 ? "" : "s"}`}
-        className="text-muted-foreground"
-      />
-      {numberOfInspections > 1 && (
-        <TabsList className={cn(manyInspections ? "" : " w-full")}>
-          {inspections.map((i) => (
-            <TabsTrigger key={i.id} value={i.id}>
-              {formatDate(i.carriedOn, "PP")}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      )}
+      <div className="">
+        <TypographyH4
+          text={`${formatNumber(numberOfInspections)} inspection${numberOfInspections === 1 ? "" : "s"}`}
+          className="text-muted-foreground"
+        />
+        {numberOfInspections > 1 && (
+          <TabsList className={cn(manyInspections ? "min-w-xs" : " w-full")}>
+            {inspections.map((i) => (
+              <TabsTrigger key={i.id} value={i.id}>
+                {formatDate(i.carriedOn, "PP")}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        )}
+      </div>
       {inspections.map((i) => {
         const { carriedOn, decision, visitReport, inspectors } = i;
         const { title: decisionMade } = applicationDecisions[decision];
@@ -91,7 +94,11 @@ export function PageClient({ application: initialData }: Props) {
           "flex-1 text-muted-foreground min-h-9 h-auto bg-muted text-xl font-semibold font-sans outline inline h-9 w-auto min-w-sm rounded-md p-1";
         const checkboxClassName = "size-8 border-foreground *:[&_svg]:size-8";
         return (
-          <TabsContent key={i.id} value={i.id} className="space-y-8">
+          <TabsContent
+            key={i.id}
+            value={i.id}
+            className={cn("space-y-8", manyInspections && "border-s ps-6")}
+          >
             {/* header  */}
             <div className="flex items-center justify-between">
               <TypographyH4
@@ -114,7 +121,12 @@ export function PageClient({ application: initialData }: Props) {
               </ButtonEditLandInspection>
             </div>
             <SectionHeader application={application} />
-            <div className="max-w-4xl mx-auto space-y-8">
+            <div
+              className={cn(
+                "max-w-4xl mx-auto space-y-8",
+                manyInspections && "max-w-none",
+              )}
+            >
               <p className="max-w-prose tracking-wide leading-loose text-justify hyphens-auto">
                 <span className="max-w-prose">
                   This inspection was carried out on{" "}

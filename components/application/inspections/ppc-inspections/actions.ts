@@ -15,7 +15,6 @@ import {
   landApplicationSchema,
   LandApplicationSchema,
 } from "@/lib/validation";
-import { redirect } from "next/navigation";
 import { cache } from "react";
 
 async function committeeMembers() {
@@ -55,9 +54,9 @@ export async function addInspection({
       },
     },
   });
-  redirect(
-    redirectUrl || `/admin/inspections/ppc-inspections/${applicationId}`,
-  );
+  // redirect(
+  //   redirectUrl || `/admin/inspections/ppc-inspections/${applicationId}`,
+  // );
 }
 
 export async function editLandInspection({

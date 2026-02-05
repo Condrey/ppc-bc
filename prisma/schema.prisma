@@ -136,7 +136,7 @@ model PpaForm1 {
   landApplicationId String          @unique
   landApplication   LandApplication @relation(fields: [landApplicationId], references: [id])
 
-  applicationNumber       Int
+  applicationNumber       Int     @default(autoincrement())
   year                    Int
   previousApplicationNo   Int?
   shouldHaveNewRoadAccess Boolean
