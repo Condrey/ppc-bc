@@ -66,7 +66,7 @@ async function allParentApplicationsByFeeAssessmentType(
   assessmentType: FeeAssessmentType,
 ): Promise<ParentApplicationData[]> {
   const _data = await prisma.application.findMany({
-    where: { feeAssessments: { every: { assessmentType } } },
+    where: { feeAssessments: { some: { assessmentType } } },
     select: {
       buildingApplication: { include: { ...buildingApplicationDataInclude } },
       landApplication: { include: landApplicationDataInclude },

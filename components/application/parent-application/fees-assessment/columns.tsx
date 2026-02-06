@@ -1,17 +1,14 @@
-import { applicationTypes } from "@/lib/enums";
-import {
-  ApplicationType,
-  FeeAssessmentType,
-} from "@/lib/generated/prisma/enums";
-import { ParentApplicationData } from "@/lib/types";
+import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
+import { applicationTypes, feesAssessmentTypes, roles } from "@/lib/enums";
+import { FeeAssessmentData } from "@/lib/types";
 import { cn, formatCurrency, getApplicationNumber } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns";
-import { CheckIcon } from "lucide-react";
-import { DataTableColumnHeader } from "../../../data-table/data-table-column-header";
-import DropDownMenuFeesAssessment from "./drop-down-menu-fees-assessment";
+import { CheckIcon, Edit2Icon, PlusIcon } from "lucide-react";
+import ButtonAddEditFeeAssessment from "./button-add-edit-fee-assessment";
+import ButtonAddEditPayment from "./payments/button-add-edit-payment";
 
-export const usePaymentAssessmentsColumns: ColumnDef<ParentApplicationData>[] =
+export const useApplicationFeeAssessmentsColumns: ColumnDef<FeeAssessmentData>[] =
   [
     {
       id: "index",
@@ -23,9 +20,83 @@ export const usePaymentAssessmentsColumns: ColumnDef<ParentApplicationData>[] =
       },
     },
     {
+      accessorKey: "assessmentType",
+      header({ column }) {
+        return (
+          <DataTableColumnHeader column={column} title="Assessment fee type" />
+        );
+      },
+      cell({ row }) {
+        const { assessmentType } = row.original;
+        const { title, icon: Icon } = feesAssessmentTypes[assessmentType];
+        return (
+          <div>
+            <div>
+              <Icon className="inline mr-2 size-5" />
+              {title + " fee"}
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "amountAssessed",
+      header({ column }) {
+        return (
+          <DataTableColumnHeader column={column} title="Assessed amount" />
+        );
+      },
+      cell({ row }) {
+        const {
+          amountAssessed,
+          currency,
+          payments: allPayments,
+        } = row.original;
+
+        const payments = allPayments.reduce(
+          (amount, total) => amount + total.amountPaid,
+          0,
+        );
+        const balance = amountAssessed - payments;
+
+        return (
+          <div>
+            <div>
+              <span className="text-muted-foreground italic">Paid: </span>
+              <span
+                className={cn(payments <= 0 ? "font-medium" : "text-success")}
+              >
+                {payments <= 0
+                  ? "Nothing"
+                  : formatCurrency(payments, currency, true)}
+              </span>
+            </div>
+            {balance <= 0 ? (
+              <div className="text-success font-bold">
+                <CheckIcon className="inline" />
+                Fully paid
+              </div>
+            ) : (
+              <div>
+                <span className="text-muted-foreground italic">bal: </span>
+                <span className="text-destructive">
+                  {formatCurrency(balance, currency, true)}
+                </span>
+              </div>
+            )}
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: "application.applicant.name",
       header({ column }) {
-        return <DataTableColumnHeader column={column} title="Applicant" />;
+        return (
+          <DataTableColumnHeader
+            column={column}
+            title="Applicant information"
+          />
+        );
       },
       cell({ row }) {
         const {
@@ -41,250 +112,85 @@ export const usePaymentAssessmentsColumns: ColumnDef<ParentApplicationData>[] =
         );
       },
     },
-
     {
       accessorKey: "application.applicationNo",
       header({ column }) {
         return (
-          <DataTableColumnHeader column={column} title="Application Number" />
+          <DataTableColumnHeader
+            column={column}
+            title="Application information"
+          />
         );
       },
       cell({ row }) {
         const {
-          application: { type, year, applicationNo },
+          application: { applicationNo, year, type },
         } = row.original;
-
-        const { title: applicationType } = applicationTypes[type];
-
+        const applicationNumber = getApplicationNumber(
+          applicationNo,
+          year,
+          type,
+        );
+        const { title, icon: Icon } = applicationTypes[type];
         return (
-          <div className="">
-            <div>{applicationType}</div>
+          <div>
+            <div>{applicationNumber}</div>
             <div className="text-xs text-muted-foreground">
-              {getApplicationNumber(applicationNo, year, type)}
+              <Icon className="inline mr-2 size-4" />
+              {title}
             </div>
           </div>
         );
       },
     },
-
     {
-      accessorKey: "application.feeAssessments.application",
+      accessorKey: "assessedAt",
       header({ column }) {
         return (
-          <DataTableColumnHeader column={column} title="Application Fee(s)" />
+          <DataTableColumnHeader column={column} title="Assessed by (at)" />
         );
       },
       cell({ row }) {
         const {
-          application: { feeAssessments, type },
+          assessedAt,
+          assessedBy: { name, role },
         } = row.original;
-        const isLandApplication = type === ApplicationType.LAND;
-        const fees = feeAssessments.filter((f) =>
-          isLandApplication
-            ? f.assessmentType === FeeAssessmentType.LAND_APPLICATION
-            : f.assessmentType === FeeAssessmentType.BUILDING_APPLICATION,
-        );
+        const { title } = roles[role];
 
-        if (!fees.length) {
-          return (
-            <p className="text-wrap italic text-muted-foreground">
-              <strong>
-                {isLandApplication ? "Land" : "Building"} application
-              </strong>{" "}
-              fee has not been assigned yet.
-            </p>
-          );
-        }
-        const allPayments = fees.flatMap((f) => f.payments);
-        const amountAssessed = fees.reduce(
-          (amount, total) => amount + total.amountAssessed,
-          0,
-        );
-        const payments = allPayments.reduce(
-          (amount, total) => amount + total.amountPaid,
-          0,
-        );
-        const balance = amountAssessed - payments;
-        const { currency } = fees[0];
         return (
           <div>
-            <div>
-              <span className="text-muted-foreground italic">Paid: </span>
-              <span
-                className={cn(payments <= 0 ? "font-medium" : "text-success")}
-              >
-                {payments <= 0
-                  ? "Nothing"
-                  : formatCurrency(payments, currency, true)}
-              </span>
+            <div>{formatDate(assessedAt, "PPp")}</div>
+            <div className="text-xs text-muted-foreground">
+              {name} - {title}
             </div>
-            {balance <= 0 ? (
-              <div className="text-success font-bold">
-                <CheckIcon className="inline" />
-                Fully paid
-              </div>
-            ) : (
-              <div>
-                <span className="text-muted-foreground italic">bal: </span>
-                <span className="text-destructive">
-                  {formatCurrency(balance, currency, true)}
-                </span>
-              </div>
-            )}
           </div>
         );
       },
     },
-    {
-      accessorKey: "application.feeAssessments.inspection",
-      header({ column }) {
-        return (
-          <DataTableColumnHeader column={column} title="Inspection Fee(s)" />
-        );
-      },
-      cell({ row }) {
-        const {
-          application: { feeAssessments },
-        } = row.original;
 
-        const fees = feeAssessments.filter(
-          (f) => f.assessmentType === FeeAssessmentType.INSPECTION,
-        );
-
-        if (!fees.length) {
-          return (
-            <p className="text-wrap italic text-muted-foreground">
-              No <strong>inspection</strong> fee charged.
-            </p>
-          );
-        }
-        const allPayments = fees.flatMap((f) => f.payments);
-        const amountAssessed = fees.reduce(
-          (amount, total) => amount + total.amountAssessed,
-          0,
-        );
-        const payments = allPayments.reduce(
-          (amount, total) => amount + total.amountPaid,
-          0,
-        );
-        const balance = amountAssessed - payments;
-        const { currency } = fees[0];
-        return (
-          <div>
-            <div>
-              <span className="text-muted-foreground italic">Paid: </span>
-              <span
-                className={cn(payments <= 0 ? "font-medium" : "text-success")}
-              >
-                {payments <= 0
-                  ? "Nothing"
-                  : formatCurrency(payments, currency, true)}
-              </span>
-            </div>
-            {balance <= 0 ? (
-              <div className="text-success font-bold">
-                <CheckIcon className="inline" />
-                Fully paid
-              </div>
-            ) : (
-              <div>
-                <span className="text-muted-foreground italic">bal: </span>
-                <span className="text-destructive">
-                  {formatCurrency(balance, currency, true)}
-                </span>
-              </div>
-            )}
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: "application.feeAssessments.penalty",
-      header({ column }) {
-        return (
-          <DataTableColumnHeader column={column} title="Penalty Charge(s)" />
-        );
-      },
-      cell({ row }) {
-        const {
-          application: { feeAssessments },
-        } = row.original;
-
-        const fees = feeAssessments.filter(
-          (f) => f.assessmentType === FeeAssessmentType.PENALTY,
-        );
-
-        if (!fees.length) {
-          return (
-            <p className="text-wrap italic text-muted-foreground">
-              No <strong>penalty</strong> fee charged.
-            </p>
-          );
-        }
-        const allPayments = fees.flatMap((f) => f.payments);
-        const amountAssessed = fees.reduce(
-          (amount, total) => amount + total.amountAssessed,
-          0,
-        );
-        const payments = allPayments.reduce(
-          (amount, total) => amount + total.amountPaid,
-          0,
-        );
-        const balance = amountAssessed - payments;
-        const { currency } = fees[0];
-        return (
-          <div>
-            <div>
-              <span className="text-muted-foreground italic">Paid: </span>
-              <span
-                className={cn(payments <= 0 ? "font-medium" : "text-success")}
-              >
-                {payments <= 0
-                  ? "Nothing"
-                  : formatCurrency(payments, currency, true)}
-              </span>
-            </div>
-            {balance <= 0 ? (
-              <div className="text-success font-bold">
-                <CheckIcon className="inline" />
-                Fully paid
-              </div>
-            ) : (
-              <div>
-                <span className="text-muted-foreground italic">bal: </span>
-                <span className="text-destructive">
-                  {formatCurrency(balance, currency, true)}
-                </span>
-              </div>
-            )}
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: "application.createdAt",
-      header({ column }) {
-        return <DataTableColumnHeader column={column} title="Applied on" />;
-      },
-      cell({ row }) {
-        const {
-          application: { createdAt },
-        } = row.original;
-
-        return (
-          <span className="text-muted-foreground">
-            {formatDate(createdAt, "PPp")}
-          </span>
-        );
-      },
-    },
     {
       id: "actions",
       header({ column }) {
         return <DataTableColumnHeader column={column} title="Actions" />;
       },
       cell({ row }) {
-        return <DropDownMenuFeesAssessment parentApplication={row.original} />;
+        const { application, assessmentType, id } = row.original;
+        return (
+          <div className="flex items-center gap-2">
+            <ButtonAddEditFeeAssessment
+              application={application}
+              assessmentType={assessmentType}
+              feeAssessment={row.original}
+              size={"icon-sm"}
+              variant={"outline"}
+            >
+              <Edit2Icon />
+            </ButtonAddEditFeeAssessment>
+            <ButtonAddEditPayment feeAssessmentId={id} size={"sm"}>
+              <PlusIcon /> Pay
+            </ButtonAddEditPayment>
+          </div>
+        );
       },
     },
   ];

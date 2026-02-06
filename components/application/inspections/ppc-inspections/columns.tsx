@@ -9,7 +9,10 @@ import {
   landUseTypes,
   naturesOfInterestInLand,
 } from "@/lib/enums";
-import { FeeAssessmentType } from "@/lib/generated/prisma/enums";
+import {
+  ApplicationType,
+  FeeAssessmentType,
+} from "@/lib/generated/prisma/enums";
 import { ParentApplicationData } from "@/lib/types";
 import { cn, formatCurrency, getApplicationNumber } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
@@ -131,24 +134,38 @@ export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
     },
     cell({ row }) {
       const {
-        application: { feeAssessments },
+        application: { feeAssessments, type },
       } = row.original;
-      const fee = feeAssessments.find(
-        (f) => f.assessmentType === FeeAssessmentType.LAND_APPLICATION,
+      // const fee = feeAssessments.find(
+      //   (f) => f.assessmentType === FeeAssessmentType.LAND_APPLICATION,
+      // );
+      const isLandApplication = type === ApplicationType.LAND;
+      const fees = feeAssessments.filter((f) =>
+        isLandApplication
+          ? f.assessmentType === FeeAssessmentType.LAND_APPLICATION
+          : f.assessmentType === FeeAssessmentType.BUILDING_APPLICATION,
       );
-      if (!fee) {
+      if (!fees.length) {
         return (
           <p className="text-wrap italic text-muted-foreground">
-            Land Application fee has not been assigned yet.
+            <strong>
+              {isLandApplication ? "Land" : "Building"} application
+            </strong>{" "}
+            fee has not been assigned yet.
           </p>
         );
       }
-      const { currency, amountAssessed, payments: allPayments } = fee;
+      const allPayments = fees.flatMap((f) => f.payments);
+      const amountAssessed = fees.reduce(
+        (amount, total) => amount + total.amountAssessed,
+        0,
+      );
       const payments = allPayments.reduce(
         (amount, total) => amount + total.amountPaid,
         0,
       );
       const balance = amountAssessed - payments;
+      const { currency } = fees[0];
       return (
         <div>
           <div>

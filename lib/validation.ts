@@ -3,6 +3,7 @@ import {
   ApplicationDecision,
   ApplicationStatus,
   ApplicationType,
+  FeeAssessmentType,
   LandUseType,
   NatureOfInterestInLand,
   PaymentMethod,
@@ -101,6 +102,17 @@ export const paymentSchema = z.object({
   receivedById: z.string().optional().nullable(),
 });
 export type PaymentSchema = z.infer<typeof paymentSchema>;
+
+// FeeAssessment
+export const feeAssessmentSchema = z.object({
+  id: z.string().optional().describe("a random UUIDv4"),
+  applicationId: requiredString.min(1, "Missing application"),
+  assessmentType: z.enum(FeeAssessmentType, {
+    error: "Choose the correct assessment type.",
+  }),
+  amountAssessed: z.number({ error: "Input correct amount" }),
+});
+export type FeeAssessmentSchema = z.infer<typeof feeAssessmentSchema>;
 
 // Applicant
 export const applicantSchema = z.object({

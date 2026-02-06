@@ -10,7 +10,7 @@ import { PlusIcon } from "lucide-react";
 import { Suspense } from "react";
 import ButtonAddEditPpaForm1 from "../ppaForm/button-add-edit-ppa-form1";
 import { useFeeAssessmentParentApplicationsQuery } from "../query";
-import { usePaymentAssessmentsColumns } from "./columns";
+import { usePaymentAssessmentsColumns } from "./payments/columns";
 
 interface Props {
   initialData: ParentApplicationData[];
@@ -49,7 +49,7 @@ export function ListOfTypeBasedFeesAssessments({
         columns={usePaymentAssessmentsColumns}
         filterColumn={{
           id: "application_applicant_name",
-          label: "application no",
+          label: "applicant",
         }}
         className="w-full"
       >

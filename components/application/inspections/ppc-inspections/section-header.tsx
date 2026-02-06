@@ -16,7 +16,7 @@ import {
 } from "@/lib/enums";
 import { Address } from "@/lib/generated/prisma/client";
 import { ApplicationType } from "@/lib/generated/prisma/enums";
-import { formatCurrency, getApplicationNumber } from "@/lib/utils";
+import { cn, formatCurrency, getApplicationNumber } from "@/lib/utils";
 import { formatDate } from "date-fns";
 import { CheckIcon, DotIcon, HistoryIcon, MapPinIcon } from "lucide-react";
 
@@ -70,8 +70,8 @@ export default function SectionHeader({ application }: Props) {
             (amount, total) => amount + total.amountPaid,
             0,
           );
-          const balance = amountPaid - amountAssessed;
-          const hasBalance = balance !== 0;
+          const balance = amountAssessed - amountPaid;
+          const hasBalance = balance > 0;
           return (
             <Item key={id} variant={"muted"}>
               <ItemContent>
@@ -82,7 +82,9 @@ export default function SectionHeader({ application }: Props) {
                 <ItemDescription>
                   Paid: {formatCurrency(amountPaid, currency, true)}
                 </ItemDescription>
-                <ItemDescription>
+                <ItemDescription
+                  className={cn(hasBalance && "text-destructive")}
+                >
                   {hasBalance ? (
                     `Bal: ${formatCurrency(balance, currency, true)}`
                   ) : (

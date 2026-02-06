@@ -35,6 +35,7 @@ export type ApplicantData = Prisma.ApplicantGetPayload<{
 // Payment
 export const paymentDataInclude = {
   receivedBy: true,
+  feeAssessment: true,
 } satisfies Prisma.PaymentInclude;
 export type PaymentData = Prisma.PaymentGetPayload<{
   include: typeof paymentDataInclude;
@@ -84,6 +85,8 @@ export type InspectionBuildingApplicationData =
 // Fee Assessment
 export const feeAssessmentDataInclude = {
   payments: true,
+  application: { include: { applicant: true } },
+  assessedBy: { select: userDataSelect },
 } satisfies Prisma.FeeAssessmentInclude;
 export type FeeAssessmentData = Prisma.FeeAssessmentGetPayload<{
   include: typeof feeAssessmentDataInclude;

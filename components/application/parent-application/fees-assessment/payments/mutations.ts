@@ -11,7 +11,11 @@ export function useUpsertPaymentMutation() {
   return useMutation({
     mutationFn: upsertPayment,
     async onSuccess(data, variables) {
-      const queryKey2: QueryKey = ["payment", variables.id];
+      const queryKey2: QueryKey = [
+        "fee-assessment",
+        "application",
+        data.feeAssessment.applicationId,
+      ];
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
 

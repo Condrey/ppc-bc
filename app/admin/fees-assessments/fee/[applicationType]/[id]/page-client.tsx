@@ -1,13 +1,16 @@
 "use client";
 
 import { getParentApplicationById } from "@/components/application/parent-application/actions";
+import DropDownMenuFeesAssessment from "@/components/application/parent-application/fees-assessment/drop-down-menu-fees-assessment";
+import { ListOfApplicationFeesAssessments } from "@/components/application/parent-application/fees-assessment/list-of-application-fees-assessments";
 import Container from "@/components/container";
-import { TypographyH1 } from "@/components/headings";
+import { TypographyH2 } from "@/components/headings";
 import ErrorContainer from "@/components/query-container/error-container";
 import { ApplicationType } from "@/lib/generated/prisma/enums";
 import { ParentApplicationData } from "@/lib/types";
 import { getApplicationNumber } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
+import { PlusIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 
 export default function PageClient({
@@ -42,19 +45,25 @@ export default function PageClient({
         },
       ]}
     >
-      <div className="flex gap-3">
-        <TypographyH1
-          text={`Fee Assessments for ${applicationNumber}`}
-          className="line-clamp-2"
-        />
-      </div>
+      <TypographyH2
+        text={`Fee Assessments for ${applicationNumber}`}
+        className="flex items-center justify-between gap-3"
+      >
+        <DropDownMenuFeesAssessment
+          isADropDown={false}
+          parentApplication={data}
+          className="ms-auto max-w-fit"
+        >
+          <PlusIcon /> Fee Assessment
+        </DropDownMenuFeesAssessment>
+      </TypographyH2>
       {status === "error" ? (
         <ErrorContainer
-          errorMessage="An error occurred while fetching land application."
+          errorMessage="An error occurred while fetching application."
           query={query}
         />
       ) : (
-        <div></div>
+        <ListOfApplicationFeesAssessments parentApplication={data} />
       )}
     </Container>
   );
