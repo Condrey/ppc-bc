@@ -125,16 +125,19 @@ model Application {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([applicationNo, year])
+  @@unique([applicationNo, year, type])
 }
 
 /**
  * ===================== LAND APPLICATION =====================
  */
 model PpaForm1 {
-  id                String          @id @default(uuid())
-  landApplicationId String          @unique
-  landApplication   LandApplication @relation(fields: [landApplicationId], references: [id])
+  id                String           @id @default(uuid())
+  landApplicationId String?          @unique
+  landApplication   LandApplication? @relation(fields: [landApplicationId], references: [id])
+
+  buildingApplication   BuildingApplication? @relation(fields: [buildingApplicationId], references: [id])
+  buildingApplicationId String?              @unique
 
   applicationNumber       Int     @default(autoincrement())
   year                    Int
@@ -157,10 +160,11 @@ model LandApplication {
   landUseId String
   landUse   LandUse @relation(fields: [landUseId], references: [id])
 
-  parcel   Parcel?   @relation(fields: [parcelId], references: [id])
+  parcel   Parcel? @relation(fields: [parcelId], references: [id])
+  parcelId String? @unique
+
   ppaForm1 PpaForm1?
   site     Site?     @relation(fields: [siteId], references: [id])
-  parcelId String?   @unique
   siteId   String?
 }
 
@@ -168,13 +172,12 @@ model LandApplication {
  * ===================== BUILDING APPLICATION =====================
  */
 model Utility {
-  id                         String                @id @default(uuid())
+  id                         String     @id @default(uuid())
   waterSupplyMethod          String
   sewageDisposalMethod       String
   refuseDisposalMethod       String
   surfaceWaterDisposalMethod String
   ppaForm1s                  PpaForm1[]
-  buildingApplications       BuildingApplication[]
 }
 
 model Access {
@@ -204,10 +207,14 @@ model BuildingApplication {
   addressId String
   address   Address @relation(fields: [addressId], references: [id])
 
-  utilities Utility? @relation(fields: [utilityId], references: [id])
-  access    Access?  @relation(fields: [accessId], references: [id])
-  utilityId String?
-  accessId  String?
+  access   Access? @relation(fields: [accessId], references: [id])
+  accessId String?
+
+  parcel   Parcel? @relation(fields: [parcelId], references: [id])
+  parcelId String? @unique
+
+  ppaForm1   PpaForm1?
+  ppaForm1Id String?
 }
 
 /**
@@ -422,9 +429,10 @@ model Parcel {
 
   landApplication LandApplication?
 
-  createdAt DateTime @default(now())
+  createdAt           DateTime             @default(now())
+  buildingApplication BuildingApplication?
 
-  @@unique([blockNumber, plotNumber])
+  @@unique([blockNumber, plotNumber, createdAt])
 }
 
 /**

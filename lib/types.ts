@@ -64,33 +64,41 @@ export type InspectionLandApplicationData = Prisma.LandApplicationGetPayload<{
   include: typeof inspectionLandApplicationDataInclude;
 }>;
 
+//Inspection Building application
+export const inspectionBuildingApplicationDataInclude = {
+  application: { include: { applicant: { include: applicantDataInclude } } },
+  address: true,
+  landUse: true,
+  parcel: true,
+  ppaForm1: { include: { utility: true, buildingApplication: true } },
+  site: {
+    include: { distanceFromFeatures: true },
+  },
+  access: true,
+} satisfies Prisma.BuildingApplicationInclude;
+export type InspectionBuildingApplicationData =
+  Prisma.BuildingApplicationGetPayload<{
+    include: typeof inspectionBuildingApplicationDataInclude;
+  }>;
+
+// Fee Assessment
+export const feeAssessmentDataInclude = {
+  payments: true,
+} satisfies Prisma.FeeAssessmentInclude;
+export type FeeAssessmentData = Prisma.FeeAssessmentGetPayload<{
+  include: typeof feeAssessmentDataInclude;
+}>;
+
 // Application
 export const applicationDataInclude = {
   applicant: { include: applicantDataInclude },
-  feeAssessments: { include: { payments: true } },
+  feeAssessments: { include: feeAssessmentDataInclude },
   inspections: { include: inspectionDataInclude },
   landApplication: {
     include: inspectionLandApplicationDataInclude,
   },
   buildingApplication: {
-    select: {
-      address: true,
-      access: true,
-      utilities: true,
-      natureOfInterest: true,
-      site: {
-        select: {
-          distanceFromFeatures: true,
-          currentUseAndSurrounding: true,
-          percentageSizeOfBuildingAvailableSpace: true,
-          hasElectricity: true,
-          hasNationalWater: true,
-          prevailingWinds: true,
-          sunDirection: true,
-        },
-      },
-      landUse: true,
-    },
+    include: inspectionBuildingApplicationDataInclude,
   },
 } satisfies Prisma.ApplicationInclude;
 export type ApplicationData = Prisma.ApplicationGetPayload<{
@@ -101,6 +109,7 @@ export type ApplicationData = Prisma.ApplicationGetPayload<{
 export const landApplicationDataInclude = {
   address: true,
   application: { include: applicationDataInclude },
+
   landUse: true,
   parcel: true,
   ppaForm1: { include: { utility: true, landApplication: true } },
@@ -109,6 +118,24 @@ export const landApplicationDataInclude = {
 export type LandApplicationData = Prisma.LandApplicationGetPayload<{
   include: typeof landApplicationDataInclude;
 }>;
+
+// Building application
+export const buildingApplicationDataInclude = {
+  address: true,
+  application: { include: applicationDataInclude },
+  landUse: true,
+  site: true,
+  access: true,
+  parcel: true,
+  ppaForm1: { include: { utility: true, landApplication: true } },
+} satisfies Prisma.BuildingApplicationInclude;
+export type BuildingApplicationData = Prisma.BuildingApplicationGetPayload<{
+  include: typeof buildingApplicationDataInclude;
+}>;
+
+export type ParentApplicationData =
+  | BuildingApplicationData
+  | LandApplicationData;
 
 // Breadcrumb
 export type BreadcrumbItem = {

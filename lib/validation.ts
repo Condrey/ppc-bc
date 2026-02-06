@@ -48,7 +48,7 @@ export const verifyUserSchema = z.object({
     .min(1, "Please add a user name")
     .describe("User username for the user.")
     .regex(/^[a-zA-Z0-9_-]+$/, "Only letters, numbers, - and _ are allowed"),
-  email: requiredString.email().min(1, "A working email is required"),
+  email: z.email().trim().min(1, "A working email is required"),
   password: requiredString
     .min(8, "Password must be at least 8 characters")
     .describe("Password for the user."),
@@ -250,8 +250,20 @@ export const siteSchema = z.object({
 });
 export type SiteSchema = z.infer<typeof siteSchema>;
 
-// Land application
-export const landApplicationSchema = z
+// Access
+export const accessSchema = z.object({
+  id: z.string().optional().describe("a random UUIDv4"),
+  pedestrian: z.boolean(),
+  vehicular: z.boolean(),
+  openAccessForNeighbors: z.boolean(),
+  existingPath: z.boolean(),
+  structures: z.boolean(),
+  fence: z.boolean(),
+});
+export type AccessSchema = z.infer<typeof accessSchema>;
+
+// Parent application
+export const parentApplicationSchema = z
   .object({
     id: z.string().optional().describe("a random UUIDv4"),
     application: applicationSchema.optional(),
@@ -262,6 +274,8 @@ export const landApplicationSchema = z
     parcel: parcelSchema.optional().nullable(),
     ppaForm1: ppaForm1Schema.optional().nullable(),
     site: siteSchema.optional().nullable(),
+    inspection: inspectionSchema.optional(),
+    access: accessSchema.optional(),
     landUse: landUseSchema.superRefine((data, ctx) => {
       if (
         data.doesItAbutRoadJunction === true &&
@@ -287,7 +301,6 @@ export const landApplicationSchema = z
         });
       }
     }),
-    inspection: inspectionSchema.optional(),
   })
   .superRefine((data, ctx) => {
     if (!!data.inspection?.id) {
@@ -329,7 +342,7 @@ export const landApplicationSchema = z
       }
     }
   });
-export type LandApplicationSchema = z.infer<typeof landApplicationSchema>;
+export type ParentApplicationSchema = z.infer<typeof parentApplicationSchema>;
 
 // miscellaneous
 export const emailSchema = z.object({ email: z.email().trim() });

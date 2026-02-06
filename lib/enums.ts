@@ -14,8 +14,10 @@ import {
   FileScanIcon,
   FileTextIcon,
   FileXIcon,
+  GavelIcon,
   LucideIcon,
   MapPinnedIcon,
+  TelescopeIcon,
 } from "lucide-react";
 
 export const allApplicationTypes = Object.values(ApplicationType);
@@ -128,27 +130,27 @@ export const naturesOfInterestInLand: Record<
 > = {
   REGISTERED_OWNER: {
     title: "Registered owner",
-    formDesc: "I am a registered owner",
+    formDesc: "A registered owner",
     variant: "outline",
   },
   LEASE: {
     title: "Leasehold",
-    formDesc: "I want for lease",
+    formDesc: "For lease",
     variant: "outline",
   },
   TENANT_BY_OCCUPANCY: {
     title: "Tenant by occupancy",
-    formDesc: "I am a tenant by occupancy",
+    formDesc: "Tenant by occupancy",
     variant: "outline",
   },
   FREEHOLD: {
     title: "Freehold",
-    formDesc: "I want a freehold",
+    formDesc: "For freehold",
     variant: "outline",
   },
   CUSTOMARY_TENANT: {
     title: "Customary tenant",
-    formDesc: "I am a customary tenant",
+    formDesc: "Customary tenant",
     variant: "outline",
   },
 };
@@ -208,23 +210,28 @@ export const feesAssessmentTypes: Record<
   {
     title: string;
     description: string;
+    icon: LucideIcon;
   }
 > = {
   LAND_APPLICATION: {
     title: "Land Application",
     description: "Fee from land applications",
+    icon: MapPinnedIcon,
   },
   BUILDING_APPLICATION: {
     title: "Building Application",
     description: "Fee from building applications",
+    icon: BuildingIcon,
   },
   INSPECTION: {
     title: "Inspection",
     description: "Fee from inspections",
+    icon: TelescopeIcon,
   },
   PENALTY: {
     title: "Penalty",
     description: "Fee from penalties",
+    icon: GavelIcon,
   },
 };
 

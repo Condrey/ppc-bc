@@ -1,6 +1,6 @@
 import { ApplicationData } from "@/lib/types";
 
-import CommandItemApplicant from "@/components/application/land-application/application/applicant/command-item-applicant";
+import CommandItemApplicant from "@/components/application/parent-application/application/applicant/command-item-applicant";
 import { Badge } from "@/components/ui/badge";
 import {
   Item,
@@ -71,7 +71,7 @@ export default function SectionHeader({ application }: Props) {
             0,
           );
           const balance = amountPaid - amountAssessed;
-          const hasBalance = balance > 0;
+          const hasBalance = balance !== 0;
           return (
             <Item key={id} variant={"muted"}>
               <ItemContent>
@@ -110,17 +110,8 @@ export default function SectionHeader({ application }: Props) {
 
 function AddressDetails({ address }: { address: Address | undefined }) {
   if (!address) return null;
-  const {
-    cell,
-    district,
-    parish,
-    location,
-    size,
-    street,
-    subCounty,
-    town,
-    village,
-  } = address;
+  const { cell, district, parish, location, street, subCounty, town, village } =
+    address;
   return (
     <Item variant={"muted"} className="max-w-sm">
       <ItemContent>
@@ -128,7 +119,7 @@ function AddressDetails({ address }: { address: Address | undefined }) {
         <p className="inline-flex items-center">
           <MapPinIcon className="inline fill-muted-foreground text-muted" />{" "}
           <span className="inline-flex">
-            {size ?? street}, {village ?? cell}, {parish ?? subCounty}
+            {street}, {village ?? cell}, {parish ?? subCounty}
           </span>
           <DotIcon className="inline`" /> {town ?? district}
         </p>

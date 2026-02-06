@@ -1,7 +1,8 @@
 "use client";
 
 import { getApplicationInspections } from "@/components/application/action";
-import ButtonEditLandInspection from "@/components/application/inspections/ppc-inspections/land/button-edit-land-inspection";
+import ButtonEditBuildingInspection from "@/components/application/inspections/ppc-inspections/parent-application/button-edit-building-inspection";
+import ButtonEditLandInspection from "@/components/application/inspections/ppc-inspections/parent-application/button-edit-land-inspection";
 import SectionHeader from "@/components/application/inspections/ppc-inspections/section-header";
 import { TypographyH3, TypographyH4 } from "@/components/headings";
 import { EmptyContainer } from "@/components/query-container/empty-container";
@@ -113,12 +114,21 @@ export function PageClient({ application: initialData }: Props) {
                       : "text-success",
                 )}
               />
-              <ButtonEditLandInspection
-                inspection={i}
-                landApplication={landApplication!}
-              >
-                Update inspection
-              </ButtonEditLandInspection>
+              {isLandApplication ? (
+                <ButtonEditLandInspection
+                  inspection={i}
+                  landApplication={landApplication!}
+                >
+                  Update inspection
+                </ButtonEditLandInspection>
+              ) : (
+                <ButtonEditBuildingInspection
+                  inspection={i}
+                  buildingApplication={buildingApplication!}
+                >
+                  Update inspection
+                </ButtonEditBuildingInspection>
+              )}
             </div>
             <SectionHeader application={application} />
             <div
@@ -156,7 +166,7 @@ export function PageClient({ application: initialData }: Props) {
                   className="bg-destructive/5 animate-pulse [&_svg]:fill-destructive max-w-md mx-auto"
                   required
                 >
-                  {isLandApplication && (
+                  {isLandApplication ? (
                     <ButtonEditLandInspection
                       variant={"destructive"}
                       inspection={i}
@@ -164,7 +174,15 @@ export function PageClient({ application: initialData }: Props) {
                     >
                       Complete inspection
                     </ButtonEditLandInspection>
-                  )}{" "}
+                  ) : (
+                    <ButtonEditBuildingInspection
+                      variant={"destructive"}
+                      inspection={i}
+                      buildingApplication={buildingApplication!}
+                    >
+                      Complete inspection
+                    </ButtonEditBuildingInspection>
+                  )}
                 </EmptyContainer>
               ) : (
                 <div className="space-y-2.5 max-w-3xl">

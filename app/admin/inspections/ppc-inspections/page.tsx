@@ -1,10 +1,10 @@
 import ListOfPpcInspectionApplications from "@/components/application/inspections/ppc-inspections/list-of-ppc-inspection-applications";
-import { getAllLandApplications } from "@/components/application/land-application/actions";
+import { getAllParentApplications } from "@/components/application/parent-application/actions";
 import Container from "@/components/container";
 import { TypographyH2 } from "@/components/headings";
 
 export default async function Page() {
-  const ladApplications = await getAllLandApplications();
+  const ladApplications = await getAllParentApplications();
   return (
     <Container
       breadcrumbs={[

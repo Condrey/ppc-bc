@@ -4,12 +4,13 @@ import { useCustomSearchParams } from "@/hooks/use-custom-search-param";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import {
+  applicationStatuses,
   applicationTypes,
   landUseTypes,
   naturesOfInterestInLand,
 } from "@/lib/enums";
 import { FeeAssessmentType } from "@/lib/generated/prisma/enums";
-import { LandApplicationData } from "@/lib/types";
+import { ParentApplicationData } from "@/lib/types";
 import { cn, formatCurrency, getApplicationNumber } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns";
@@ -25,7 +26,7 @@ import { useTransition } from "react";
 import { DataTableColumnHeader } from "../../../data-table/data-table-column-header";
 import ButtonAddInspection from "./button-add-inspection";
 
-export const usePpcInspectionsColumns: ColumnDef<LandApplicationData>[] = [
+export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
   {
     id: "index",
     header({ column }) {
@@ -79,12 +80,23 @@ export const usePpcInspectionsColumns: ColumnDef<LandApplicationData>[] = [
     },
     cell({ row }) {
       const {
-        application: { inspections },
+        application: { inspections, status },
       } = row.original;
       const neverInspected = !inspections.length;
+      const { title, variant } = applicationStatuses[status];
       return (
-        <Badge variant={neverInspected ? "destructive" : "success"}>
-          {neverInspected ? "Pending" : "Inspected"}
+        <Badge
+          variant={
+            // neverInspected ? "destructive" : variant
+            "secondary"
+          }
+          className="font-bold"
+        >
+          {neverInspected
+            ? "Pending"
+            : status === "APPROVED"
+              ? "Inspected"
+              : title}
         </Badge>
       );
     },
@@ -96,12 +108,13 @@ export const usePpcInspectionsColumns: ColumnDef<LandApplicationData>[] = [
     },
     cell({ row }) {
       const {
-        application: { type, year, applicationNo },
+        application: { type, year, applicationNo, status },
       } = row.original;
       const { title: applicationType } = applicationTypes[type];
-
+      const { title: applicationStatus, variant } = applicationStatuses[status];
       return (
         <div className="">
+          <Badge variant={variant}>{applicationStatus}</Badge>
           <div>{applicationType}</div>
           <div className="text-xs text-muted-foreground">
             {getApplicationNumber(applicationNo, year, type)}

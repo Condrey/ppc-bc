@@ -1,5 +1,6 @@
 "use client";
 
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -25,7 +26,6 @@ import { SearchIcon } from "lucide-react";
 import * as React from "react";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableViewOptions } from "./data-table-view-options";
-import { Input } from "@/components/ui/input";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -139,7 +139,7 @@ export function DataTable<TData, TValue>({
                       !handleClick
                         ? "cursor-default"
                         : "group/row cursor-pointer",
-                      rowItem.id === selectedItemId && "bg-muted",
+                      // rowItem.id! === selectedItemId && "bg-muted",
                     )}
                   >
                     {row.getVisibleCells().map((cell, index, array) => (

@@ -1,12 +1,12 @@
-import { getAllLandApplications } from "@/components/application/land-application/actions";
-import ButtonAddEditPpaForm1 from "@/components/application/land-application/ppaForm/button-add-edit-ppa-form1";
-import ListOfPpaForm1s from "@/components/application/land-application/ppaForm/list-of-ppa-forms";
+import { getAllParentApplications } from "@/components/application/parent-application/actions";
+import ButtonAddEditPpaForm1 from "@/components/application/parent-application/ppaForm/button-add-edit-ppa-form1";
+import ListOfPpaForm1s from "@/components/application/parent-application/ppaForm/list-of-ppa-forms";
 import Container from "@/components/container";
 import { TypographyH2 } from "@/components/headings";
 import { PlusIcon } from "lucide-react";
 
 export default async function Page() {
-  const landApplications = await getAllLandApplications();
+  const parentApplications = await getAllParentApplications();
 
   return (
     <Container
@@ -25,7 +25,7 @@ export default async function Page() {
           Add PPA Form 1
         </ButtonAddEditPpaForm1>
       </TypographyH2>
-      <ListOfPpaForm1s initialData={landApplications} />
+      <ListOfPpaForm1s initialData={parentApplications} />
     </Container>
   );
 }

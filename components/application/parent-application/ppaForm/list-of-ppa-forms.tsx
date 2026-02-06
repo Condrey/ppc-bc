@@ -2,14 +2,15 @@
 
 import { TypographyH4 } from "@/components/headings";
 import { ParentApplicationData } from "@/lib/types";
+import { PlusIcon } from "lucide-react";
 import { DataTable } from "../../../data-table/data-table";
 import { EmptyContainer } from "../../../query-container/empty-container";
 import ErrorContainer from "../../../query-container/error-container";
-import ButtonAddEditPpaForm1 from "../../parent-application/ppaForm/button-add-edit-ppa-form1";
-import { useParentApplicationsQuery } from "../../parent-application/query";
-import { usePpcInspectionsColumns } from "./columns";
+import { useParentApplicationsQuery } from "../query";
+import ButtonAddEditPpaForm1 from "./button-add-edit-ppa-form1";
+import { usePpaForm1Columns } from "./columns";
 
-export default function ListOfPpcInspectionApplications({
+export default function ListOfPpaForm1s({
   initialData,
 }: {
   initialData: ParentApplicationData[];
@@ -19,10 +20,7 @@ export default function ListOfPpcInspectionApplications({
   const { data: parentApplications, status } = query;
   if (status === "error") {
     return (
-      <ErrorContainer
-        errorMessage="Failed to fetch inspection applications"
-        query={query}
-      />
+      <ErrorContainer errorMessage="Failed to fetch PPA1 forms" query={query} />
     );
   }
   if (!parentApplications.length) {
@@ -38,10 +36,16 @@ export default function ListOfPpcInspectionApplications({
   return (
     <DataTable
       data={parentApplications}
-      columns={usePpcInspectionsColumns}
+      columns={usePpaForm1Columns}
       filterColumn={{ id: "application_applicant_name", label: "applicant" }}
-      tableHeaderSection={<TypographyH4 text="Inspection Applications" />}
+      tableHeaderSection={
+        <TypographyH4 text="Applications for Development Permit" />
+      }
       className="w-full"
-    ></DataTable>
+    >
+      <ButtonAddEditPpaForm1 size={"sm"} variant={"secondary"}>
+        <PlusIcon /> New
+      </ButtonAddEditPpaForm1>
+    </DataTable>
   );
 }

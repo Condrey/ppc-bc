@@ -94,7 +94,11 @@ export const navLinks: NavLinkGroup[] = [
       },
       ...allFeesAssessmentTypes.map((fa) => {
         const { title, description } = feesAssessmentTypes[fa];
-        return { href: `/admin/fees-assessments/${fa}`, description, title };
+        return {
+          href: `/admin/fees-assessments/${fa}`,
+          description,
+          title: `${title} fees`,
+        };
       }),
     ],
     showOnMediumScreen: true,
