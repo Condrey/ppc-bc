@@ -8,10 +8,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const webName = `Physical Planning and Building Control`;
+export const webName = `PPC and BC`;
 export const organization = "Lira City Council";
 export const siteConfig = {
-  name: webName,
+  name: "Physical Planning and Building Control",
   url: process.env.NEXT_PUBLIC_BASE_URL,
   logo: "/logo.png",
   defaultCoverImage: "/web-app-manifest-512x512.png",
