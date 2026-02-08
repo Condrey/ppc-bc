@@ -122,8 +122,8 @@ export const applicantSchema = z
       .min(1, "Please, name is missing.")
       .transform(formatPersonName),
     address: requiredString.min(1, "Address is missing"),
-    contact: requiredString.min(1, "Contact is missing"),
-    email: requiredString.min(1, "Provide an email"),
+    contact: requiredString.min(1, "Address is missing"),
+    email: z.string().optional().nullable(),
     userId: z.string().optional(),
     isSelfRegistration: z.boolean().optional(),
     username: requiredString.optional().describe("User username for the user."),
@@ -149,6 +149,13 @@ export const applicantSchema = z
         ctx.addIssue({
           path: ["contact"],
           message: "Missing contact.",
+          code: "custom",
+        });
+      }
+      if (!data.email) {
+        ctx.addIssue({
+          path: ["email"],
+          message: "Missing email.",
           code: "custom",
         });
       }

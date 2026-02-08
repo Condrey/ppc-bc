@@ -76,6 +76,7 @@ export default function SignUpForm() {
                 <FormControl>
                   <Input
                     {...field}
+                    value={field.value!}
                     placeholder="e.g., someone@gmail.com"
                     type="email"
                   />

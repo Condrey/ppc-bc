@@ -55,7 +55,7 @@ export async function signUp(
         create: {
           username: username!,
           name,
-          email,
+          email: email!,
           passwordHash,
         },
       },
