@@ -11,8 +11,8 @@ import {
 import { Input } from "@/components/ui/input";
 import LoadingButton from "@/components/ui/loading-button";
 import { PasswordInput } from "@/components/ui/password-input";
-import { Role } from "@/lib/generated/prisma/enums";
-import { signUpSchema, SignUpSchema } from "@/lib/validation";
+import { Textarea } from "@/components/ui/textarea";
+import { applicantSchema, ApplicantSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MoveRightIcon } from "lucide-react";
 import Link from "next/link";
@@ -24,18 +24,20 @@ import { signUp } from "./actions";
 
 export default function SignUpForm() {
   const [isPending, startTransition] = useTransition();
-  const form = useForm<SignUpSchema>({
-    resolver: zodResolver(signUpSchema),
+  const form = useForm<ApplicantSchema>({
+    resolver: zodResolver(applicantSchema),
     values: {
       username: "",
       email: "",
       password: "",
       name: "",
-      role: Role.REGISTRAR,
+      address: "",
+      contact: "",
+      isSelfRegistration: true,
     },
   });
 
-  async function onSubmit(values: SignUpSchema) {
+  async function onSubmit(values: ApplicantSchema) {
     startTransition(async () => {
       const { error } = await signUp(values);
       if (error)
@@ -47,7 +49,6 @@ export default function SignUpForm() {
   }
   return (
     <>
-      {" "}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -55,12 +56,12 @@ export default function SignUpForm() {
         >
           <FormField
             control={form.control}
-            name="username"
+            name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>User Name</FormLabel>
+                <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="e.g., janedoe " />
+                  <Input {...field} placeholder="e.g., Jane Doe " />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -100,6 +101,37 @@ export default function SignUpForm() {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="contact"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Contact</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="e.g., 0772345678 " />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Address</FormLabel>
+                <FormControl>
+                  <Textarea
+                    cols={3}
+                    {...field}
+                    placeholder="e.g., Junior quarters "
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <LoadingButton loading={isPending} type="submit" className="w-full">
             Create account
           </LoadingButton>

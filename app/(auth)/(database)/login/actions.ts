@@ -52,6 +52,9 @@ export async function loginAction(
   if (!loginRedirectUrl.startsWith("/")) {
     loginRedirectUrl = "/";
   }
+  if (loginRedirectUrl === "/") {
+    loginRedirectUrl = "/admin";
+  }
   return redirect(
     existingUser.isVerified
       ? loginRedirectUrl

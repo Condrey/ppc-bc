@@ -115,16 +115,45 @@ export const feeAssessmentSchema = z.object({
 export type FeeAssessmentSchema = z.infer<typeof feeAssessmentSchema>;
 
 // Applicant
-export const applicantSchema = z.object({
-  id: z.string().optional().describe("a random UUIDv4"),
-  name: requiredString
-    .min(1, "Please, name is missing.")
-    .transform(formatPersonName),
-  address: requiredString.min(1, "Address is missing"),
-  contact: requiredString.min(1, "Address is missing"),
-  email: z.string().optional().nullable(),
-  userId: z.string().optional(),
-});
+export const applicantSchema = z
+  .object({
+    id: z.string().optional().describe("a random UUIDv4"),
+    name: requiredString
+      .min(1, "Please, name is missing.")
+      .transform(formatPersonName),
+    address: requiredString.min(1, "Address is missing"),
+    contact: requiredString.min(1, "Contact is missing"),
+    email: requiredString.min(1, "Provide an email"),
+    userId: z.string().optional(),
+    isSelfRegistration: z.boolean().optional(),
+    username: requiredString.optional().describe("User username for the user."),
+    password: z.string().optional().describe("Password for the user."),
+  })
+  .superRefine((data, ctx) => {
+    if (data.isSelfRegistration) {
+      if (!data.password) {
+        ctx.addIssue({
+          path: ["password"],
+          message: "Enter your password.",
+          code: "custom",
+        });
+      }
+      if (!data.address) {
+        ctx.addIssue({
+          path: ["address"],
+          message: "Missing address.",
+          code: "custom",
+        });
+      }
+      if (!data.contact) {
+        ctx.addIssue({
+          path: ["contact"],
+          message: "Missing contact.",
+          code: "custom",
+        });
+      }
+    }
+  });
 export type ApplicantSchema = z.infer<typeof applicantSchema>;
 
 // Inspection

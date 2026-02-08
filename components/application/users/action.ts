@@ -11,11 +11,42 @@ import { cache } from "react";
 
 async function allUsers() {
   return await prisma.user.findMany({
-    where: { role: { not: Role.SUPER_ADMIN } },
+    where: { role: { notIn: [Role.SUPER_ADMIN] } },
+    select: userDataSelect,
+    orderBy: { name: "asc" },
   });
 }
-
 export const getAllUsers = cache(allUsers);
+
+async function allCommitteeMembers() {
+  return await prisma.user.findMany({
+    where: { role: { notIn: [Role.SUPER_ADMIN, Role.APPLICANT] } },
+    select: userDataSelect,
+    orderBy: { name: "asc" },
+  });
+}
+export const getAllCommitteeMembers = cache(allCommitteeMembers);
+
+async function allCommitteeMembersWithoutLeaders() {
+  return await prisma.user.findMany({
+    where: {
+      role: {
+        notIn: [
+          Role.SUPER_ADMIN,
+          Role.APPLICANT,
+          Role.CHAIRMAN_BC,
+          Role.CHAIRMAN_PPC,
+          Role.REGISTRAR,
+        ],
+      },
+    },
+    select: userDataSelect,
+    orderBy: { name: "asc" },
+  });
+}
+export const getAllCommitteeMembersWithoutLeaders = cache(
+  allCommitteeMembersWithoutLeaders,
+);
 
 async function allRoleBasedUsers(role: Role) {
   return await prisma.user.findMany({

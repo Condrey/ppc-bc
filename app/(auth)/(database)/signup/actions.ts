@@ -1,16 +1,19 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { signUpSchema, SignUpSchema } from "@/lib/validation";
+import { slugify } from "@/lib/utils";
+import { applicantSchema, ApplicantSchema } from "@/lib/validation";
 import { hash } from "@node-rs/argon2";
 import { redirect } from "next/navigation";
 import { createSession } from "../../lib/session";
 import { generateSessionToken, setSessionTokenCookie } from "../../lib/tokens";
 
 export async function signUp(
-  credentials: SignUpSchema,
+  credentials: ApplicantSchema,
 ): Promise<{ error: string }> {
-  const { username, email, password, name } = signUpSchema.parse(credentials);
+  const { email, name, address, contact, password } =
+    applicantSchema.parse(credentials);
+  let username = slugify(name);
   const passwordHash = await hash(password!, {
     memoryCost: 19456,
     timeCost: 2,
@@ -26,14 +29,12 @@ export async function signUp(
     },
   });
   if (existingUserName) {
-    return {
-      error: "Username is already taken, please select another",
-    };
+    username = slugify(username + contact);
   }
   const existingEmail = await prisma.user.findFirst({
     where: {
       email: {
-        equals: email,
+        equals: email!,
         mode: "insensitive",
       },
     },
@@ -45,18 +46,26 @@ export async function signUp(
     };
   }
 
-  const user = await prisma.user.create({
+  const { user } = await prisma.applicant.create({
     data: {
-      username: username!,
+      address,
+      contact,
       name,
-      email,
-      passwordHash,
+      user: {
+        create: {
+          username: username!,
+          name,
+          email,
+          passwordHash,
+        },
+      },
     },
+    include: { user: true },
   });
 
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id);
   await setSessionTokenCookie(sessionToken, session.expiresAt);
 
-  return redirect("/");
+  return redirect("/admin");
 }

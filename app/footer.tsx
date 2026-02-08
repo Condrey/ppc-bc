@@ -14,7 +14,7 @@ export default function Footer({ className }: FooterProps) {
     <div
       className={cn(
         "bg-black  dark:bg-background text-muted-foreground tracking-wider py-0.5 capitalize w-full",
-        className
+        className,
       )}
     >
       <div className="w-full flex justify-between items-center max-w-9xl mx-auto">

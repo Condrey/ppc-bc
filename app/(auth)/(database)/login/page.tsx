@@ -36,7 +36,7 @@ export default async function Page() {
 
       <div className=" flex-1 max-h-fit sm:m-auto w-full max-w-sm sm:bg-muted rounded-md sm:border p-4">
         <h1 className="text-center sm:text-xl text-lg uppercase font-bold text-primary">
-          Administrator Login
+          Login
         </h1>
         <span></span>
         <Suspense>
