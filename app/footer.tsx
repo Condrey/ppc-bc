@@ -1,7 +1,8 @@
 "use client";
 
 import { ThemeToggler } from "@/components/theme-toggler";
-import { cn, siteConfig } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn, organization, siteConfig } from "@/lib/utils";
 
 interface FooterProps {
   className?: string;
@@ -9,6 +10,7 @@ interface FooterProps {
 
 export default function Footer({ className }: FooterProps) {
   const currentYear = new Date().getFullYear();
+  const isMobile = useIsMobile();
 
   return (
     <div
@@ -20,7 +22,8 @@ export default function Footer({ className }: FooterProps) {
       <div className="w-full flex justify-between items-center max-w-9xl mx-auto">
         <p className='text-center text-sm md:after:content-["_,_The_Republic_Of_Uganda"]'>
           {`Copyright 2025${currentYear <= 2025 ? "" : `- ${currentYear}`},
-            ${siteConfig.name}`}
+            ${isMobile ? organization : siteConfig.name}`}{" "}
+          {isMobile ? "" : organization}
         </p>
         <ThemeToggler />
       </div>
