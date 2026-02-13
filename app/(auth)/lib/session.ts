@@ -1,3 +1,4 @@
+"server-only";
 import { Role } from "@/lib/generated/prisma/client";
 import prisma from "@/lib/prisma";
 import { addMilliseconds } from "date-fns";

@@ -11,9 +11,11 @@ import {
 } from "lucide-react";
 import {
   allApplicationTypes,
+  allCommittees,
   allFeesAssessmentTypes,
   allRoles,
   applicationTypes,
+  committees,
   feesAssessmentTypes,
   roles,
 } from "./enums";
@@ -130,18 +132,14 @@ export const navLinks: NavLinkGroup[] = [
     href: "/admin/meetings",
     description: "View Inspections and reports",
     icon: BubblesIcon,
-    children: [
-      {
-        href: "/admin/meetings/ppc",
-        title: "PPC Meetings",
-        description: "Meetings of PPC",
-      },
-      {
-        href: "/admin/meetings/bc",
-        title: "BC Meetings",
-        description: "Meetings of BC",
-      },
-    ],
+    children: allCommittees.map((committee) => {
+      const { title, description } = committees[committee];
+      return {
+        href: `/admin/meetings/${committee}`,
+        title,
+        description,
+      };
+    }),
     showOnMediumScreen: true,
   },
 

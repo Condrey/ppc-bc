@@ -162,6 +162,7 @@ function MenuItem({ item, parentLink }: { item: NavLink; parentLink: string }) {
         onClick={() => startTransition(() => {})}
         asChild
         isActive={isActive}
+        size="md"
       >
         <Link href={url} className="h-fit py-1 flex gap-2">
           {isPending && <Loader2Icon className="animate-spin size-4" />}

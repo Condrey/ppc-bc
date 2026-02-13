@@ -2,6 +2,7 @@ import {
   ApplicationDecision,
   ApplicationStatus,
   ApplicationType,
+  Committee,
   FeeAssessmentType,
   LandUseType,
   NatureOfInterestInLand,
@@ -306,4 +307,23 @@ export const myPrivileges: Record<Role, Role[]> = {
   ARCHITECT: [Role.ARCHITECT, Role.APPLICANT],
   REGISTRAR: [Role.REGISTRAR, Role.APPLICANT],
   APPLICANT: [],
+};
+
+export const allCommittees = Object.values(Committee);
+export const committees: Record<
+  Committee,
+  {
+    title: string;
+    description: string;
+    // icon: LucideIcon;
+  }
+> = {
+  PPC: {
+    title: "Physical Planning Committee",
+    description: "The committee for land use",
+  },
+  BC: {
+    title: "Building Control",
+    description: "The committee for building",
+  },
 };

@@ -9,6 +9,7 @@ import {
   PaymentMethod,
   Role,
 } from "./generated/prisma/enums";
+import { GeoJSONType } from "./types";
 import { formatPersonName } from "./utils";
 const requiredString = z.string().trim();
 
@@ -250,23 +251,56 @@ export const landUseSchema = z
 export type LandUseSchema = z.infer<typeof landUseSchema>;
 
 // Parcel
-export const parcelSchema = z.object({
-  id: z.string().optional().describe("a random UUIDv4"),
-  blockNumber: z
-    .string({ error: "Missing Block Number" })
-    .trim()
-    .min(1, "Missing Block Number"),
-  plotNumber: z
-    .string({ error: "Missing Block Number" })
-    .trim()
-    .min(1, "Missing Block Number"),
-  sheetNumber: z.string().optional().nullable(),
-  geometry: z.string().optional().nullable(),
-  areaSqMeters: z
-    .number({ error: "Input correct area in SqMeters" })
-    .optional()
-    .nullable(),
+const coordinatePair = z.tuple([
+  z.number().min(-180).max(180),
+  z.number().min(-90).max(90),
+]);
+const linearRing = z
+  .array(coordinatePair)
+  .min(4)
+  .refine(
+    (coords) => {
+      const first = coords[0];
+      const last = coords[coords.length - 1];
+      return first[0] === last[0] && first[1] === last[1];
+    },
+    {
+      message: "Polygon must be closed (first and last coordinate must match)",
+    },
+  );
+
+const polygonSchema = z.object({
+  type: z.literal("Polygon"),
+  coordinates: z.array(linearRing),
 });
+
+const multiPolygonSchema = z.object({
+  type: z.literal("MultiPolygon"),
+  coordinates: z.array(z.array(linearRing)),
+});
+
+const geometrySchema = z.union([polygonSchema, multiPolygonSchema]);
+
+export const parcelSchema = z.object({
+  id: z.string().optional(),
+  blockNumber: z.string().trim().min(1, "Missing Block Number"),
+  plotNumber: z.string().trim().min(1, "Missing Plot Number"),
+  parcelNumber: z.string().optional().nullable(),
+  areaSqMeters: z.number().positive().optional().nullable(),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  geometry: z.preprocess((val: any) => {
+    if (typeof val === "string") {
+      try {
+        return JSON.parse(val) as GeoJSONType;
+      } catch {
+        return undefined;
+      }
+    }
+    return val;
+  }, geometrySchema),
+  // geometry: geometrySchema.transform((val) => JSON.stringify(val,null,2)),
+});
+
 export type ParcelSchema = z.infer<typeof parcelSchema>;
 
 // distance from feature

@@ -27,14 +27,21 @@ model User {
   emailVerificationTokens EmailVerificationToken[]
   sessions                Session[]
 
-  inspections    Inspection[]    @relation("InspectionTeam")
-  documents      Document[]
-  signatures     Signature[]
-  workflowStages WorkflowStage[]
-  feeAssessments FeeAssessment[]
-  payments       Payment[]
-  appeals        Appeal[]
-  applicants     Applicant[]
+  inspections         Inspection[]       @relation("InspectionTeam")
+  documents           Document[]
+  signatures          Signature[]
+  workflowStages      WorkflowStage[]
+  feeAssessments      FeeAssessment[]
+  payments            Payment[]
+  appeals             Appeal[]
+  applicants          Applicant[]
+  meeting             Meeting?           @relation(fields: [meetingId], references: [id])
+  meetingId           String?
+  meetingAttendance   MeetingAttendance? @relation(fields: [meetingAttendanceId], references: [id])
+  meetingAttendanceId String?
+  chairedMinutes      Minute[]           @relation("chaired_minutes")
+  minute              Minute?            @relation(fields: [minuteId], references: [id])
+  minuteId            String?
 }
 
 model EmailVerificationToken {
@@ -124,6 +131,8 @@ model Application {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  meeting   Meeting? @relation(fields: [meetingId], references: [id])
+  meetingId String?
 
   @@unique([applicationNo, year, type])
 }
@@ -419,12 +428,14 @@ model Resubmission {
  */
 
 model Parcel {
-  id          String  @id @default(uuid())
-  blockNumber String
-  plotNumber  String
-  sheetNumber String?
+  id           String  @id @default(uuid())
+  blockNumber  String
+  plotNumber   String
+  parcelNumber String?
 
-  geometry     String? // GeoJSON (polygon, multipolygon)
+  geometry     Json? //GeoJSON (polygon, multipolygon)
+  centroidLat  Float?
+  centroidLng  Float?
   areaSqMeters Float?
 
   landApplication LandApplication?
@@ -436,8 +447,55 @@ model Parcel {
 }
 
 /**
+ * ===================== MEETING =====================
+ */
+
+model Meeting {
+  id              String        @id @default(uuid())
+  committee       Committee     @default(PPC)
+  title           String
+  message         String?
+  minute          Minute?       @relation(fields: [minuteId], references: [id])
+  applications    Application[]
+  invitedMembers  User[]
+  sendInvitations Boolean       @default(true)
+  happeningOn     DateTime?
+  postponedOn     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  minuteId String?
+}
+
+model Minute {
+  id                       String              @id @default(uuid())
+  minuteNumber             String
+  chairedBy                User                @relation("chaired_minutes", fields: [userId], references: [id])
+  attendance               MeetingAttendance[]
+  agenda                   String
+  discussions              String
+  wayForward               String
+  recommendations          String
+  absentMembersWithApology User[]
+  meetings                 Meeting[]
+  userId                   String
+}
+
+model MeetingAttendance {
+  id        String  @id @default(uuid())
+  attendees User[]
+  minute    Minute? @relation(fields: [minuteId], references: [id])
+  minuteId  String?
+}
+
+/**
  * ===================== ENUMS =====================
  */
+
+enum Committee {
+  PPC
+  BC
+}
 
 enum Role {
   SUPER_ADMIN

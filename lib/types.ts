@@ -32,6 +32,15 @@ export type ApplicantData = Prisma.ApplicantGetPayload<{
   include: typeof applicantDataInclude;
 }>;
 
+// Parcel
+export const parcelDataInclude = {
+  buildingApplication: true,
+  landApplication: true,
+} satisfies Prisma.ParcelInclude;
+export type ParcelData = Prisma.ParcelGetPayload<{
+  include: typeof parcelDataInclude;
+}>;
+
 // Payment
 export const paymentDataInclude = {
   receivedBy: true,
@@ -140,8 +149,23 @@ export type ParentApplicationData =
   | BuildingApplicationData
   | LandApplicationData;
 
+// Meeting
+// Applicant
+export const meetingDataInclude = {
+  invitedMembers: true,
+  minute: true,
+  applications: true,
+} satisfies Prisma.MeetingInclude;
+export type MeetingData = Prisma.MeetingGetPayload<{
+  include: typeof meetingDataInclude;
+}>;
+
 // Breadcrumb
 export type BreadcrumbItem = {
   title: string;
   href?: string;
 };
+
+export type GeoJSONType =
+  | { type: "Polygon"; coordinates: [number, number][][] }
+  | { type: "MultiPolygon"; coordinates: [number, number][][][] };
