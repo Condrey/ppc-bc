@@ -8,7 +8,11 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { InspectionBuildingApplicationData, InspectionData } from "@/lib/types";
+import {
+  GeoJSONType,
+  InspectionBuildingApplicationData,
+  InspectionData,
+} from "@/lib/types";
 import {
   ParentApplicationSchema,
   parentApplicationSchema,
@@ -68,6 +72,12 @@ export default function FormAddEditBuildingInspection({
         openAccessForNeighbors: false,
         structures: false,
         vehicular: false,
+      },
+      parcel: {
+        ...buildingApplication.parcel,
+        geometry: buildingApplication.parcel?.geometry as GeoJSONType,
+        blockNumber: buildingApplication.parcel?.blockNumber || "",
+        plotNumber: buildingApplication.parcel?.plotNumber || "",
       },
     },
   });

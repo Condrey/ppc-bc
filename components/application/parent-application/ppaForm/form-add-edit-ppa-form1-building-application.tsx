@@ -16,7 +16,7 @@ import {
   ApplicationStatus,
   ApplicationType,
 } from "@/lib/generated/prisma/enums";
-import { BuildingApplicationData } from "@/lib/types";
+import { BuildingApplicationData, GeoJSONType } from "@/lib/types";
 import {
   ParentApplicationSchema,
   parentApplicationSchema,
@@ -71,7 +71,10 @@ export default function FormAddEditPpaForm1BuildingApplication({
         hasElectricity: false,
         hasNationalWater: false,
       },
-      parcel: buildingApplication?.parcel,
+      parcel: {
+        ...buildingApplication?.parcel,
+        geometry: buildingApplication?.parcel?.geometry as GeoJSONType,
+      },
       access: buildingApplication?.access || {
         existingPath: false,
         fence: false,

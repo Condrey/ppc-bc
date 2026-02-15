@@ -8,7 +8,11 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { InspectionData, InspectionLandApplicationData } from "@/lib/types";
+import {
+  GeoJSONType,
+  InspectionData,
+  InspectionLandApplicationData,
+} from "@/lib/types";
 import {
   ParentApplicationSchema,
   parentApplicationSchema,
@@ -58,6 +62,12 @@ export default function FormAddEditLandInspection({
         decision: inspection.decision,
         inspectorsIds:
           inspection.inspectors.map((i) => ({ userId: i.id })) || [],
+      },
+      parcel: {
+        ...landApplication.parcel,
+        geometry: landApplication.parcel?.geometry as GeoJSONType,
+        blockNumber: landApplication.parcel?.blockNumber || "",
+        plotNumber: landApplication.parcel?.plotNumber || "",
       },
     },
   });

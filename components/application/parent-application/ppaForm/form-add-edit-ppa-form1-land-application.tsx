@@ -16,7 +16,7 @@ import {
   ApplicationStatus,
   ApplicationType,
 } from "@/lib/generated/prisma/enums";
-import { LandApplicationData } from "@/lib/types";
+import { GeoJSONType, LandApplicationData } from "@/lib/types";
 import {
   ParentApplicationSchema,
   parentApplicationSchema,
@@ -71,7 +71,10 @@ export default function FormAddEditPpaForm1LandApplication({
         hasElectricity: false,
         hasNationalWater: false,
       },
-      parcel: landApplication?.parcel,
+      parcel: {
+        ...landApplication?.parcel,
+        geometry: landApplication?.parcel?.geometry as GeoJSONType,
+      },
     },
   });
   const query = useQuery({
