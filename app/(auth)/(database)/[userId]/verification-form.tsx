@@ -32,7 +32,7 @@ export default function VerificationForm({ user }: VerificationFormProps) {
   const [error, setError] = useState<string>();
   const form = useForm<VerifyUserSchema>({
     resolver: zodResolver(verifyUserSchema),
-    defaultValues: {
+    values: {
       email: user.email || "",
       name: user.name || "",
       username: user.username || "",

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { NumberInput } from "@/components/number-input/number-input";
 import { Button } from "@/components/ui/button";
 import {
@@ -39,13 +40,13 @@ export default function FormAddEditPayment({
 }: Props) {
   const form = useForm<PaymentSchema>({
     resolver: zodResolver(paymentSchema),
-    defaultValues: {
+    values: {
       id: payment?.id || "",
-      amountPaid: payment?.amountPaid,
+      amountPaid: payment?.amountPaid!,
       feeAssessmentId: payment?.feeAssessmentId || feeAssessmentId,
-      paymentMethod: payment?.paymentMethod,
+      paymentMethod: payment?.paymentMethod!,
       receivedById: payment?.receivedById,
-      referenceNumber: payment?.referenceNumber,
+      referenceNumber: payment?.referenceNumber || "",
     },
   });
   const { mutate, isPending } = useUpsertPaymentMutation();

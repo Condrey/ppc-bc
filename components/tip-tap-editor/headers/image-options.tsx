@@ -26,10 +26,10 @@ import { useForm } from "react-hook-form";
 
 export default function ImageOptions({ editor }: { editor: Editor }) {
   const [isPending, startTransition] = useTransition();
-  const [_, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const form = useForm<SingleContentSchema>({
     resolver: zodResolver(singleContentSchema),
-    defaultValues: {
+    values: {
       singleContent: "",
     },
   });

@@ -18,8 +18,12 @@ import {
 } from "@/lib/generated/prisma/enums";
 import { BuildingApplicationData, GeoJSONType } from "@/lib/types";
 import {
+  ApplicationSchema,
+  LandUseSchema,
+  ParcelSchema,
   ParentApplicationSchema,
   parentApplicationSchema,
+  PpaForm1Schema,
 } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
@@ -48,25 +52,32 @@ export default function FormAddEditPpaForm1BuildingApplication({
   const currentYear = new Date().getFullYear();
   const form = useForm<ParentApplicationSchema>({
     resolver: zodResolver(parentApplicationSchema),
-    defaultValues: {
+    values: {
       id: buildingApplication?.id || "",
-      application: buildingApplication?.application || {
-        year: currentYear,
-        type: ApplicationType.BUILDING,
-        status: ApplicationStatus.SUBMITTED,
-      },
-      natureOfInterest: buildingApplication?.natureOfInterest,
+      application:
+        buildingApplication?.application ||
+        ({
+          year: currentYear,
+          type: ApplicationType.BUILDING,
+          status: ApplicationStatus.SUBMITTED,
+        } as ApplicationSchema),
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+      natureOfInterest: buildingApplication?.natureOfInterest!,
       address: buildingApplication?.address || {
         district: "Lira City",
       },
-      ppaForm1: buildingApplication?.ppaForm1 || {
-        shouldHaveNewRoadAccess: false,
-        year: currentYear,
-      },
-      landUse: buildingApplication?.landUse || {
-        doesItAbutRoadJunction: false,
-        doesNotInvolveBuilding: false,
-      },
+      ppaForm1:
+        buildingApplication?.ppaForm1 ||
+        ({
+          shouldHaveNewRoadAccess: false,
+          year: currentYear,
+        } as PpaForm1Schema),
+      landUse:
+        buildingApplication?.landUse ||
+        ({
+          doesItAbutRoadJunction: false,
+          doesNotInvolveBuilding: false,
+        } as LandUseSchema),
       site: buildingApplication?.site || {
         hasElectricity: false,
         hasNationalWater: false,
@@ -74,7 +85,7 @@ export default function FormAddEditPpaForm1BuildingApplication({
       parcel: {
         ...buildingApplication?.parcel,
         geometry: buildingApplication?.parcel?.geometry as GeoJSONType,
-      },
+      } as ParcelSchema,
       access: buildingApplication?.access || {
         existingPath: false,
         fence: false,

@@ -30,7 +30,7 @@ export default function LoginForm() {
   const [isPending, startTransition] = useTransition();
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
+    values: {
       password: "",
       username: "",
     },

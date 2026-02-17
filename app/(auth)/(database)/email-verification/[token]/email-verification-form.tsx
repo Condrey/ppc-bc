@@ -43,7 +43,7 @@ export default function EmailVerificationForm({ email }: { email: string }) {
   const [error, setError] = useState<string>();
   const form = useForm<EmailSchema>({
     resolver: zodResolver(emailSchema),
-    defaultValues: { email },
+    values: { email },
   });
   const { data, isRefetching } = useQuery({
     queryKey: ["isEmailVerified"],

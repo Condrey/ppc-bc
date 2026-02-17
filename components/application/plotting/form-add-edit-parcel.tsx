@@ -19,6 +19,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { GeoJSONType, ParentApplicationData } from "@/lib/types";
 import {
+  ParcelSchema,
   parentApplicationSchema,
   ParentApplicationSchema,
 } from "@/lib/validation";
@@ -39,13 +40,13 @@ export default function FormAddEditParentApplication({
 }: Props) {
   const form = useForm<ParentApplicationSchema>({
     resolver: zodResolver(parentApplicationSchema),
-    defaultValues: {
+    values: {
       ...parentApplication,
       access: undefined,
       parcel: {
         ...parentApplication.parcel,
         geometry: parentApplication.parcel?.geometry as GeoJSONType,
-      },
+      } as ParcelSchema,
     },
   });
   const { mutate, isPending } = useUpsertParcelMutation();

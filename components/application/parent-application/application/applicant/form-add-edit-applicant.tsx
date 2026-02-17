@@ -36,12 +36,12 @@ export default function FormAddEditApplicant({
 }: Props) {
   const form = useForm<ApplicantSchema>({
     resolver: zodResolver(applicantSchema),
-    defaultValues: {
+    values: {
       id: applicant?.id || "",
-      address: applicant?.address,
-      contact: applicant?.contact,
+      address: applicant?.address || "",
+      contact: applicant?.contact || "",
       email: applicant?.email,
-      name: applicant?.name,
+      name: applicant?.name || "",
     },
   });
   const { mutate, isPending } = useUpsertApplicantMutation();
