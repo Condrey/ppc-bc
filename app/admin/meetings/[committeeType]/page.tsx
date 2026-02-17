@@ -1,7 +1,7 @@
 import { getAllCommitteeMeetings } from "@/components/application/meetings/action";
+import ButtonAddEditMeeting from "@/components/application/meetings/form-components/button-add-edit-meeting";
 import Container from "@/components/container";
 import { TypographyH2 } from "@/components/headings";
-import { Button } from "@/components/ui/button";
 import { committees } from "@/lib/enums";
 import { Committee } from "@/lib/generated/prisma/enums";
 import { PlusIcon } from "lucide-react";
@@ -44,9 +44,13 @@ export default async function Page({ params }: Props) {
         text={`${title} Meetings`}
         className="flex items-center flex-wrap justify-between"
       >
-        <Button className="ms-auto max-w-fit w-full" variant={"secondary"}>
+        <ButtonAddEditMeeting
+          committee={committeeType}
+          className="ms-auto max-w-fit w-full"
+          variant={"secondary"}
+        >
           <PlusIcon className="inline" /> new meeting
-        </Button>
+        </ButtonAddEditMeeting>
       </TypographyH2>
       <PageClient meetings={meetings} committeeType={committeeType} />
     </Container>

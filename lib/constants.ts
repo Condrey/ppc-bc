@@ -23,8 +23,7 @@ import { Role } from "./generated/prisma/enums";
 
 export const MAX_ATTACHMENTS = 5;
 export const REDIRECT_TO_URL_SEARCH_PARAMS = "redirectToUrl";
-export const ASSET_SEARCH_PARAMETER = "asset-params";
-export const FINANCE_SEARCH_PARAMETER = "finance-params";
+export const APPLICATION_TYPE_SEARCH_PARAMETER = "application-type";
 export const DEFAULT_PASSWORD = "defaultPassword123!";
 
 export type NavLink = { title: string; href: string; description: string };

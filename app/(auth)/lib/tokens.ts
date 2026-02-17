@@ -1,4 +1,3 @@
-"server-only";
 
 import prisma from "@/lib/prisma";
 import { addMilliseconds } from "date-fns";

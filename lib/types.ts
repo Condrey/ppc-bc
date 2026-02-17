@@ -152,9 +152,9 @@ export type ParentApplicationData =
 // Meeting
 // Applicant
 export const meetingDataInclude = {
-  invitedMembers: true,
+  invitedMembers: { select: userDataSelect },
   minute: true,
-  applications: true,
+  applications: { include: applicationDataInclude },
 } satisfies Prisma.MeetingInclude;
 export type MeetingData = Prisma.MeetingGetPayload<{
   include: typeof meetingDataInclude;

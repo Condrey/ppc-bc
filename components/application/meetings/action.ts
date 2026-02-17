@@ -1,8 +1,17 @@
 "use server";
 
-import { Committee } from "@/lib/generated/prisma/enums";
+import { validateRequest } from "@/app/(auth)/auth";
+import { myPrivileges } from "@/lib/enums";
+import { Application } from "@/lib/generated/prisma/browser";
+import {
+  ApplicationStatus,
+  Committee,
+  MeetingStatus,
+  Role,
+} from "@/lib/generated/prisma/enums";
 import prisma from "@/lib/prisma";
 import { meetingDataInclude } from "@/lib/types";
+import { meetingSchema, MeetingSchema } from "@/lib/validation";
 import { cache } from "react";
 
 async function allMeetings() {
@@ -22,15 +31,85 @@ async function allCommitteeMeetings(committee: Committee) {
 }
 export const getAllCommitteeMeetings = cache(allCommitteeMeetings);
 
-// export async function upsertUser(
-//   input: SignUpSchema,
-// ): Promise<string | UserData> {
-//   const { email, name, role, username, id } = signUpSchema.parse(input);
-//   // apply auth
-//   return await prisma.user.upsert({
-//     where: { email },
-//     create: { email, name, passwordHash, role, username: _username },
-//     update: { email, name, role, username: _username },
-//     select: userDataSelect,
-//   });
-// }
+async function meetingById(id: string) {
+  return await prisma.meeting.findUnique({
+    where: { id },
+    include: meetingDataInclude,
+  });
+}
+export const getMeetingById = cache(meetingById);
+
+export async function upsertMeeting(input: MeetingSchema) {
+  const {
+    committee,
+    sendInvitations,
+    title,
+    happeningOn,
+    message,
+    postponedOn,
+    venue,
+    id,
+  } = meetingSchema.parse(input);
+
+  const { user } = await validateRequest();
+  const isAuthorized =
+    !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
+  if (!isAuthorized) throw Error("Unauthorized");
+
+  return await prisma.meeting.upsert({
+    where: { id },
+    create: {
+      committee,
+      sendInvitations,
+      title,
+      happeningOn,
+      message,
+      postponedOn,
+      venue,
+      status: MeetingStatus.PENDING,
+    },
+    update: {
+      committee,
+      sendInvitations,
+      title,
+      happeningOn,
+      message,
+      postponedOn,
+      venue,
+    },
+  });
+}
+
+export async function startMeeting(meetingId: string) {
+  const { user } = await validateRequest();
+  const isAuthorized =
+    !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
+  if (!isAuthorized) throw Error("Unauthorized");
+
+  await prisma.meeting.update({
+    where: { id: meetingId },
+    data: {
+      status: MeetingStatus.IN_PROGRESS,
+    },
+  });
+}
+
+export async function decideApplication({
+  application,
+  decision,
+}: {
+  application: Application;
+  decision: ApplicationStatus;
+}) {
+  const { user } = await validateRequest();
+  const isAuthorized =
+    !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
+  if (!isAuthorized) throw Error("Unauthorized");
+  const { id } = application;
+  await prisma.application.update({
+    where: { id },
+    data: {
+      status: decision,
+    },
+  });
+}

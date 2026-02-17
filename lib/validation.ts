@@ -3,6 +3,7 @@ import {
   ApplicationDecision,
   ApplicationStatus,
   ApplicationType,
+  Committee,
   FeeAssessmentType,
   LandUseType,
   NatureOfInterestInLand,
@@ -425,6 +426,30 @@ export const parentApplicationSchema = z
     }
   });
 export type ParentApplicationSchema = z.infer<typeof parentApplicationSchema>;
+
+// Meeting
+export const meetingSchema = z
+  .object({
+    id: z.string().optional().describe("a random UUIDv4"),
+    committee: z.enum(Committee, { error: "" }),
+    title: z.string().min(1, "Please add a meeting title."),
+    message: z.string().optional().nullable(),
+    // invitedMembers: z.string().optional().nullable(),
+    venue: z.string().min(1, "Please indicate the venue"),
+    sendInvitations: z.boolean(),
+    happeningOn: z.date({ error: "Indicate meeting date" }),
+    postponedOn: z.date().optional().nullable(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.sendInvitations && !data.message) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["message"],
+        message: "Since you are sending invitations, add a message",
+      });
+    }
+  });
+export type MeetingSchema = z.infer<typeof meetingSchema>;
 
 // miscellaneous
 export const emailSchema = z.object({ email: z.email().trim() });

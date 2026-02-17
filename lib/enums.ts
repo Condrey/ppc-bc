@@ -5,6 +5,7 @@ import {
   Committee,
   FeeAssessmentType,
   LandUseType,
+  MeetingStatus,
   NatureOfInterestInLand,
   PaymentMethod,
   Role,
@@ -43,6 +44,7 @@ export const applicationStatuses: Record<
   ApplicationStatus,
   {
     title: string;
+    verb: string;
     variant:
       | "default"
       | "secondary"
@@ -55,26 +57,32 @@ export const applicationStatuses: Record<
   SUBMITTED: {
     title: "Submitted",
     variant: "default",
+    verb: "submit",
   },
   UNDER_REVIEW: {
     title: "Under review",
     variant: "outline",
+    verb: "review",
   },
   INSPECTED: {
     title: "Inspected",
     variant: "warning",
+    verb: "inspec",
   },
   APPROVED: {
     title: "Approved",
     variant: "success",
+    verb: "approve",
   },
   DEFERRED: {
     title: "Deferred",
     variant: "secondary",
+    verb: "defer",
   },
   REJECTED: {
     title: "Rejected",
     variant: "destructive",
+    verb: "reject",
   },
 };
 
@@ -325,5 +333,37 @@ export const committees: Record<
   BC: {
     title: "Building Control",
     description: "The committee for building",
+  },
+};
+
+export const allMeetingStatuses = Object.values(MeetingStatus);
+export const meetingStatuses: Record<
+  MeetingStatus,
+  {
+    title: string;
+    variant:
+      | "default"
+      | "secondary"
+      | "destructive"
+      | "outline"
+      | "success"
+      | "warning";
+  }
+> = {
+  PENDING: {
+    title: "Pending",
+    variant: "warning",
+  },
+  IN_PROGRESS: {
+    title: "In progress",
+    variant: "success",
+  },
+  COMPLETED: {
+    title: "Completed",
+    variant: "success",
+  },
+  POSTPONED: {
+    title: "Postponed",
+    variant: "default",
   },
 };

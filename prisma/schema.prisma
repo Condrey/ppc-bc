@@ -454,17 +454,18 @@ model Meeting {
   id              String        @id @default(uuid())
   committee       Committee     @default(PPC)
   title           String
+  venue           String
   message         String?
   minute          Minute?       @relation(fields: [minuteId], references: [id])
   applications    Application[]
   invitedMembers  User[]
   sendInvitations Boolean       @default(true)
-  happeningOn     DateTime?
+  happeningOn     DateTime
   postponedOn     DateTime?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-
-  minuteId String?
+  minuteId        String?
+  status          MeetingStatus @default(PENDING)
 }
 
 model Minute {
@@ -544,6 +545,13 @@ enum WorkflowStageStatus {
   PENDING
   IN_PROGRESS
   COMPLETED
+}
+
+enum MeetingStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  POSTPONED
 }
 
 enum DocumentType {
