@@ -135,7 +135,7 @@ export default function FormAddEditPpaForm1LandApplication({
             <Form {...form}>
               <form onSubmit={form.handleSubmit(handleFormSubmit)}>
                 {/* <pre>{JSON.stringify(form.watch(), null, 2)}</pre> */}
-                {/* <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre> */}
+                <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre>
                 <div className="grid lg:grid-cols-2 gap-6">
                   <div className="space-y-6">
                     <ApplicationSection

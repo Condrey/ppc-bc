@@ -288,17 +288,19 @@ export const parcelSchema = z.object({
   plotNumber: z.string().trim().min(1, "Missing Plot Number"),
   parcelNumber: z.string().optional().nullable(),
   areaSqMeters: z.number().positive().optional().nullable(),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  geometry: z.preprocess((val: any) => {
-    if (typeof val === "string") {
-      try {
-        return JSON.parse(val) as GeoJSONType;
-      } catch {
-        return undefined;
+  geometry: z
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .preprocess((val: any) => {
+      if (typeof val === "string") {
+        try {
+          return JSON.parse(val) as GeoJSONType;
+        } catch {
+          return undefined;
+        }
       }
-    }
-    return val;
-  }, geometrySchema),
+      return val;
+    }, geometrySchema)
+    .optional(),
   // geometry: geometrySchema.transform((val) => JSON.stringify(val,null,2)),
 });
 
