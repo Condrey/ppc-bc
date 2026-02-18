@@ -9,10 +9,9 @@ import { getApplicationNumber, sanitizeFilename } from "@/lib/utils";
 import { put } from "@vercel/blob";
 import * as carbone from "carbone";
 import { formatDate } from "date-fns";
-import { NextRequest, NextResponse } from "next/server";
 import * as path from "path";
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: Request, res: Response) {
   console.info("Downloading PPA1 form...");
   const body = await req.json();
   const application = body as ApplicationData;
@@ -99,13 +98,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     // return msg
     const msg = `Successfully downloaded the PPA1 form`;
-    return NextResponse.json(
+    return Response.json(
       { message: msg, url: blob.downloadUrl, isError: false },
       { status: 200, statusText: msg },
     );
   } catch (error) {
     console.error("Error downloading Ppa1 form:", error);
-    return NextResponse.json(
+    return Response.json(
       { message: `PPA1 form download failed: ${error}`, isError: true },
       { status: 500, statusText: "Internal Server Error" },
     );
