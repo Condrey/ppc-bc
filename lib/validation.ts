@@ -330,7 +330,7 @@ export const siteSchema = z.object({
   percentageSizeOfBuildingAvailableSpace: z.number().optional().nullable(),
   hasNationalWater: z.boolean(),
   hasElectricity: z.boolean({ error: "Please make a selection" }),
-  distanceFromFeatures: distanceFromFeaturesSchema.optional(),
+  distanceFromFeatures: distanceFromFeaturesSchema.nullish(),
 });
 export type SiteSchema = z.infer<typeof siteSchema>;
 

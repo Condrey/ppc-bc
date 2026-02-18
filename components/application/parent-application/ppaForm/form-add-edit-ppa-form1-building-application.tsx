@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { EmptyContainer } from "@/components/query-container/empty-container";
 import ErrorContainer from "@/components/query-container/error-container";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -61,7 +62,6 @@ export default function FormAddEditPpaForm1BuildingApplication({
           type: ApplicationType.BUILDING,
           status: ApplicationStatus.SUBMITTED,
         } as ApplicationSchema),
-      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
       natureOfInterest: buildingApplication?.natureOfInterest!,
       address: buildingApplication?.address || {
         district: "Lira City",
