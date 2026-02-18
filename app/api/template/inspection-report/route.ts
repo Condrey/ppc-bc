@@ -7,7 +7,6 @@ import { formatDate } from "date-fns";
 import * as path from "path";
 
 export async function POST(req: Request, res: Response) {
-  console.info("Downloading PPA1 form...");
   const body = await req.json();
   const { application, inspection } = body as {
     application: ApplicationData;
