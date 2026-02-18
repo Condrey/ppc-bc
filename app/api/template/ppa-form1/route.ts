@@ -12,10 +12,7 @@ import { formatDate } from "date-fns";
 import { NextRequest } from "next/server";
 import * as path from "path";
 
-export async function POST(
-  req: NextRequest,
-  context: { params: Promise<{ name: string }> },
-) {
+export async function POST(req: NextRequest) {
   console.info("Downloading PPA1 form...");
   const body = await req.json();
   const application = body as ApplicationData;

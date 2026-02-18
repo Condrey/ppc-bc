@@ -7,10 +7,7 @@ import { formatDate } from "date-fns";
 import { NextRequest } from "next/server";
 import * as path from "path";
 
-export async function POST(
-  req: NextRequest,
-  context: { params: Promise<{ name: string }> },
-) {
+export async function POST(req: NextRequest) {
   const body = await req.json();
   const { application, inspection } = body as {
     application: ApplicationData;
