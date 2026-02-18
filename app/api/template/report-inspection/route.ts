@@ -4,9 +4,13 @@ import { getApplicationNumber, sanitizeFilename } from "@/lib/utils";
 import { put } from "@vercel/blob";
 import * as carbone from "carbone";
 import { formatDate } from "date-fns";
+import { NextRequest } from "next/server";
 import * as path from "path";
 
-export async function POST(req: Request, res: Response) {
+export async function POST(
+  req: NextRequest,
+  context: { params: Promise<{ name: string }> },
+) {
   const body = await req.json();
   const { application, inspection } = body as {
     application: ApplicationData;
