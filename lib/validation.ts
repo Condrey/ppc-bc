@@ -10,7 +10,6 @@ import {
   PaymentMethod,
   Role,
 } from "./generated/prisma/enums";
-import { GeoJSONType } from "./types";
 import { formatPersonName } from "./utils";
 const requiredString = z.string().trim();
 
@@ -293,7 +292,7 @@ export const parcelSchema = z.object({
     .preprocess((val: any) => {
       if (typeof val === "string") {
         try {
-          return JSON.parse(val) as GeoJSONType;
+          return JSON.parse(val);
         } catch {
           return undefined;
         }

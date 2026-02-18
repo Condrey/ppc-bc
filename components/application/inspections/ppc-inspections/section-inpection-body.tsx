@@ -18,12 +18,14 @@ import {
 import { ApplicationData, InspectionData } from "@/lib/types";
 import { cn, getApplicationNumber } from "@/lib/utils";
 import { formatDate } from "date-fns";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, DownloadIcon } from "lucide-react";
+import ButtonAddInspection from "./button-add-inspection";
+import ButtonDownloadInspectionReport from "./parent-application/button-download-inspection-report";
 import ButtonEditBuildingInspection from "./parent-application/button-edit-building-inspection";
 import ButtonEditLandInspection from "./parent-application/button-edit-land-inspection";
 
 interface Props {
-  inspection: InspectionData;
+  inspection: InspectionData | undefined;
   application: ApplicationData;
 }
 
@@ -39,10 +41,23 @@ export default function SectionInspectionBody({
     buildingApplication,
     owners,
     inspections,
+    id: applicationId,
   } = application;
   const numberOfInspections = inspections.length;
   const manyInspections = numberOfInspections > 3;
   const isLandApplication = type === ApplicationType.LAND;
+  if (!inspection) {
+    return (
+      <EmptyContainer
+        title="Not inspected"
+        description="This site was not inspected by the committee"
+      >
+        <ButtonAddInspection applicationId={applicationId}>
+          Start inspection
+        </ButtonAddInspection>
+      </EmptyContainer>
+    );
+  }
 
   const { carriedOn, decision, visitReport, inspectors } = inspection;
   const { title: decisionMade } = applicationDecisions[decision];
@@ -57,6 +72,16 @@ export default function SectionInspectionBody({
         manyInspections && "max-w-none",
       )}
     >
+      <div>
+        <ButtonDownloadInspectionReport
+          application={application}
+          inspection={inspection}
+          size={"sm"}
+          className=""
+        >
+          <DownloadIcon className="inline mr-2 " /> inspection
+        </ButtonDownloadInspectionReport>
+      </div>
       <p className="max-w-prose tracking-wide leading-loose text-justify hyphens-auto">
         <span className="max-w-prose">
           This inspection was carried out on{" "}

@@ -45,7 +45,8 @@ export default function FormAddEditParentApplication({
       access: undefined,
       parcel: {
         ...parentApplication.parcel,
-        geometry: parentApplication.parcel?.geometry as GeoJSONType,
+        geometry:
+          (parentApplication.parcel?.geometry as GeoJSONType) || undefined,
       } as ParcelSchema,
     },
   });

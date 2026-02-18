@@ -44,6 +44,14 @@ export async function upsertPpaForm1ForLandApplication(
           _max: { applicationNo: true },
         });
         const newApplicationNumber = (lastApplicationNumber ?? 0) + 1;
+        const applicationFee =
+          natureOfInterest === "FREEHOLD"
+            ? 59000
+            : natureOfInterest === "LEASE"
+              ? 118000
+              : natureOfInterest === "CUSTOMARY_TENANT"
+                ? 10000
+                : 59000;
         const { applicationId } = await tx.landApplication.create({
           data: {
             natureOfInterest,
@@ -103,7 +111,7 @@ export async function upsertPpaForm1ForLandApplication(
         await tx.feeAssessment.create({
           data: {
             applicationId,
-            amountAssessed: 59000,
+            amountAssessed: applicationFee,
             assessmentType: FeeAssessmentType.LAND_APPLICATION,
             currency: "Ugx",
             assessedById: application?.applicant.userId ?? "",

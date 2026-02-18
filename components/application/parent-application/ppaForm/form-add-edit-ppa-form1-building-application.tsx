@@ -84,7 +84,8 @@ export default function FormAddEditPpaForm1BuildingApplication({
       },
       parcel: {
         ...buildingApplication?.parcel,
-        geometry: buildingApplication?.parcel?.geometry as GeoJSONType,
+        geometry:
+          (buildingApplication?.parcel?.geometry as GeoJSONType) || undefined,
       } as ParcelSchema,
       access: buildingApplication?.access || {
         existingPath: false,

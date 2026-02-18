@@ -125,7 +125,7 @@ export const landApplicationDataInclude = {
   landUse: true,
   parcel: true,
   ppaForm1: { include: { utility: true, landApplication: true } },
-  site: true,
+  site: { include: { distanceFromFeatures: true } },
 } satisfies Prisma.LandApplicationInclude;
 export type LandApplicationData = Prisma.LandApplicationGetPayload<{
   include: typeof landApplicationDataInclude;
@@ -136,7 +136,7 @@ export const buildingApplicationDataInclude = {
   address: true,
   application: { include: applicationDataInclude },
   landUse: true,
-  site: true,
+  site: { include: { distanceFromFeatures: true } },
   access: true,
   parcel: true,
   ppaForm1: { include: { utility: true, landApplication: true } },

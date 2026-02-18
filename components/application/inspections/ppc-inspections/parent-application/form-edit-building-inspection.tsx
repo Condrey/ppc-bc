@@ -75,7 +75,8 @@ export default function FormAddEditBuildingInspection({
       },
       parcel: {
         ...buildingApplication.parcel,
-        geometry: buildingApplication.parcel?.geometry as GeoJSONType,
+        geometry:
+          (buildingApplication.parcel?.geometry as GeoJSONType) || undefined,
         blockNumber: buildingApplication.parcel?.blockNumber || "",
         plotNumber: buildingApplication.parcel?.plotNumber || "",
       },

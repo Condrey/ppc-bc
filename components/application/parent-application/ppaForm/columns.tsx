@@ -13,12 +13,19 @@ import { ParentApplicationData } from "@/lib/types";
 import { getApplicationNumber } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns";
-import { DotIcon, DropletsIcon, Edit3Icon, LightbulbIcon } from "lucide-react";
+import {
+  DotIcon,
+  DownloadIcon,
+  DropletsIcon,
+  Edit3Icon,
+  LightbulbIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useTransition } from "react";
 import { DataTableColumnHeader } from "../../../data-table/data-table-column-header";
 import CommandItemApplicant from "../application/applicant/command-item-applicant";
 import ButtonAddEditPpaForm1 from "./button-add-edit-ppa-form1";
+import ButtonDownloadPpaForm1 from "./button-download-ppa-form1";
 
 export const usePpaForm1Columns: ColumnDef<ParentApplicationData>[] = [
   {
@@ -162,11 +169,12 @@ export const usePpaForm1Columns: ColumnDef<ParentApplicationData>[] = [
       return <DataTableColumnHeader column={column} title="Actions" />;
     },
     cell({ row }) {
+      const { id, application } = row.original;
       const [isPending, startTransition] = useTransition();
       const { getNavigationLinkWithPathnameWithoutUpdate } =
         useCustomSearchParams();
       const url = getNavigationLinkWithPathnameWithoutUpdate(
-        `/admin/registration/ppa-form${row.original.id}`,
+        `/admin/registration/ppa-form${id}`,
       );
       return (
         <div className="flex gap-2 items-center">
@@ -177,7 +185,13 @@ export const usePpaForm1Columns: ColumnDef<ParentApplicationData>[] = [
           >
             <Edit3Icon />
           </ButtonAddEditPpaForm1>
-
+          <ButtonDownloadPpaForm1
+            application={application}
+            size={"icon-sm"}
+            variant={"outline"}
+          >
+            <DownloadIcon />
+          </ButtonDownloadPpaForm1>
           <Link
             href={url}
             className={buttonVariants({ size: "sm" })}

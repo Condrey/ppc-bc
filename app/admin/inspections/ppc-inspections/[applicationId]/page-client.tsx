@@ -1,6 +1,7 @@
 "use client";
 
 import { getApplicationInspections } from "@/components/application/action";
+import ButtonDownloadInspectionReport from "@/components/application/inspections/ppc-inspections/parent-application/button-download-inspection-report";
 import ButtonEditBuildingInspection from "@/components/application/inspections/ppc-inspections/parent-application/button-edit-building-inspection";
 import ButtonEditLandInspection from "@/components/application/inspections/ppc-inspections/parent-application/button-edit-land-inspection";
 import SectionHeader from "@/components/application/inspections/ppc-inspections/section-header";
@@ -18,6 +19,7 @@ import { ApplicationData } from "@/lib/types";
 import { cn, formatNumber } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { formatDate } from "date-fns";
+import { DownloadIcon } from "lucide-react";
 
 interface Props {
   application: ApplicationData;
@@ -95,21 +97,31 @@ export function PageClient({ application: initialData }: Props) {
                       : "text-success",
                 )}
               />
-              {isLandApplication ? (
-                <ButtonEditLandInspection
+              <div className="flex gap-2 items-center">
+                {isLandApplication ? (
+                  <ButtonEditLandInspection
+                    inspection={i}
+                    landApplication={landApplication!}
+                  >
+                    Update inspection
+                  </ButtonEditLandInspection>
+                ) : (
+                  <ButtonEditBuildingInspection
+                    inspection={i}
+                    buildingApplication={buildingApplication!}
+                  >
+                    Update inspection
+                  </ButtonEditBuildingInspection>
+                )}
+                <ButtonDownloadInspectionReport
+                  application={application}
                   inspection={i}
-                  landApplication={landApplication!}
+                  size={"icon"}
+                  variant={"outline"}
                 >
-                  Update inspection
-                </ButtonEditLandInspection>
-              ) : (
-                <ButtonEditBuildingInspection
-                  inspection={i}
-                  buildingApplication={buildingApplication!}
-                >
-                  Update inspection
-                </ButtonEditBuildingInspection>
-              )}
+                  <DownloadIcon />
+                </ButtonDownloadInspectionReport>
+              </div>
             </div>
             <SectionHeader application={application} />
             <SectionInspectionBody application={application} inspection={i} />

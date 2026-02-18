@@ -115,6 +115,6 @@ export async function deleteSessionById(sessionId: string): Promise<void> {
         id: sessionId,
       },
     }),
-    await deleteSessionTokenCookie(),
+    // await deleteSessionTokenCookie(),
   ]);
 }

@@ -56,28 +56,41 @@ export async function upsertMeeting(input: MeetingSchema) {
     !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
   if (!isAuthorized) throw Error("Unauthorized");
 
-  return await prisma.meeting.upsert({
-    where: { id },
-    create: {
-      committee,
-      sendInvitations,
-      title,
-      happeningOn,
-      message,
-      postponedOn,
-      venue,
-      status: MeetingStatus.PENDING,
+  return await prisma.$transaction(
+    async (tx) => {
+      const applications = await tx.application.findMany({
+        where: {
+          meetingId: { equals: null },
+          // status: { in: ["INSPECTED", "SUBMITTED", "UNDER_REVIEW"] },
+        },
+      });
+
+      await tx.meeting.upsert({
+        where: { id },
+        create: {
+          committee,
+          sendInvitations,
+          title,
+          happeningOn,
+          message,
+          postponedOn,
+          venue,
+          status: MeetingStatus.PENDING,
+          applications: { connect: applications.map((a) => ({ id: a.id })) },
+        },
+        update: {
+          committee,
+          sendInvitations,
+          title,
+          happeningOn,
+          message,
+          postponedOn,
+          venue,
+        },
+      });
     },
-    update: {
-      committee,
-      sendInvitations,
-      title,
-      happeningOn,
-      message,
-      postponedOn,
-      venue,
-    },
-  });
+    { maxWait: 18000, timeout: 18000 },
+  );
 }
 
 export async function startMeeting(meetingId: string) {

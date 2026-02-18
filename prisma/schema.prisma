@@ -76,7 +76,7 @@ model Applicant {
   address   String
   contact   String
   email     String?
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   applications  Application[]
@@ -143,9 +143,9 @@ model Application {
 model PpaForm1 {
   id                String           @id @default(uuid())
   landApplicationId String?          @unique
-  landApplication   LandApplication? @relation(fields: [landApplicationId], references: [id])
+  landApplication   LandApplication? @relation(fields: [landApplicationId], references: [id], onDelete: Cascade)
 
-  buildingApplication   BuildingApplication? @relation(fields: [buildingApplicationId], references: [id])
+  buildingApplication   BuildingApplication? @relation(fields: [buildingApplicationId], references: [id], onDelete: Cascade)
   buildingApplicationId String?              @unique
 
   applicationNumber       Int     @default(autoincrement())
@@ -160,7 +160,7 @@ model PpaForm1 {
 model LandApplication {
   id            String      @id @default(uuid())
   applicationId String      @unique
-  application   Application @relation(fields: [applicationId], references: [id])
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   natureOfInterest NatureOfInterestInLand
   addressId        String
@@ -203,7 +203,7 @@ model Access {
 model BuildingApplication {
   id            String      @id @default(uuid())
   applicationId String      @unique
-  application   Application @relation(fields: [applicationId], references: [id])
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   natureOfInterest NatureOfInterestInLand
 
@@ -280,7 +280,7 @@ model DistanceFromFeatures {
 model Inspection {
   id            String      @id @default(uuid())
   applicationId String
-  application   Application @relation(fields: [applicationId], references: [id])
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   carriedOn   DateTime            @default(now())
   visitReport String
@@ -311,8 +311,8 @@ model Document {
   signatures Signature[]
 
   createdAt   DateTime     @default(now())
-  application Application? @relation(fields: [applicationId], references: [id])
-  inspection  Inspection?  @relation(fields: [inspectionId], references: [id])
+  application Application? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  inspection  Inspection?  @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
 }
 
 model Signature {
@@ -335,7 +335,7 @@ model Signature {
 model WorkflowStage {
   id            String      @id @default(uuid())
   applicationId String
-  application   Application @relation(fields: [applicationId], references: [id])
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   stage    WorkflowStageType
   status   WorkflowStageStatus
@@ -356,7 +356,7 @@ model WorkflowStage {
 model FeeAssessment {
   id            String      @id @default(uuid())
   applicationId String
-  application   Application @relation(fields: [applicationId], references: [id])
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   assessmentType FeeAssessmentType
   amountAssessed Float
@@ -372,7 +372,7 @@ model FeeAssessment {
 model Payment {
   id              String        @id @default(uuid())
   feeAssessmentId String
-  feeAssessment   FeeAssessment @relation(fields: [feeAssessmentId], references: [id])
+  feeAssessment   FeeAssessment @relation(fields: [feeAssessmentId], references: [id], onDelete: Cascade)
 
   amountPaid      Float
   paymentMethod   PaymentMethod
@@ -392,7 +392,7 @@ model Payment {
 model Appeal {
   id            String      @id @default(uuid())
   applicationId String
-  application   Application @relation(fields: [applicationId], references: [id])
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   appealReason String
   status       AppealStatus
@@ -414,7 +414,7 @@ model Appeal {
 model Resubmission {
   id            String      @id @default(uuid())
   applicationId String
-  application   Application @relation(fields: [applicationId], references: [id])
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   reason          String
   resubmittedById String
@@ -485,7 +485,7 @@ model Minute {
 model MeetingAttendance {
   id        String  @id @default(uuid())
   attendees User[]
-  minute    Minute? @relation(fields: [minuteId], references: [id])
+  minute    Minute? @relation(fields: [minuteId], references: [id], onDelete: Cascade)
   minuteId  String?
 }
 

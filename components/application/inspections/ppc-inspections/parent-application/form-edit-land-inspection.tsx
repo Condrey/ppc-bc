@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import AddressSection from "@/components/application/parent-application/ppaForm/form-components/address-section";
 import { Button } from "@/components/ui/button";
 import { Form, FormFooter } from "@/components/ui/form";
@@ -51,7 +52,7 @@ export default function FormAddEditLandInspection({
       ...landApplication,
       site: {
         ...site,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+
         distanceFromFeatures: site?.distanceFromFeatures!,
       } as SiteSchema,
       inspection: {
@@ -65,7 +66,8 @@ export default function FormAddEditLandInspection({
       },
       parcel: {
         ...landApplication.parcel,
-        geometry: landApplication.parcel?.geometry as GeoJSONType,
+        geometry:
+          (landApplication.parcel?.geometry as GeoJSONType) || undefined,
         blockNumber: landApplication.parcel?.blockNumber || "",
         plotNumber: landApplication.parcel?.plotNumber || "",
       },

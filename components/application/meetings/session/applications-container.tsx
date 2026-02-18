@@ -67,9 +67,10 @@ function ApplicationContainer({ application }: ApplicationContainerProps) {
   const { natureOfInterest, parcel } = parentApplication!;
   const { title: decisionMade } = applicationStatuses[decision];
   const { title } = naturesOfInterestInLand[natureOfInterest];
-  const inspection = inspections[0]!;
+  const inspection = inspections[inspections.length - 1];
   return (
     <div className="space-y-6">
+      <pre>{JSON.stringify(application, null, 2)}</pre>
       <div className="flex items-center justify-between">
         <TypographyH4
           text={`[Committee ${decisionMade}]`}

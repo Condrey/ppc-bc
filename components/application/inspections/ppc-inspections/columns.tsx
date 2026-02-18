@@ -21,6 +21,7 @@ import {
   CheckIcon,
   CircleIcon,
   DotIcon,
+  DownloadIcon,
   DropletsIcon,
   LightbulbIcon,
 } from "lucide-react";
@@ -28,6 +29,7 @@ import Link from "next/link";
 import { useTransition } from "react";
 import { DataTableColumnHeader } from "../../../data-table/data-table-column-header";
 import ButtonAddInspection from "./button-add-inspection";
+import ButtonDownloadInspectionReport from "./parent-application/button-download-inspection-report";
 
 export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
   {
@@ -301,13 +303,23 @@ export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
               Inspect
             </ButtonAddInspection>
           ) : (
-            <Link
-              href={url}
-              onClick={() => startTransition(() => {})}
-              className={buttonVariants({ size: "sm" })}
-            >
-              {isPending && <Spinner className="inline" />} View
-            </Link>
+            <>
+              <ButtonDownloadInspectionReport
+                application={row.original.application}
+                inspection={inspections[inspections.length - 1]}
+                size={"icon-sm"}
+                variant={"outline"}
+              >
+                <DownloadIcon />
+              </ButtonDownloadInspectionReport>
+              <Link
+                href={url}
+                onClick={() => startTransition(() => {})}
+                className={buttonVariants({ size: "sm" })}
+              >
+                {isPending && <Spinner className="inline" />} View
+              </Link>
+            </>
           )}
         </div>
       );
