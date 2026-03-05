@@ -18,7 +18,7 @@ import Link from "next/link";
 export default async function ComponentContacts() {
   const committeeMembers = await getAllCommitteeMembersWithoutLeaders();
   return (
-    <section id="contacts" className="space-y-6 mx-auto max-w-4xl">
+    <section id="contacts" className="space-y-6 mx-auto max-w-5xl ">
       <TypographyH1 text="Contacts" className="lg:uppercase" />
       <p className="max-w-prose">
         Need help with your application or have a concern? Send a message and

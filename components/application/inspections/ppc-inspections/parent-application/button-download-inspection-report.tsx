@@ -20,7 +20,6 @@ export default function ButtonDownloadInspectionReport({
 
   async function handleOnClickEvent() {
     startTransition(async () => {
-      const value = { application, inspection };
       try {
         const response = await ky.post(`/api/template/report-inspection`, {
           body: JSON.stringify({ application, inspection }),
