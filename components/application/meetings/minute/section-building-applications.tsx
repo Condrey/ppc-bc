@@ -12,7 +12,7 @@ import {
 import { applicationStatuses, landUseTypes } from "@/lib/enums";
 import { ApplicationStatus } from "@/lib/generated/prisma/enums";
 import { ApplicationData, MeetingData } from "@/lib/types";
-import { formatNumber } from "@/lib/utils";
+import { formatNumber, getApplicationNumber } from "@/lib/utils";
 
 export default function SectionBuildingApplications({
   meeting,
@@ -92,8 +92,16 @@ function DecisionSection({
   return (
     <>
       {parentApplications.map((parentApplication, index) => {
-        const { id, buildingApplication, owners, status, inspections } =
-          parentApplication;
+        const {
+          id,
+          buildingApplication,
+          owners,
+          status,
+          inspections,
+          applicationNo,
+          year,
+          type,
+        } = parentApplication;
         const inspection = !inspections.length
           ? undefined
           : inspections[inspections.length - 1];
@@ -110,7 +118,12 @@ function DecisionSection({
             <TableCell>
               {String(initialIndex + index + 1).padStart(2, "0")}
             </TableCell>
-            <TableCell>{owners}.</TableCell>
+            <TableCell className="space-y-1.5">
+              <p className="capitalize">{owners}.</p>
+              <p className="font-semibold text-muted-foreground slashed-zero font-mono">
+                {getApplicationNumber(applicationNo, year, type)}
+              </p>
+            </TableCell>
             <TableCell>
               <p>
                 {`${cell ? `${cell} cell, ` : ""}${village ? `${village} village, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty}, ` : ""} ${district}`}
@@ -120,7 +133,7 @@ function DecisionSection({
             <TableCell>
               {_landUseType === "OTHERS" ? otherLandUseType : formDesc}
             </TableCell>
-            <TableCell>
+            <TableCell className="space-y-1.5">
               <Badge variant={variant}>{applicationStatus}</Badge>
               {(status === "DEFERRED" || status === "REJECTED") &&
                 inspection && <p>{inspection.visitReport}</p>}

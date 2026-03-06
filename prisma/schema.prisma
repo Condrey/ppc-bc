@@ -596,6 +596,8 @@ enum AppealStatus {
 
 enum NatureOfInterestInLand {
   REGISTERED_OWNER
+  INITIAL_LEASE
+  LEASE_EXTENSION
   LEASE
   TENANT_BY_OCCUPANCY
   FREEHOLD

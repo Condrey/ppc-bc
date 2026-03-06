@@ -162,6 +162,16 @@ export const naturesOfInterestInLand: Record<
     formDesc: "Customary tenant",
     variant: "outline",
   },
+  INITIAL_LEASE: {
+    formDesc: "As initial leasehold",
+    title: "Initial Leasehold",
+    variant: "outline",
+  },
+  LEASE_EXTENSION: {
+    formDesc: "As a leasehold extension",
+    title: "Leasehold extension",
+    variant: "outline",
+  },
 };
 
 export const allLandUseTypes = Object.values(LandUseType);

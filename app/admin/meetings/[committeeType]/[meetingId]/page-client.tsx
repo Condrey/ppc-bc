@@ -3,6 +3,7 @@
 import CardMeetingApplications from "@/components/application/meetings/card-meeting-applications";
 import CardStartMeeting from "@/components/application/meetings/card-start-meeting";
 import ButtonAddEditMinute from "@/components/application/meetings/minute/button-add-edit-minute";
+import ButtonDownloadMinute from "@/components/application/meetings/minute/button-download-minute";
 import ListOfMeetingMinutes from "@/components/application/meetings/minute/list-of-meeting-minutes";
 import { useMeetingQuery } from "@/components/application/meetings/query";
 import CommandItemUser from "@/components/application/users/command-item-user";
@@ -11,6 +12,7 @@ import { TypographyH2 } from "@/components/headings";
 import { EmptyContainer } from "@/components/query-container/empty-container";
 import ErrorContainer from "@/components/query-container/error-container";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -18,11 +20,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Item, ItemContent, ItemTitle } from "@/components/ui/item";
 import { committees, meetingStatuses } from "@/lib/enums";
 import { Committee } from "@/lib/generated/prisma/enums";
 import { MeetingData } from "@/lib/types";
-import { AlertTriangleIcon } from "lucide-react";
+import {
+  AlertTriangleIcon,
+  DownloadIcon,
+  Edit3Icon,
+  MoreVerticalIcon,
+  Trash2Icon,
+} from "lucide-react";
 import { notFound } from "next/navigation";
 
 interface Props {
@@ -91,13 +108,41 @@ export default function PageClient({ meeting: initialData, committee }: Props) {
                   You can view the minute details in the minutes section below.
                 </CardDescription>
               </div>
-              <ButtonAddEditMinute
-                meeting={meeting}
-                minute={minute}
-                className="ml-3"
-              >
-                Update minute
-              </ButtonAddEditMinute>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant={"ghost"} size={"icon-lg"} className="">
+                    <span className="sr-only">More actions</span>
+                    <MoreVerticalIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel>Minute Actions</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <ButtonDownloadMinute meeting={meeting} variant={"ghost"}>
+                        <DownloadIcon className="inline mr-2" /> Download minute
+                      </ButtonDownloadMinute>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <ButtonAddEditMinute
+                        meeting={meeting}
+                        minute={minute}
+                        variant={"ghost"}
+                      >
+                        <Edit3Icon /> Update minute
+                      </ButtonAddEditMinute>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem variant="destructive" asChild>
+                      <Button variant={"ghost"}>
+                        <Trash2Icon />
+                        Delete Minute
+                      </Button>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </CardHeader>
           <CardContent>
