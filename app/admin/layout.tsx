@@ -28,8 +28,8 @@ export default async function Layout({
     <SessionProvider value={{ session, user }}>
       <div className="[--header-height:calc(--spacing(14))]">
         <SidebarProvider className="flex flex-col ">
-          <header className="sticky top-0 z-50 h-(--header-height) flex items-center w-full  bg-accent text-accent-foreground   dark:border-b">
-            <TopAppBar className="w-full max-w-9xl  py-2 mx-auto  px-3 " />
+          <header className="sticky top-0 z-50 h-(--header-height) flex items-center w-full  bg-accent text-accent-foreground border-b shadow-xl  dark:border-b">
+            <TopAppBar className="w-full max-w-9xl  py-2 mx-auto  px-3  " />
           </header>
           <div className="flex  flex-1 size-full ">
             <AppSidebar />

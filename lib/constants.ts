@@ -132,10 +132,10 @@ export const navLinks: NavLinkGroup[] = [
     description: "View Inspections and reports",
     icon: BubblesIcon,
     children: allCommittees.map((committee) => {
-      const { title, description } = committees[committee];
+      const { shortForm, description } = committees[committee];
       return {
         href: `/admin/meetings/${committee}`,
-        title,
+        title: `${shortForm} meeting`,
         description,
       };
     }),

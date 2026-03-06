@@ -333,16 +333,20 @@ export const committees: Record<
   {
     title: string;
     description: string;
+    shortForm: string;
     // icon: LucideIcon;
   }
 > = {
   PPC: {
     title: "Physical Planning Committee",
     description: "The committee for land use",
+
+    shortForm: "PPC",
   },
   BC: {
     title: "Building Control",
     description: "The committee for building",
+    shortForm: "BC",
   },
 };
 
