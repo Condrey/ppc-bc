@@ -51,6 +51,8 @@ export const getAllCommitteeMembersWithoutLeaders = cache(
 async function allRoleBasedUsers(role: Role) {
   return await prisma.user.findMany({
     where: { role, AND: { role: { not: Role.SUPER_ADMIN } } },
+    select: userDataSelect,
+    orderBy: { name: "asc" },
   });
 }
 

@@ -428,14 +428,55 @@ export const parentApplicationSchema = z
   });
 export type ParentApplicationSchema = z.infer<typeof parentApplicationSchema>;
 
+// Agenda
+export const agendaSchema = z.object({
+  id: z.string().optional().describe("a random UUIDv4"),
+  title: requiredString.min(1, "Missing agenda title"),
+  number: z.number(),
+  discussion: z.string().optional().nullable(),
+  wayForward: z.string().optional().nullable(),
+  shouldHaveBuildingApplications: z.boolean(),
+  shouldHaveLandApplications: z.boolean(),
+});
+export type AgendaSchema = z.infer<typeof agendaSchema>;
+
+// Minute
+export const minuteSchema = z
+  .object({
+    id: z.string().optional().describe("a random UUIDv4"),
+    meetingId: requiredString.min(1, "Missing meeting id"),
+    chairId: requiredString.min(1, "Missing chair of the meeting"),
+    secretaryId: requiredString.min(1, "Missing secretary of the meeting"),
+    agendas: z.array(agendaSchema),
+    absentMembersWithApology: z.array(z.object({ id: requiredString.min(1) })),
+    presentMembers: z.array(z.object({ id: requiredString.min(1) })),
+  })
+  .superRefine((data, ctx) => {
+    if (data.agendas.length === 0) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["agendas"],
+        message: "Add at least one agenda to the minute",
+      });
+    }
+    if (data.presentMembers.length < 2) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["presentMembers"],
+        message: "At least two members must be present in the meeting",
+      });
+    }
+  });
+export type MinuteSchema = z.infer<typeof minuteSchema>;
+
 // Meeting
 export const meetingSchema = z
   .object({
     id: z.string().optional().describe("a random UUIDv4"),
-    committee: z.enum(Committee, { error: "" }),
+    committee: z.enum(Committee, { error: "Please select a committee" }),
     title: z.string().min(1, "Please add a meeting title."),
     message: z.string().optional().nullable(),
-    // invitedMembers: z.string().optional().nullable(),
+    invitedMembers: z.array(z.object({ id: requiredString.min(1) })),
     venue: z.string().min(1, "Please indicate the venue"),
     sendInvitations: z.boolean(),
     happeningOn: z.date({ error: "Indicate meeting date" }),

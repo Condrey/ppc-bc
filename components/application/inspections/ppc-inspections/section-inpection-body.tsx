@@ -72,37 +72,40 @@ export default function SectionInspectionBody({
         manyInspections && "max-w-none",
       )}
     >
-      <div>
-        <ButtonDownloadInspectionReport
-          application={application}
-          inspection={inspection}
-          size={"sm"}
-          className=""
-        >
-          <DownloadIcon className="inline mr-2 " /> inspection
-        </ButtonDownloadInspectionReport>
-      </div>
-      <p className="max-w-prose tracking-wide leading-loose text-justify hyphens-auto">
-        <span className="max-w-prose">
-          This inspection was carried out on{" "}
-          <strong>{formatDate(carriedOn, "PPPp")}.</strong>
-        </span>
-        <span className="max-w-prose inline">
-          {" "}
-          The decision made by the inspectors is that the application{" "}
-          {getApplicationNumber(applicationNo, year, type)}{" "}
-          <strong
-            className={cn(
-              "",
-              (decision === ApplicationDecision.DEFERRED ||
-                decision === ApplicationDecision.REJECTED) &&
-                "text-destructive",
-            )}
+      <div className="space-y-2.5 max-w-3xl">
+        {!!visitReport && (
+          <ButtonDownloadInspectionReport
+            application={application}
+            inspection={inspection}
+            size={"sm"}
+            className="float-end ms-3"
+            variant={"outline"}
           >
-            {decisionMade}.
-          </strong>
-        </span>
-      </p>
+            <DownloadIcon className="inline mr-2 " /> download inspection report
+          </ButtonDownloadInspectionReport>
+        )}
+        <p className=" tracking-wide leading-loose text-justify hyphens-auto">
+          <span className="max-w-prose">
+            This inspection was carried out on{" "}
+            <strong>{formatDate(carriedOn, "PPPp")}.</strong>
+          </span>
+          <span className="max-w-prose inline">
+            {" "}
+            The decision made by the inspectors is that the application{" "}
+            {getApplicationNumber(applicationNo, year, type)}{" "}
+            <strong
+              className={cn(
+                "",
+                (decision === ApplicationDecision.DEFERRED ||
+                  decision === ApplicationDecision.REJECTED) &&
+                  "text-destructive",
+              )}
+            >
+              {decisionMade}.
+            </strong>
+          </span>
+        </p>
+      </div>
       {!visitReport ? (
         <EmptyContainer
           title="Incomplete inspection"

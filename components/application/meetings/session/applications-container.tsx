@@ -70,7 +70,7 @@ function ApplicationContainer({ application }: ApplicationContainerProps) {
   const inspection = inspections[inspections.length - 1];
   return (
     <div className="space-y-6">
-      <pre>{JSON.stringify(application, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(application, null, 2)}</pre> */}
       <div className="flex items-center justify-between">
         <TypographyH4
           text={`[Committee ${decisionMade}]`}
@@ -86,11 +86,12 @@ function ApplicationContainer({ application }: ApplicationContainerProps) {
                   : "text-muted-foreground animate-none",
           )}
         />
-        <ButtonGroup className="flex ms-auto items-center gap-0.5">
+        <ButtonGroup className="flex ms-auto items-center gap-0.5  ">
           <ButtonDecideApplication
             application={application}
             decision="REJECTED"
             variant="destructive"
+            disabled={decision === ApplicationStatus.REJECTED}
           >
             Reject
           </ButtonDecideApplication>
@@ -98,6 +99,7 @@ function ApplicationContainer({ application }: ApplicationContainerProps) {
             application={application}
             decision="DEFERRED"
             className="bg-warning"
+            disabled={decision === ApplicationStatus.DEFERRED}
           >
             Defer
           </ButtonDecideApplication>
@@ -105,6 +107,7 @@ function ApplicationContainer({ application }: ApplicationContainerProps) {
             application={application}
             decision="APPROVED"
             className="bg-success"
+            disabled={decision === ApplicationStatus.APPROVED}
           >
             Approve
           </ButtonDecideApplication>

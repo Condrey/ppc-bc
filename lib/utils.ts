@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { formatDuration, intervalToDuration } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import { applicationTypes } from "./enums";
-import { ApplicationType } from "./generated/prisma/enums";
+import { ApplicationType, Committee } from "./generated/prisma/enums";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -110,6 +110,17 @@ export const getApplicationNumber = (
   );
 };
 
+export const getMinuteNumber = ({
+  number,
+  date: now,
+  committee = "PPC",
+}: {
+  number: number;
+  date: Date;
+  committee?: Committee;
+}) => {
+  return `Minute No. LC ${committee} ${String(number).padStart(3, "0")}/${String(now.getMonth() + 1).padStart(2, "0")}/${now.getFullYear()}`;
+};
 // export const getAuthorizedUser = async (minRole: Role) => {
 //   const { user } = await validateRequest();
 //   const isAuthorized = !!user && myPrivileges[user.role].includes(minRole);
@@ -138,4 +149,17 @@ export const formatPersonName = (value: string) =>
 
 export function sanitizeFilename(name: string): string {
   return name.replace(/[\/\\:*?"<>|]/g, "-");
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function useDebounce<T extends (...args: any[]) => void>(
+  fn: T,
+  delay: number,
+) {
+  let timer: ReturnType<typeof setTimeout>;
+
+  return (...args: Parameters<T>) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  };
 }

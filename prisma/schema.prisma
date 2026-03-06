@@ -27,21 +27,21 @@ model User {
   emailVerificationTokens EmailVerificationToken[]
   sessions                Session[]
 
-  inspections         Inspection[]       @relation("InspectionTeam")
-  documents           Document[]
-  signatures          Signature[]
-  workflowStages      WorkflowStage[]
-  feeAssessments      FeeAssessment[]
-  payments            Payment[]
-  appeals             Appeal[]
-  applicants          Applicant[]
-  meeting             Meeting?           @relation(fields: [meetingId], references: [id])
-  meetingId           String?
-  meetingAttendance   MeetingAttendance? @relation(fields: [meetingAttendanceId], references: [id])
-  meetingAttendanceId String?
-  chairedMinutes      Minute[]           @relation("chaired_minutes")
-  minute              Minute?            @relation(fields: [minuteId], references: [id])
-  minuteId            String?
+  inspections              Inspection[]    @relation("InspectionTeam")
+  documents                Document[]
+  signatures               Signature[]
+  workflowStages           WorkflowStage[]
+  feeAssessments           FeeAssessment[]
+  payments                 Payment[]
+  appeals                  Appeal[]
+  applicants               Applicant[]
+  meeting                  Meeting?        @relation(fields: [meetingId], references: [id])
+  meetingId                String?
+  meetingAttendanceId      String?
+  chairedMinutes           Minute[]        @relation("chaired_minutes")
+  writtenMinutes           Minute[]        @relation("wrote_minutes")
+  minutesPresent           Minute[]        @relation("minute_present")
+  minutesAbsentWithApology Minute[]        @relation("minute_absent_with_apology")
 }
 
 model EmailVerificationToken {
@@ -111,6 +111,7 @@ model Address {
 model Application {
   id            String            @id @default(uuid())
   applicationNo Int               @default(autoincrement())
+  minuteNumber  String?
   year          Int
   type          ApplicationType
   status        ApplicationStatus
@@ -456,7 +457,6 @@ model Meeting {
   title           String
   venue           String
   message         String?
-  minute          Minute?       @relation(fields: [minuteId], references: [id])
   applications    Application[]
   invitedMembers  User[]
   sendInvitations Boolean       @default(true)
@@ -464,29 +464,36 @@ model Meeting {
   postponedOn     DateTime?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  minuteId        String?
   status          MeetingStatus @default(PENDING)
+  minute          Minute?
 }
 
 model Minute {
-  id                       String              @id @default(uuid())
-  minuteNumber             String
-  chairedBy                User                @relation("chaired_minutes", fields: [userId], references: [id])
-  attendance               MeetingAttendance[]
-  agenda                   String
-  discussions              String
-  wayForward               String
-  recommendations          String
-  absentMembersWithApology User[]
-  meetings                 Meeting[]
-  userId                   String
+  id String @id @default(uuid())
+
+  meeting   Meeting @relation(fields: [meetingId], references: [id])
+  meetingId String  @unique
+
+  chairedBy   User   @relation("chaired_minutes", fields: [chairId], references: [id])
+  chairId     String
+  writtenBy   User   @relation("wrote_minutes", fields: [secretaryId], references: [id])
+  secretaryId String
+
+  agendas                  Agenda[]
+  absentMembersWithApology User[]   @relation("minute_absent_with_apology")
+  presentMembers           User[]   @relation("minute_present")
 }
 
-model MeetingAttendance {
-  id        String  @id @default(uuid())
-  attendees User[]
-  minute    Minute? @relation(fields: [minuteId], references: [id], onDelete: Cascade)
-  minuteId  String?
+model Agenda {
+  id                             String  @id @default(uuid())
+  title                          String
+  number                         Int     @default(autoincrement())
+  discussion                     String?
+  wayForward                     String?
+  shouldHaveBuildingApplications Boolean @default(false)
+  shouldHaveLandApplications     Boolean @default(false)
+  minute                         Minute  @relation(fields: [minuteId], references: [id], onDelete: Cascade)
+  minuteId                       String
 }
 
 /**

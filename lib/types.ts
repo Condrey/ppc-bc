@@ -149,11 +149,23 @@ export type ParentApplicationData =
   | BuildingApplicationData
   | LandApplicationData;
 
+// Minute
+export const minuteDataInclude = {
+  absentMembersWithApology: { select: userDataSelect },
+  agendas: true,
+  chairedBy: { select: userDataSelect },
+  writtenBy: { select: userDataSelect },
+  presentMembers: { select: userDataSelect },
+  meeting: true,
+} satisfies Prisma.MinuteInclude;
+export type MinuteData = Prisma.MinuteGetPayload<{
+  include: typeof minuteDataInclude;
+}>;
+
 // Meeting
-// Applicant
 export const meetingDataInclude = {
   invitedMembers: { select: userDataSelect },
-  minute: true,
+  minute: { include: minuteDataInclude },
   applications: { include: applicationDataInclude },
 } satisfies Prisma.MeetingInclude;
 export type MeetingData = Prisma.MeetingGetPayload<{

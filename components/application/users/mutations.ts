@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { upsertUser } from "./action";
 
 const queryKey: QueryKey = ["users"];
+const queryKey2: QueryKey = ["committee-members"];
 
 export function useInsertUserMutation() {
   const queryClient = useQueryClient();
@@ -12,6 +13,7 @@ export function useInsertUserMutation() {
     mutationFn: upsertUser,
     async onSuccess(data, variables) {
       await queryClient.cancelQueries({ queryKey });
+      await queryClient.cancelQueries({ queryKey: queryKey2 });
       queryClient.setQueryData<UserData[]>(queryKey, (oldData) => {
         if (!oldData) return;
         if (typeof data === "string") {
@@ -27,6 +29,7 @@ export function useInsertUserMutation() {
           }
         }
       });
+      queryClient.invalidateQueries({ queryKey: queryKey2 });
     },
     onError(error) {
       console.error(error);

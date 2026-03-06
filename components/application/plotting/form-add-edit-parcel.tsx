@@ -132,9 +132,9 @@ export default function FormAddEditParentApplication({
                   </FormItem>
                 )}
               />
-              <pre className="whitespace-pre-wrap">
-                {/* {JSON.stringify(form.watch("parcel.geometry"), null, 2)} */}
-              </pre>
+              {/* <pre className="whitespace-pre-wrap">
+                {JSON.stringify(form.watch("parcel.geometry"), null, 2)}
+              </pre> */}
               <FormField
                 control={form.control}
                 name="parcel.geometry"
