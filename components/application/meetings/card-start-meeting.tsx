@@ -33,9 +33,7 @@ export default function CardStartMeeting({ meeting, className }: Props) {
     id,
     status,
   } = meeting;
-  const title = minute
-    ? `${minute.minuteNumber} meeting`
-    : `${meetingTitle}`.substring(0, 25);
+  const title = `${meetingTitle}`.substring(0, 25);
   const meetingInProgress = status === MeetingStatus.IN_PROGRESS;
   return (
     <Item variant={"muted"} className={cn("", className)}>
@@ -66,7 +64,7 @@ export default function CardStartMeeting({ meeting, className }: Props) {
 
         <ItemFooter>
           {minute ? (
-            <div>{minute.minuteNumber}</div>
+            <span className="text-success">{"Minuted"}</span>
           ) : (
             <span className="text-warning">Not yet minuted</span>
           )}

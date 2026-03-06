@@ -51,7 +51,8 @@ export default function FormAddEditMeeting({
       venue: meeting?.venue || "",
       sendInvitations: meeting?.sendInvitations || true,
       message: meeting?.message || "",
-
+      invitedMembers:
+        meeting?.invitedMembers.map((member) => ({ id: member.id })) || [],
       postponedOn: meeting?.postponedOn,
     },
   });

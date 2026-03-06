@@ -35,13 +35,11 @@ export default function SheetMeetingSession({
   open,
   onOpenChange,
 }: Props) {
-  const { minute, title: meetingTitle } = meeting;
+  const { title: meetingTitle } = meeting;
   const [value, setValue] = useState(allApplicationTypes[0]);
   const { title: currentType, icon: CurrentIcon } = applicationTypes[value];
   const { updateSearchParamsAndNavigate } = useCustomSearchParams();
-  const title = minute
-    ? `${minute.minuteNumber} meeting`
-    : `${meetingTitle}`.substring(0, 25);
+  const title = `${meetingTitle}`.substring(0, 25);
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>

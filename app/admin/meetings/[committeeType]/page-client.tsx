@@ -43,7 +43,7 @@ export function PageClient({ meetings: initialData, committeeType }: Props) {
     <DataTable
       data={meetings}
       columns={useMeetingsColumns}
-      filterColumn={{ id: "minute_minuteNumber", label: "minute number" }}
+      // filterColumn={{ id: "minute_minuteNumber", label: "minute number" }}
       className="w-full"
     ></DataTable>
   );

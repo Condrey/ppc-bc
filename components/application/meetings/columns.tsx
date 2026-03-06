@@ -23,26 +23,26 @@ export const useMeetingsColumns: ColumnDef<MeetingData>[] = [
       return <span>{row.index + 1}</span>;
     },
   },
-  {
-    accessorKey: "minute.minuteNumber",
-    header({ column }) {
-      return <DataTableColumnHeader column={column} title="Minute number" />;
-    },
-    cell({ row }) {
-      const { minute } = row.original;
-      return (
-        <div>
-          {!minute ? (
-            <div className="text-destructive">Not minuted</div>
-          ) : (
-            <div className="text-xs text-muted-foreground">
-              {minute.minuteNumber}
-            </div>
-          )}
-        </div>
-      );
-    },
-  },
+  // {
+  //   accessorKey: "minute.minuteNumber",
+  //   header({ column }) {
+  //     return <DataTableColumnHeader column={column} title="Minute number" />;
+  //   },
+  //   cell({ row }) {
+  //     const { minute } = row.original;
+  //     return (
+  //       <div>
+  //         {!minute ? (
+  //           <div className="text-destructive">Not minuted</div>
+  //         ) : (
+  //           <div className="text-xs text-muted-foreground">
+  //             {minute.minuteNumber}
+  //           </div>
+  //         )}
+  //       </div>
+  //     );
+  //   },
+  // },
 
   {
     accessorKey: "status",
