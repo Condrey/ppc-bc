@@ -28,6 +28,7 @@ export default function SectionBuildingApplications({
         <EmptyContainer
           title="No Building Application"
           description="There are no building Applications that were reviewed in this meeting."
+          className={"[&_svg]:hidden md:p-0 p-3"}
         />
       ) : (
         <div>
@@ -90,13 +91,6 @@ function DecisionSection({
   const numberOfItems = parentApplications.length;
   return (
     <>
-      <TableRow>
-        <TableCell colSpan={5} className="uppercase  text-lg  text-center">
-          {numberOfItems === 0
-            ? `No ${decision} building applications`
-            : ` ${decision} (${formatNumber(parentApplications.length)})`}
-        </TableCell>
-      </TableRow>
       {parentApplications.map((parentApplication, index) => {
         const { id, buildingApplication, owners, status, inspections } =
           parentApplication;
@@ -105,7 +99,7 @@ function DecisionSection({
           : inspections[inspections.length - 1];
         if (!buildingApplication) return null;
         const {
-          address: { cell, parish, subCounty },
+          address: { cell, parish, subCounty, district, location, village },
           landUse: { landUseType: _landUseType, otherLandUseType },
         } = buildingApplication;
         const { formDesc } = landUseTypes[_landUseType];
@@ -117,7 +111,12 @@ function DecisionSection({
               {String(initialIndex + index + 1).padStart(2, "0")}
             </TableCell>
             <TableCell>{owners}.</TableCell>
-            <TableCell>{`${cell ? `${cell} village, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty} division.` : ""}`}</TableCell>
+            <TableCell>
+              <p>
+                {`${cell ? `${cell} cell, ` : ""}${village ? `${village} village, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty}, ` : ""} ${district}`}
+              </p>
+              {location && <p>Precise location: {location}</p>}
+            </TableCell>
             <TableCell>
               {_landUseType === "OTHERS" ? otherLandUseType : formDesc}
             </TableCell>
@@ -129,6 +128,13 @@ function DecisionSection({
           </TableRow>
         );
       })}
+      <TableRow>
+        <TableCell colSpan={5} className="uppercase  text-lg  text-center">
+          {numberOfItems === 0
+            ? `No ${decision} building applications`
+            : ` ${decision} (${formatNumber(parentApplications.length)})`}
+        </TableCell>
+      </TableRow>
     </>
   );
 }

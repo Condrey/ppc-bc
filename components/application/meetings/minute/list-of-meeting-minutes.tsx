@@ -32,7 +32,6 @@ export default function ListOfMeetingMinutes({
         const {
           discussion,
           id,
-          minuteId,
           number,
           shouldHaveBuildingApplications,
           shouldHaveLandApplications,

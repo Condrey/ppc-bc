@@ -9,7 +9,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { applicationStatuses, landUseTypes } from "@/lib/enums";
+import {
+  applicationStatuses,
+  landUseTypes,
+  naturesOfInterestInLand,
+} from "@/lib/enums";
 import { ApplicationStatus } from "@/lib/generated/prisma/enums";
 import { ApplicationData, MeetingData } from "@/lib/types";
 import { formatNumber } from "@/lib/utils";
@@ -28,17 +32,20 @@ export default function SectionLandApplications({
         <EmptyContainer
           title="No Land Application"
           description="There are no land Applications that were reviewed in this meeting."
+          className={"[&_svg]:hidden md:p-0 p-3"}
         />
       ) : (
         <div>
-          <Table className="table border max-w-7xl mx-auto">
+          <Table className="table border ">
             <TableHeader>
               <TableRow className="*:font-bold *:border">
                 <TableHead>S/N</TableHead>
-                <TableHead>NAMES</TableHead>
+                <TableHead>OWNER</TableHead>
+                <TableHead>TENURE</TableHead>
                 <TableHead>LOCATION</TableHead>
-                <TableHead>LAND USE</TableHead>
-                <TableHead>RECOMMENDATION</TableHead>
+                <TableHead>ROAD</TableHead>
+                <TableHead>USER</TableHead>
+                <TableHead>PPC DECISION</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -90,13 +97,6 @@ function DecisionSection({
   const numberOfItems = parentApplications.length;
   return (
     <>
-      <TableRow>
-        <TableCell colSpan={5} className="uppercase  text-lg  text-center">
-          {numberOfItems === 0
-            ? `No ${decision} land applications`
-            : ` ${decision} (${formatNumber(parentApplications.length)})`}
-        </TableCell>
-      </TableRow>
       {parentApplications.map((parentApplication, index) => {
         const { id, landApplication, owners, status, inspections } =
           parentApplication;
@@ -105,10 +105,22 @@ function DecisionSection({
           : inspections[inspections.length - 1];
         if (!landApplication) return null;
         const {
-          address: { cell, parish, subCounty },
+          address: {
+            cell,
+            parish,
+            subCounty,
+            district,
+            location,
+            village,
+            street,
+          },
+          parcel,
+          natureOfInterest: _natureOfInterest,
           landUse: { landUseType: _landUseType, otherLandUseType },
         } = landApplication;
-        const { formDesc } = landUseTypes[_landUseType];
+        const { title: landUseType } = landUseTypes[_landUseType];
+        const { title: natureOfInterest } =
+          naturesOfInterestInLand[_natureOfInterest];
         const { title: applicationStatus, variant } =
           applicationStatuses[status];
         return (
@@ -117,9 +129,21 @@ function DecisionSection({
               {String(initialIndex + index + 1).padStart(2, "0")}
             </TableCell>
             <TableCell>{owners}.</TableCell>
-            <TableCell>{`${cell ? `${cell} village, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty} division.` : ""}`}</TableCell>
+            <TableCell>{natureOfInterest}</TableCell>
             <TableCell>
-              {_landUseType === "OTHERS" ? otherLandUseType : formDesc}
+              <p>
+                {`${cell ? `${cell} cell, ` : ""}${village ? `${village} village, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty}, ` : ""} ${district}`}
+              </p>
+              {location && <p>Precise location: {location}</p>}
+            </TableCell>
+            <TableCell>
+              <p className="font-semibold">{street}</p>
+              {parcel && (
+                <p className="italic">{`${parcel.plotNumber ? `Plot ${parcel.plotNumber}, ` : ""} ${parcel.blockNumber ? `Block ${parcel.blockNumber}` : ""}`}</p>
+              )}
+            </TableCell>
+            <TableCell>
+              {_landUseType === "OTHERS" ? otherLandUseType : landUseType}
             </TableCell>
             <TableCell>
               <Badge variant={variant}>{applicationStatus}</Badge>
@@ -129,6 +153,13 @@ function DecisionSection({
           </TableRow>
         );
       })}
+      <TableRow>
+        <TableCell colSpan={5} className="uppercase  text-lg  text-center">
+          {numberOfItems === 0
+            ? `No ${decision} land applications`
+            : ` ${decision} (${formatNumber(parentApplications.length)})`}
+        </TableCell>
+      </TableRow>
     </>
   );
 }
