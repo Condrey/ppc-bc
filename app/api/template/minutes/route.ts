@@ -224,9 +224,7 @@ export async function POST(req: NextRequest) {
 
     // Give a unique fileName
     const currentTime = Date.now();
-    const fileName = sanitizeFilename(
-      `${meeting.title.substring(10)}_${currentTime}.docx`,
-    );
+    const fileName = sanitizeFilename(`${meeting.title}_${currentTime}.docx`);
 
     // Upload to Blob storage
     const blob = await put(fileName, result, {
