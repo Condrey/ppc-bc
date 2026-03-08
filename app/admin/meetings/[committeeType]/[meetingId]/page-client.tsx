@@ -108,7 +108,10 @@ export default function PageClient({ meeting: initialData, committee }: Props) {
                   You can view the minute details in the minutes section below.
                 </CardDescription>
               </div>
-              <DropdownMenu>
+              <ButtonDownloadMinute meeting={meeting} variant={"ghost"}>
+                <DownloadIcon className="inline mr-2" /> Download minute
+              </ButtonDownloadMinute>
+              <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button variant={"ghost"} size={"icon-lg"} className="">
                     <span className="sr-only">More actions</span>
