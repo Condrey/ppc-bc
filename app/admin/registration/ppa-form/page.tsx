@@ -18,10 +18,10 @@ export default async function Page() {
     >
       <TypographyH2
         text="List of PPA1 Forms"
-        className="flex justify-between items-center"
+        className="flex space-y-3 justify-between items-center flex-wrap"
       >
-        <ButtonAddEditPpaForm1>
-          <PlusIcon />
+        <ButtonAddEditPpaForm1 className="ms-auto max-w-fit">
+          <PlusIcon className="hidden sm:block" />
           Add PPA Form 1
         </ButtonAddEditPpaForm1>
       </TypographyH2>

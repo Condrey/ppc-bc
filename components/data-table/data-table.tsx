@@ -71,12 +71,7 @@ export function DataTable<TData, TValue>({
     state: { sorting, columnFilters, columnVisibility },
   });
   return (
-    <div
-      className={cn(
-        "w-fit max-w-full rounded-md bg-secondary/30 dark:bg-card p-4 shadow-md",
-        className,
-      )}
-    >
+    <div className={cn("w-fit max-w-full rounded-md", className)}>
       <div className="w-full">{tableHeaderSection}</div>
       {/* filtering , column visibility and children */}
       <div className="flex items-center gap-2 justify-between py-4">
@@ -105,10 +100,13 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
       <div className="pb-4 md:pb-8">
-        <Table>
+        <Table className="border">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow
+                key={headerGroup.id}
+                className="bg-success text-success-foreground *:text-success-foreground hover:bg-success "
+              >
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
@@ -136,6 +134,7 @@ export function DataTable<TData, TValue>({
                       handleClick ? handleClick(rowItem.id) : undefined
                     }
                     className={cn(
+                      "odd:bg-accent even:bg-accent/50 *:border",
                       !handleClick
                         ? "cursor-default"
                         : "group/row cursor-pointer",
@@ -143,7 +142,10 @@ export function DataTable<TData, TValue>({
                     )}
                   >
                     {row.getVisibleCells().map((cell, index, array) => (
-                      <TableCell key={cell.id} className="w-fit">
+                      <TableCell
+                        key={cell.id}
+                        className="w-fit first:text-success first:text-xl first:font-bold first-letter:text-end"
+                      >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext(),

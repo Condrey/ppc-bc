@@ -22,13 +22,13 @@ export default function Container({
           <ResponsiveBreadcrumb
             items={breadcrumbs}
             ITEMS_TO_DISPLAY={ITEMS_TO_DISPLAY}
-            className="sticky top-0 bg-background "
+            className="sticky top-0 bg-background hidden sm:block"
           />
         </Suspense>
       )}
       <div
         className={cn(
-          "max-w-9xl w-full px-3 py-12 space-y-6 mx-auto",
+          "max-w-9xl w-full px-3 py:3 sm:py-12 space-y-6 mx-auto",
           className,
         )}
         {...props}
