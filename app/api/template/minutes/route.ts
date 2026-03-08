@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
         : "";
       const blockAndPlot = `Plot ${parcel?.plotNumber}, Block ${parcel?.blockNumber}`;
       const { title: landUseType } = landUseTypes[_landUseType];
-      const user = landUseType === "OTHERS" ? otherLandUseType : landUseType;
+      const user = _landUseType === "OTHERS" ? otherLandUseType : landUseType;
       const { title: applicationStatus } = applicationStatuses[a.status];
       const inspection = !a.inspections.length
         ? undefined
@@ -170,9 +170,11 @@ export async function POST(req: NextRequest) {
         getFilteredApplications("APPROVED").length +
           getFilteredApplications("DEFERRED").length,
       ),
+      approvedNumber: getFilteredApplications("APPROVED").length,
+      deferredNumber: getFilteredApplications("DEFERRED").length,
+      rejectedNumber: getFilteredApplications("REJECTED").length,
     };
   });
-
   const data = {
     committee: committeeName.toUpperCase(),
     date,
