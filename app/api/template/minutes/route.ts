@@ -6,7 +6,11 @@ import {
   roles,
 } from "@/lib/enums";
 import { MeetingData } from "@/lib/types";
-import { getMinuteNumber, sanitizeFilename } from "@/lib/utils";
+import {
+  getApplicationNumber,
+  getMinuteNumber,
+  sanitizeFilename,
+} from "@/lib/utils";
 import { put } from "@vercel/blob";
 import * as carbone from "carbone";
 import { formatDate } from "date-fns";
@@ -76,6 +80,11 @@ export async function POST(req: NextRequest) {
         report,
         type: a.type,
         status: a.status,
+        applicationNumber: getApplicationNumber(
+          a.applicationNo,
+          a.year,
+          a.type,
+        ),
       };
     }
     const {
@@ -114,6 +123,7 @@ export async function POST(req: NextRequest) {
       report,
       type: a.type,
       status: a.status,
+      applicationNumber: getApplicationNumber(a.applicationNo, a.year, a.type),
     };
   });
 
@@ -170,9 +180,15 @@ export async function POST(req: NextRequest) {
         getFilteredApplications("APPROVED").length +
           getFilteredApplications("DEFERRED").length,
       ),
-      approvedNumber: getFilteredApplications("APPROVED").length,
-      deferredNumber: getFilteredApplications("DEFERRED").length,
-      rejectedNumber: getFilteredApplications("REJECTED").length,
+      approvedNumber: String(
+        getFilteredApplications("APPROVED").length,
+      ).padStart(2, "0"),
+      deferredNumber: String(
+        getFilteredApplications("DEFERRED").length,
+      ).padStart(2, "0"),
+      rejectedNumber: String(
+        getFilteredApplications("REJECTED").length,
+      ).padStart(2, "0"),
     };
   });
   const data = {
