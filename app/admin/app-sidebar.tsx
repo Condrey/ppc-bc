@@ -89,9 +89,7 @@ function ParentMenuItem({
   const noDropDown = index === 0 || !item.children.length;
   const { getNavigationLinkWithPathnameWithoutUpdate } =
     useCustomSearchParams();
-  const [openCollapsible, setOpenCollapsible] = useState(
-    index === 1 || isActive,
-  );
+  const [openCollapsible, setOpenCollapsible] = useState(isActive);
 
   const url = noDropDown
     ? getNavigationLinkWithPathnameWithoutUpdate(item.href)

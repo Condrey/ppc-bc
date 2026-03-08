@@ -25,7 +25,7 @@ export function TypographyH2({ text, className, children }: TypoGraphyProps) {
   return (
     <div
       className={cn(
-        "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0",
+        "scroll-m-20 border-b text-success pb-2 text-3xl font-semibold tracking-tight first:mt-0",
         geistSans.className,
         className,
       )}

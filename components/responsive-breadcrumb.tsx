@@ -61,7 +61,10 @@ export function ResponsiveBreadcrumb({
     >
       <BreadcrumbList>
         {isDesktop && (
-          <SidebarTrigger className="flex-inline size-8 mr-10   " />
+          <SidebarTrigger
+            variant={"destructive"}
+            className="flex-inline size-8 mr-10   "
+          />
         )}
         <BreadcrumbItem>
           <BreadcrumbLink onClick={() => startTransition(() => {})} asChild>
