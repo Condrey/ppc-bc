@@ -22,9 +22,9 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { FunnelIcon, PlusIcon, SearchIcon } from "lucide-react";
+import { FunnelIcon, SearchIcon } from "lucide-react";
 import * as React from "react";
-import { Button } from "../ui/button";
+import InfiniteScrollContainer from "../infinite-scroll-container";
 import { DataColumnFilter } from "./data-table-column-header";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableViewOptions } from "./data-table-view-options";
@@ -37,6 +37,7 @@ interface DataTableProps<TData, TValue> {
   selectedItemId?: string | null;
   filterColumn?: { id: string; label?: string };
   children?: React.ReactNode;
+  fab?: React.ReactNode;
   tableHeaderSection?: React.ReactNode;
   className?: string;
 
@@ -52,9 +53,11 @@ export function DataTable<TData, TValue>({
   filterColumn,
   children,
   tableHeaderSection,
+  fab,
   className,
   cardRenderer,
 }: DataTableProps<TData, TValue>) {
+  const [count, setCount] = React.useState(5);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -74,79 +77,71 @@ export function DataTable<TData, TValue>({
     onColumnVisibilityChange: setColumnVisibility,
     state: { sorting, columnFilters, columnVisibility },
   });
-  const SearchInput = ({ className }: { className?: string }) => {
-    return (
-      <>
-        {!!filterColumn && (
-          <div className={cn("relative flex w-full ", className)}>
-            <SearchIcon className="absolute start-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground transition-colors peer-focus:text-foreground peer-focus-visible:text-foreground" />
-            <Input
-              placeholder={`Search by ${filterColumn.label ?? filterColumn.id}...`}
-              value={
-                (table
-                  .getColumn(filterColumn.id)
-                  ?.getFilterValue() as string) ?? ""
-              }
-              onChange={(event) =>
-                table
-                  .getColumn(filterColumn.id)
-                  ?.setFilterValue(event.target.value)
-              }
-              className="peer flex-1 ps-7"
-            />
-          </div>
-        )}
-      </>
-    );
-  };
+
   return (
     <>
       {/* mobile view  */}
-      <div
-        className={cn(
-          "space-y-6   size-full md:hidden slide-out-to-start-full",
-          className,
-        )}
-      >
+      <div className={cn("space-y-6    size-full md:hidden ", className)}>
         <div className="w-full flex justify-between gap-2">
-          <SearchInput className="max-w-md " />
-          <DataColumnFilter table={table}>
-            <FunnelIcon className="shrink" />{" "}
-            <span className="shrink">Sort</span>
-          </DataColumnFilter>
-        </div>
-        <div className="absolute bottom-3 right-3">
-          <Button className="rounded-full" size={"icon-lg"}>
-            <PlusIcon />
-          </Button>
-        </div>
-        <div
-          className=" overflow-y-auto "
-          // onBottomReached={() => {}}
-        >
-          {table.getRowModel().rows.length ? (
-            <div className="grid gap-3 md:hidden sm:grid-cols-2">
-              {table.getRowModel().rows.map((row) => {
-                const rowItem = row.original as TData;
-                return (
-                  <div
-                    key={row.id}
-                    onClick={() =>
-                      handleClick
-                        ? handleClick((row.original as { id: string }).id)
-                        : undefined
-                    }
-                  >
-                    {cardRenderer?.(rowItem)}
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-muted-foreground">
-              No results
+          {!!filterColumn && (
+            <div className={cn("relative flex w-full max-w-md")}>
+              <SearchIcon className="absolute start-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground transition-colors peer-focus:text-foreground peer-focus-visible:text-foreground" />
+              <Input
+                placeholder={`Search by ${filterColumn.label ?? filterColumn.id}...`}
+                value={
+                  (table
+                    .getColumn(filterColumn.id)
+                    ?.getFilterValue() as string) ?? ""
+                }
+                onChange={(event) =>
+                  table
+                    .getColumn(filterColumn.id)
+                    ?.setFilterValue(event.target.value)
+                }
+                className="peer flex-1 ps-7"
+              />
             </div>
           )}
+          <DataColumnFilter table={table}>
+            <FunnelIcon className="shrink" />{" "}
+            <span className="shrink hidden sm:block">Sort</span>
+          </DataColumnFilter>
+        </div>
+
+        <div className="h-full  ">
+          <div className="absolute bottom-3 right-3">{fab}</div>
+          <InfiniteScrollContainer
+            onBottomReached={() => {
+              setCount((count) => count + 5);
+            }}
+          >
+            {table.getRowModel().rows.length ? (
+              <div className="grid gap-3 md:hidden sm:grid-cols-2">
+                {table
+                  .getRowModel()
+                  .rows.slice(0, count)
+                  .map((row) => {
+                    const rowItem = row.original as TData;
+                    return (
+                      <div
+                        key={row.id}
+                        onClick={() =>
+                          handleClick
+                            ? handleClick((row.original as { id: string }).id)
+                            : undefined
+                        }
+                      >
+                        {cardRenderer?.(rowItem)}
+                      </div>
+                    );
+                  })}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-muted-foreground">
+                No results
+              </div>
+            )}
+          </InfiniteScrollContainer>
         </div>
       </div>
       {/* Desktop view  */}

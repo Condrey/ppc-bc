@@ -48,13 +48,7 @@ export default function ListOfPpaForm1s({
   }
   return (
     <DataTable
-      data={[
-        ...parentApplications,
-        ...parentApplications,
-        ...parentApplications,
-        ...parentApplications,
-        ...parentApplications,
-      ].map((a, index) => ({ ...a, id: index + a.id }))}
+      data={parentApplications.map((a, index) => ({ ...a, id: index + a.id }))}
       columns={usePpaForm1Columns}
       filterColumn={{
         id: "application_applicant_name",
@@ -64,6 +58,11 @@ export default function ListOfPpaForm1s({
         <TypographyH4 text="Applications for Development Permit" />
       }
       className="w-full"
+      fab={
+        <ButtonAddEditPpaForm1 className="rounded-full" size={"icon-lg"}>
+          <PlusIcon />
+        </ButtonAddEditPpaForm1>
+      }
       cardRenderer={(item) => {
         const {
           address: { cell, district, village, subCounty, parish },

@@ -21,7 +21,7 @@ export default async function Page() {
         text="List of PPA1 Forms"
         className="flex space-y-3 justify-between items-center flex-wrap"
       >
-        <ButtonAddEditPpaForm1 className="ms-auto max-w-fit">
+        <ButtonAddEditPpaForm1 className="ms-auto max-w-fit hidden md:block">
           <PlusIcon className="hidden sm:block" />
           Add PPA Form 1
         </ButtonAddEditPpaForm1>
