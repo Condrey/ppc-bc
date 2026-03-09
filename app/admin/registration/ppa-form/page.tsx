@@ -15,6 +15,7 @@ export default async function Page() {
         { title: "Registration", href: "/admin/registration" },
         { title: "PPA1 Forms", href: "/admin/registration/ppa-form" },
       ]}
+      className=""
     >
       <TypographyH2
         text="List of PPA1 Forms"

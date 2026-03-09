@@ -31,13 +31,13 @@ export default async function Layout({
           <header className="sticky top-0 z-50 h-(--header-height) flex items-center w-full  bg-accent text-accent-foreground border-b shadow-xl  dark:border-b">
             <TopAppBar className="w-full max-w-9xl  py-2 mx-auto  px-3  " />
           </header>
-          <div className="flex  flex-1 size-full ">
+          <div className="flex   flex-1 size-full ">
             <AppSidebar />
-            <SidebarInset>
+            <SidebarInset className="  ">
               <div className=" mx-auto h-full pt-2 overflow-hidden flex flex-col  w-full">
                 <main className=" flex-1 w-full   overflow-y-auto scroll-auto flex flex-col gap-4 ">
                   {children}
-                  <footer className="w-full">
+                  <footer className="w-full  hidden md:block">
                     <Footer className="bg-black/80 dark:bg-white/20 *:px-4 w-full  text-background dark:text-foreground " />
                   </footer>
                 </main>

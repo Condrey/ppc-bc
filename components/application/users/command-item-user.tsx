@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ApplicantAvatar from "@/components/applicant-avatar";
 import {
   Item,
   ItemActions,
@@ -11,9 +11,8 @@ import {
 } from "@/components/ui/item";
 import { roles } from "@/lib/enums";
 import { UserData } from "@/lib/types";
-import { cn, getColorsFromText, getNameInitials } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { CheckIcon, MailIcon } from "lucide-react";
-import React from "react";
 
 interface Props {
   user: UserData;
@@ -24,14 +23,13 @@ interface Props {
   title?: string;
 }
 export default function CommandItemUser({
-  user: { avatarUrl, email, name, role, username },
+  user: { avatarUrl, email, name, role },
   avatarSize,
   isChecked,
   className,
   variant,
   title,
 }: Props) {
-  const { color2: BG_GRADIENT } = getColorsFromText(name);
   const { title: userRole } = roles[role];
   return (
     <Item
@@ -39,20 +37,11 @@ export default function CommandItemUser({
       className={cn("p-0 w-full flex-nowrap max-w-xs", className)}
     >
       <ItemMedia className="shrink ">
-        <Avatar
-          style={
-            {
-              "--avatar-size": avatarSize,
-              "--bg-gradient": BG_GRADIENT,
-            } as React.CSSProperties
-          }
-          className="size-(--avatar-size) shrink"
-        >
-          <AvatarImage src={avatarUrl!} alt="user profile" />
-          <AvatarFallback className="bg-radial to-(--bg-gradient) from-(--bg-gradient)/50 text-(--bg-gradient) text-xl font-bold">
-            {getNameInitials(name)}
-          </AvatarFallback>
-        </Avatar>
+        <ApplicantAvatar
+          avatarUrl={avatarUrl}
+          name={name}
+          avatarSize={avatarSize}
+        />
       </ItemMedia>
       <ItemContent className="gap-0">
         {title && <ItemTitle className="font-bold">{title}</ItemTitle>}

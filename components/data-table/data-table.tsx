@@ -22,8 +22,10 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { SearchIcon } from "lucide-react";
+import { FunnelIcon, PlusIcon, SearchIcon } from "lucide-react";
 import * as React from "react";
+import { Button } from "../ui/button";
+import { DataColumnFilter } from "./data-table-column-header";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableViewOptions } from "./data-table-view-options";
 
@@ -37,6 +39,8 @@ interface DataTableProps<TData, TValue> {
   children?: React.ReactNode;
   tableHeaderSection?: React.ReactNode;
   className?: string;
+
+  cardRenderer?: (row: TData) => React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
@@ -49,12 +53,12 @@ export function DataTable<TData, TValue>({
   children,
   tableHeaderSection,
   className,
+  cardRenderer,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
-
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
@@ -70,13 +74,11 @@ export function DataTable<TData, TValue>({
     onColumnVisibilityChange: setColumnVisibility,
     state: { sorting, columnFilters, columnVisibility },
   });
-  return (
-    <div className={cn("w-fit max-w-full rounded-md", className)}>
-      <div className="w-full">{tableHeaderSection}</div>
-      {/* filtering , column visibility and children */}
-      <div className="flex items-center gap-2 justify-between py-4">
+  const SearchInput = ({ className }: { className?: string }) => {
+    return (
+      <>
         {!!filterColumn && (
-          <div className="relative">
+          <div className={cn("relative flex w-full ", className)}>
             <SearchIcon className="absolute start-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground transition-colors peer-focus:text-foreground peer-focus-visible:text-foreground" />
             <Input
               placeholder={`Search by ${filterColumn.label ?? filterColumn.id}...`}
@@ -90,86 +92,166 @@ export function DataTable<TData, TValue>({
                   .getColumn(filterColumn.id)
                   ?.setFilterValue(event.target.value)
               }
-              className="peer max-w-sm ps-7"
+              className="peer flex-1 ps-7"
             />
           </div>
         )}
-        <div className="flex items-center gap-2">
-          <DataTableViewOptions table={table} />
-          {children}
+      </>
+    );
+  };
+  return (
+    <>
+      {/* mobile view  */}
+      <div
+        className={cn(
+          "space-y-6   size-full md:hidden slide-out-to-start-full",
+          className,
+        )}
+      >
+        <div className="w-full flex justify-between gap-2">
+          <SearchInput className="max-w-md " />
+          <DataColumnFilter table={table}>
+            <FunnelIcon className="shrink" />{" "}
+            <span className="shrink">Sort</span>
+          </DataColumnFilter>
+        </div>
+        <div className="absolute bottom-3 right-3">
+          <Button className="rounded-full" size={"icon-lg"}>
+            <PlusIcon />
+          </Button>
+        </div>
+        <div
+          className=" overflow-y-auto "
+          // onBottomReached={() => {}}
+        >
+          {table.getRowModel().rows.length ? (
+            <div className="grid gap-3 md:hidden sm:grid-cols-2">
+              {table.getRowModel().rows.map((row) => {
+                const rowItem = row.original as TData;
+                return (
+                  <div
+                    key={row.id}
+                    onClick={() =>
+                      handleClick
+                        ? handleClick((row.original as { id: string }).id)
+                        : undefined
+                    }
+                  >
+                    {cardRenderer?.(rowItem)}
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-muted-foreground">
+              No results
+            </div>
+          )}
         </div>
       </div>
-      <div className="pb-4 md:pb-8">
-        <Table className="border">
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow
-                key={headerGroup.id}
-                className="bg-success text-success-foreground *:text-success-foreground hover:bg-success "
-              >
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => {
-                const rowItem = row.original as { id: string };
-                return (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    onClick={() =>
-                      handleClick ? handleClick(rowItem.id) : undefined
-                    }
-                    className={cn(
-                      "odd:bg-accent even:bg-accent/50 *:border",
-                      !handleClick
-                        ? "cursor-default"
-                        : "group/row cursor-pointer",
-                      // rowItem.id! === selectedItemId && "bg-muted",
-                    )}
-                  >
-                    {row.getVisibleCells().map((cell, index, array) => (
-                      <TableCell
-                        key={cell.id}
-                        className="w-fit first:text-success first:text-xl first:font-bold first-letter:text-end"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                );
-              })
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
+      {/* Desktop view  */}
+      <div
+        className={cn("w-fit hidden md:block max-w-full rounded-md", className)}
+      >
+        <div className="w-full">{tableHeaderSection}</div>
+        {/* filtering , column visibility and children */}
+        <div className="flex items-center gap-2 justify-between py-4">
+          {!!filterColumn && (
+            <div className="relative">
+              <SearchIcon className="absolute start-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground transition-colors peer-focus:text-foreground peer-focus-visible:text-foreground" />
+              <Input
+                placeholder={`Search by ${filterColumn.label ?? filterColumn.id}...`}
+                value={
+                  (table
+                    .getColumn(filterColumn.id)
+                    ?.getFilterValue() as string) ?? ""
+                }
+                onChange={(event) =>
+                  table
+                    .getColumn(filterColumn.id)
+                    ?.setFilterValue(event.target.value)
+                }
+                className="peer max-w-sm ps-7"
+              />
+            </div>
+          )}
+          <div className="flex items-center gap-2">
+            <DataTableViewOptions table={table} />
+            {children}
+          </div>
+        </div>
+        <div className="pb-4 md:pb-8">
+          <Table className="border">
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow
+                  key={headerGroup.id}
+                  className="bg-success text-success-foreground *:text-success-foreground hover:bg-success "
                 >
-                  No results
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                      </TableHead>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows.length ? (
+                table.getRowModel().rows.map((row) => {
+                  const rowItem = row.original as { id: string };
+                  return (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      onClick={() =>
+                        handleClick ? handleClick(rowItem.id) : undefined
+                      }
+                      className={cn(
+                        "odd:bg-accent even:bg-accent/50 *:border",
+                        !handleClick
+                          ? "cursor-default"
+                          : "group/row cursor-pointer",
+                        // rowItem.id! === selectedItemId && "bg-muted",
+                      )}
+                    >
+                      {row.getVisibleCells().map((cell, index, array) => (
+                        <TableCell
+                          key={cell.id}
+                          className="w-fit first:text-success first:text-xl first:font-bold first-letter:text-end"
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        {/* pagination  */}
+        <DataTablePagination table={table} ROWS_PER_PAGE={ROWS_PER_TABLE} />
       </div>
-      {/* pagination  */}
-      <DataTablePagination table={table} ROWS_PER_PAGE={ROWS_PER_TABLE} />
-    </div>
+    </>
   );
 }
