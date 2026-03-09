@@ -59,7 +59,10 @@ export default function ListOfPpaForm1s({
       }
       className="w-full"
       fab={
-        <ButtonAddEditPpaForm1 className="rounded-full" size={"icon-xl"}>
+        <ButtonAddEditPpaForm1
+          className="rounded-full shadow-2xs"
+          size={"icon-xl"}
+        >
           <PlusIcon />
         </ButtonAddEditPpaForm1>
       }
