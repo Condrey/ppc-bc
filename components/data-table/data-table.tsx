@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { MOBILE_MAX_ITEMS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import {
   ColumnDef,
@@ -47,7 +48,7 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  ROWS_PER_TABLE = 5,
+  ROWS_PER_TABLE = MOBILE_MAX_ITEMS,
   selectedItemId,
   handleClick,
   filterColumn,
@@ -57,7 +58,7 @@ export function DataTable<TData, TValue>({
   className,
   cardRenderer,
 }: DataTableProps<TData, TValue>) {
-  const [count, setCount] = React.useState(5);
+  const [count, setCount] = React.useState(MOBILE_MAX_ITEMS);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -112,7 +113,7 @@ export function DataTable<TData, TValue>({
           <div className="absolute bottom-3 right-3">{fab}</div>
           <InfiniteScrollContainer
             onBottomReached={() => {
-              setCount((count) => count + 5);
+              setCount((count) => count + MOBILE_MAX_ITEMS);
             }}
           >
             {table.getRowModel().rows.length ? (
