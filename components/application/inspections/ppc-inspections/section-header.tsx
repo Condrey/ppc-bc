@@ -39,7 +39,7 @@ export default function SectionHeader({ application }: Props) {
   const { title: applicationStatus } = applicationStatuses[status];
 
   return (
-    <div className="flex flex-wrap *:flex-1 gap-3">
+    <div className="flex-col sm:flex-row flex flex-wrap *:flex-1 gap-3">
       <Item variant={"muted"}>
         <ItemContent>
           <ItemTitle className="font-bold">{applicationType}</ItemTitle>
@@ -59,7 +59,7 @@ export default function SectionHeader({ application }: Props) {
         applicant={applicant}
         isChecked={false}
         variant="muted"
-        className="p-3 w-full"
+        className="p-3 w-full max-w-none sm:max-w-xs"
         avatarSize="60px"
         title="APPLICANT"
       />

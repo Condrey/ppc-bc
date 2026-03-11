@@ -11,7 +11,7 @@ export function TypographyH1({ text, className }: TypoGraphyProps) {
   return (
     <h1
       className={cn(
-        "scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance",
+        "scroll-m-20 text-center text-2xl md:text-4xl font-extrabold tracking-tight text-balance",
         playFair.className,
         className,
       )}

@@ -112,8 +112,9 @@ export function PageClient({ application: initialData, applicationId }: Props) {
                   <ButtonEditBuildingInspection
                     inspection={i}
                     buildingApplication={buildingApplication!}
+                    variant={decision === "PENDING" ? "destructive" : "default"}
                   >
-                    Update inspection
+                    {decision === "PENDING" ? "Finish" : "Update"} inspection
                   </ButtonEditBuildingInspection>
                 )}
                 <ButtonDownloadInspectionReport
@@ -122,7 +123,8 @@ export function PageClient({ application: initialData, applicationId }: Props) {
                   size={"default"}
                   variant={"outline"}
                 >
-                  <DownloadIcon className="inline" /> <span className="md:hidden">Download</span>
+                  <DownloadIcon className="inline" />{" "}
+                  <span className="md:hidden">Download</span>
                 </ButtonDownloadInspectionReport>
               </div>
             </div>

@@ -56,17 +56,21 @@ export default async function Page({ params }: Props) {
         },
       ]}
     >
-      <TypographyH1 text={owners} className="text-muted-foreground " />
+      <TypographyH1
+        text={"Owned by " + owners}
+        className="text-muted-foreground "
+      />
       <TypographyH2
         text={`INSPECTIONS (${title})`}
         className="flex gap-3  items-center  justify-between"
       >
         <ButtonAddInspection
           applicationId={id}
-          className="ms-auto max-w-fit w-full flex-none"
+          className="ms-auto max-w-fit w-full "
           variant={"secondary"}
         >
-          <PlusIcon className="inline" /> <span className="hidden md:flex">new inspection</span>
+          <PlusIcon className="inline" />{" "}
+          <span className="hidden md:flex">new inspection</span>
         </ButtonAddInspection>
       </TypographyH2>
       <PageClient application={application} applicationId={applicationId} />

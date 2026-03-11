@@ -62,8 +62,8 @@ export default function SectionInspectionBody({
   const { carriedOn, decision, visitReport, inspectors } = inspection;
   const { title: decisionMade } = applicationDecisions[decision];
   const fieldClassName =
-    "flex-1 text-muted-foreground min-h-9 h-auto bg-muted text-xl font-semibold font-sans outline inline h-9 w-auto min-w-sm rounded-md p-1";
-  const checkboxClassName = "size-8 border-foreground *:[&_svg]:size-8";
+    "flex-1 text-muted-foreground min-h-9 h-auto bg-muted md:text-xl font-semibold font-sans md:outline inline h-9 w-auto min-w-sm rounded-md p-1";
+  const checkboxClassName = " md:size-8 border-foreground md:*:[&_svg]:size-8";
 
   return (
     <div
@@ -73,26 +73,28 @@ export default function SectionInspectionBody({
       )}
     >
       <div className="space-y-2.5 max-w-3xl">
-        {!!visitReport && (
-          <ButtonDownloadInspectionReport
-            application={application}
-            inspection={inspection}
-            size={"sm"}
-            className="float-end ms-3"
-            variant={"outline"}
-          >
-            <DownloadIcon className="inline mr-2 " /> download inspection report
-          </ButtonDownloadInspectionReport>
-        )}
-        <p className=" tracking-wide leading-loose text-justify hyphens-auto">
+        <ButtonDownloadInspectionReport
+          application={application}
+          inspection={inspection}
+          size={"sm"}
+          className="float-end ms-3"
+          variant={"outline"}
+        >
+          <DownloadIcon className="inline mr-2 " /> download inspection report
+        </ButtonDownloadInspectionReport>
+
+        <p className=" tracking-wide leading-loose text-justify hyphens-auto ">
           <span className="max-w-prose">
             This inspection was carried out on{" "}
             <strong>{formatDate(carriedOn, "PPPp")}.</strong>
           </span>
           <span className="max-w-prose inline">
             {" "}
-            The decision made by the inspectors is that the application{" "}
-            {getApplicationNumber(applicationNo, year, type)}{" "}
+            The decision made by the inspectors is that the application with
+            application number{" "}
+            <strong className="slashed-zero font-mono">
+              {getApplicationNumber(applicationNo, year, type)}
+            </strong>{" "}
             <strong
               className={cn(
                 "",
@@ -297,7 +299,7 @@ export default function SectionInspectionBody({
                   <Label>
                     <Checkbox
                       checked={buildingApplication?.access?.structures}
-                      className="size-8 border-foreground *:[&_svg]:size-8"
+                      className={checkboxClassName}
                       disabled
                     />{" "}
                     <span>Structures and fence</span>
