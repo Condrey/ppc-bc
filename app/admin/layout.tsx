@@ -23,7 +23,6 @@ export default async function Layout({
   } else if (!user) {
     redirect("/login");
   }
-
   return (
     <SessionProvider value={{ session, user }}>
       <div className="[--header-height:calc(--spacing(14))]">
@@ -34,7 +33,7 @@ export default async function Layout({
           <div className="flex   flex-1 size-full ">
             <AppSidebar />
             <SidebarInset className="  ">
-              <div className=" mx-auto h-full pt-2 overflow-hidden flex flex-col  w-full">
+              <div className=" mx-auto h-full  overflow-hidden flex flex-col  w-full">
                 <main className=" flex-1 w-full   overflow-y-auto scroll-auto flex flex-col gap-4 ">
                   {children}
                   <footer className="w-full  hidden md:block">

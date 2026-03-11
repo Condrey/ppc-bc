@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { MOBILE_MAX_ITEMS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import {
@@ -48,7 +49,7 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  ROWS_PER_TABLE = MOBILE_MAX_ITEMS,
+  ROWS_PER_TABLE = 5,
   selectedItemId,
   handleClick,
   filterColumn,
@@ -58,7 +59,8 @@ export function DataTable<TData, TValue>({
   className,
   cardRenderer,
 }: DataTableProps<TData, TValue>) {
-  const [count, setCount] = React.useState(MOBILE_MAX_ITEMS);
+  const isMobile = useIsMobile();
+  const [count, setCount] = React.useState(5);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -110,7 +112,7 @@ export function DataTable<TData, TValue>({
         </div>
 
         <div className="h-full  ">
-          <div className="absolute bottom-3 right-3">{fab}</div>
+          <div className="absolute z-40 bottom-3 right-3">{fab}</div>
           <InfiniteScrollContainer
             onBottomReached={() => {
               setCount((count) => count + MOBILE_MAX_ITEMS);
@@ -246,7 +248,11 @@ export function DataTable<TData, TValue>({
           </Table>
         </div>
         {/* pagination  */}
-        <DataTablePagination table={table} ROWS_PER_PAGE={ROWS_PER_TABLE} />
+
+        <DataTablePagination
+          table={table}
+          ROWS_PER_PAGE={isMobile ? count : ROWS_PER_TABLE}
+        />
       </div>
     </>
   );

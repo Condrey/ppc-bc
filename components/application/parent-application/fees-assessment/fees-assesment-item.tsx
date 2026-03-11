@@ -11,11 +11,11 @@ import {
 } from "@/components/ui/item";
 import { Spinner } from "@/components/ui/spinner";
 import { useCustomSearchParams } from "@/hooks/use-custom-search-param";
-import { applicationStatuses, applicationTypes } from "@/lib/enums";
+import { applicationTypes, naturesOfInterestInLand } from "@/lib/enums";
 import { ParentApplicationData } from "@/lib/types";
-import { getApplicationNumber } from "@/lib/utils";
+import { formatCurrency, getApplicationNumber } from "@/lib/utils";
 import { formatDate } from "date-fns";
-import { HistoryIcon, MapPinIcon } from "lucide-react";
+import { CheckIcon, CoinsIcon, DotIcon, HistoryIcon } from "lucide-react";
 import Link from "next/link";
 import { useTransition } from "react";
 
@@ -24,14 +24,13 @@ type Props = {
   navigateTo?: string;
 };
 
-export default function PpaFormItem({ item, navigateTo }: Props) {
+export default function FeesAssessmentItem({ item, navigateTo }: Props) {
   const [isPending, startTransition] = useTransition();
   const { getNavigationLinkWithPathnameWithoutUpdate } =
     useCustomSearchParams();
   const url = navigateTo
     ? getNavigationLinkWithPathnameWithoutUpdate(navigateTo)
     : "#";
-
   return (
     <Item
       size={"sm"}
@@ -61,20 +60,38 @@ const Content = ({
       applicationNo,
       year,
       type,
-      status,
       createdAt,
       applicant: {
         name,
         user: { avatarUrl },
       },
+      feeAssessments,
     },
+    natureOfInterest,
   } = item;
+
   const { title: applicationType } = applicationTypes[type];
-  const { title: applicationStatus, variant } = applicationStatuses[status];
   const location = `${cell ? `${cell} cell, ` : ""}${village ? `${village} village, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty}, ` : ""} ${district}`;
-
+  const { title: interest } = naturesOfInterestInLand[natureOfInterest];
   const applicationNumber = getApplicationNumber(applicationNo, year, type);
-
+  const allAssessments = feeAssessments.map(
+    ({ payments: allPayments, amountAssessed }) => {
+      const payments = allPayments.reduce(
+        (amount, total) => amount + total.amountPaid,
+        0,
+      );
+      const balance = amountAssessed - payments;
+      return { payments, balance };
+    },
+  );
+  const allPayments = allAssessments.reduce(
+    (amount, total) => amount + total.payments,
+    0,
+  );
+  const allBalances = allAssessments.reduce(
+    (amount, total) => amount + total.balance,
+    0,
+  );
   return (
     <>
       <ItemHeader>
@@ -89,25 +106,39 @@ const Content = ({
             <ItemDescription>{applicationNumber}</ItemDescription>
           </div>
         </div>
-        <ItemMedia>
-          {isPending && navigateTo ? (
-            <Spinner />
-          ) : (
-            <Badge variant={variant}>{applicationStatus}</Badge>
-          )}
+        <ItemMedia className="text-muted-foreground ">
+          {isPending && navigateTo ? <Spinner /> : <CoinsIcon />}
         </ItemMedia>
       </ItemHeader>
 
       <ItemContent>
-        <p className="line-clamp-1  text-muted-foreground">
-          <MapPinIcon className="inline size-5 mr-1 fill-muted text-muted-foreground" />
-          {location}
+        <p className="line-clamp-1 font-semibold">{name}</p>
+        <p className="line-clamp-1  ">
+          <span>{interest},</span>{" "}
+          <span className="text-muted-foreground">{location}</span>
         </p>
       </ItemContent>
       <ItemFooter>
-        <p className="line-clamp-1">
-          <span className="italic text-muted-foreground">by</span> {name}
-        </p>
+        {allBalances === 0 ? (
+          <Badge variant={"success"} className="">
+            <CheckIcon />
+            All payments cleared
+          </Badge>
+        ) : (
+          <p>
+            <span className="italic text-muted-foreground">Paid</span>{" "}
+            {allPayments === 0
+              ? "Nothing"
+              : formatCurrency(allPayments, "UGX", true)}
+            <DotIcon className="inline" />{" "}
+            <Badge variant={"destructive"}>
+              <span className="italic font-sans">Bal</span>{" "}
+              {allBalances === 0
+                ? "Nothing"
+                : formatCurrency(allBalances, "UGX", true)}
+            </Badge>
+          </p>
+        )}
         <span className="block flex-none">
           <HistoryIcon className="inline size-4 mr-1" />
           {formatDate(createdAt, "PP")}

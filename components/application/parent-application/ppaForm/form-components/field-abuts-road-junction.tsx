@@ -20,7 +20,7 @@ interface Props {
 export default function FieldAbutsRoadJunction({ form }: Props) {
   const isChecked = form.watch("landUse.doesItAbutRoadJunction");
   return (
-    <Item variant={"muted"}>
+    <Item variant={isChecked ? "success" : "muted"} className={cn("")}>
       <ItemContent className="space-y-5">
         <FormField
           control={form.control}

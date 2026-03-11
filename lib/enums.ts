@@ -128,6 +128,7 @@ export const naturesOfInterestInLand: Record<
   {
     formDesc: string;
     title: string;
+    amount: number;
     variant:
       | "default"
       | "secondary"
@@ -141,36 +142,43 @@ export const naturesOfInterestInLand: Record<
     title: "Registered owner",
     formDesc: "A registered owner",
     variant: "outline",
+    amount: 59000,
   },
   LEASE: {
-    title: "Leasehold",
-    formDesc: "For lease",
+    title: "Leasehold Renewal",
+    formDesc: "For leasehold renewal",
     variant: "outline",
+    amount: 118000,
   },
   TENANT_BY_OCCUPANCY: {
     title: "Tenant by occupancy",
     formDesc: "Tenant by occupancy",
     variant: "outline",
+    amount: 59000,
   },
   FREEHOLD: {
     title: "Freehold",
     formDesc: "For freehold",
     variant: "outline",
+    amount: 59000,
   },
   CUSTOMARY_TENANT: {
     title: "Customary tenant",
     formDesc: "Customary tenant",
     variant: "outline",
+    amount: 10000,
   },
   INITIAL_LEASE: {
     formDesc: "As initial leasehold",
     title: "Initial Leasehold",
     variant: "outline",
+    amount: 118000,
   },
   LEASE_EXTENSION: {
     formDesc: "As a leasehold extension",
     title: "Leasehold extension",
     variant: "outline",
+    amount: 118000,
   },
 };
 

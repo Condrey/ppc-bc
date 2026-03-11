@@ -10,6 +10,7 @@ import { PlusIcon } from "lucide-react";
 import { Suspense } from "react";
 import ButtonAddEditPpaForm1 from "../ppaForm/button-add-edit-ppa-form1";
 import { useFeeAssessmentParentApplicationsQuery } from "../query";
+import FeesAssessmentItem from "./fees-assesment-item";
 import { usePaymentAssessmentsColumns } from "./payments/columns";
 
 interface Props {
@@ -51,6 +52,12 @@ export function ListOfTypeBasedFeesAssessments({
           id: "application_applicant_name",
           label: "applicant",
         }}
+        cardRenderer={(item) => (
+          <FeesAssessmentItem
+            item={item}
+            navigateTo={`/admin/fees-assessments/fee/${item.application.type}/${item.id}`}
+          />
+        )}
         className="w-full"
       >
         <ButtonAddEditPpaForm1>

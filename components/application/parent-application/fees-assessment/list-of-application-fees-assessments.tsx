@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
 import { Suspense } from "react";
 import { getAllApplicationFeeAssessments } from "./action";
+import ApplicationFeesAssessmentItem from "./application-fees-assessment-item";
 import { useApplicationFeeAssessmentsColumns } from "./columns";
 import DropDownMenuFeesAssessment from "./drop-down-menu-fees-assessment";
 
@@ -65,6 +66,8 @@ export function ListOfApplicationFeesAssessments({ parentApplication }: Props) {
           id: "application_applicant_name",
           label: "applicant",
         }}
+        cardRenderer={(item) => <ApplicationFeesAssessmentItem item={item}
+         navigateTo="" />}
         className="w-full"
       >
         <DropDownMenuFeesAssessment

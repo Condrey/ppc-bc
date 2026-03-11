@@ -52,7 +52,7 @@ export default function PageClient({
         <DropDownMenuFeesAssessment
           isADropDown={false}
           parentApplication={data}
-          className="ms-auto max-w-fit"
+          className="ms-auto max-w-fit hidden md:block "
         >
           <PlusIcon /> Fee Assessment
         </DropDownMenuFeesAssessment>

@@ -1,7 +1,6 @@
 "use client";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { cn, siteConfig, webName } from "@/lib/utils";
 
 interface TopAppBarProps {
@@ -9,11 +8,17 @@ interface TopAppBarProps {
 }
 
 export default function TopAppBar({ className }: TopAppBarProps) {
-  const isMobile = useIsMobile();
   return (
     <header className={cn("", className)}>
-      {isMobile && <SidebarTrigger />}
-      <span className="uppercase">{isMobile ? webName : siteConfig.name}</span>
+      <SidebarTrigger
+        className="md:hidden"
+        size={"xl"}
+        variant={"destructive"}
+      />
+      <p className="uppercase ms-2 inline">
+        <span className="md:hidden">{webName}</span>
+        <span className="hidden md:block">{siteConfig.name}</span>
+      </p>
     </header>
   );
 }

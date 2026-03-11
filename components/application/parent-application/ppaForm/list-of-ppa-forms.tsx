@@ -1,27 +1,15 @@
 "use client";
 
-import ApplicantAvatar from "@/components/applicant-avatar";
 import { TypographyH4 } from "@/components/headings";
-import { Badge } from "@/components/ui/badge";
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemFooter,
-  ItemHeader,
-  ItemTitle,
-} from "@/components/ui/item";
-import { applicationStatuses, applicationTypes } from "@/lib/enums";
 import { ParentApplicationData } from "@/lib/types";
-import { getApplicationNumber } from "@/lib/utils";
-import { formatDate } from "date-fns";
-import { HistoryIcon, MapPinIcon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { DataTable } from "../../../data-table/data-table";
 import { EmptyContainer } from "../../../query-container/empty-container";
 import ErrorContainer from "../../../query-container/error-container";
 import { useParentApplicationsQuery } from "../query";
 import ButtonAddEditPpaForm1 from "./button-add-edit-ppa-form1";
 import { usePpaForm1Columns } from "./columns";
+import PpaFormItem from "./ppa-form-item";
 
 export default function ListOfPpaForm1s({
   initialData,
@@ -57,7 +45,6 @@ export default function ListOfPpaForm1s({
       tableHeaderSection={
         <TypographyH4 text="Applications for Development Permit" />
       }
-      className="w-full"
       fab={
         <ButtonAddEditPpaForm1
           className="rounded-full shadow-2xs"
@@ -66,65 +53,8 @@ export default function ListOfPpaForm1s({
           <PlusIcon />
         </ButtonAddEditPpaForm1>
       }
-      cardRenderer={(item) => {
-        const {
-          address: { cell, district, village, subCounty, parish },
-          application: {
-            applicationNo,
-            year,
-            type,
-            status,
-            createdAt,
-            applicant: {
-              name,
-              user: { avatarUrl },
-            },
-          },
-        } = item;
-        const { title: applicationType } = applicationTypes[type];
-        const { title: applicationStatus, variant } =
-          applicationStatuses[status];
-        const location = `${cell ? `${cell} cell, ` : ""}${village ? `${village} village, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty}, ` : ""} ${district}`;
-
-        const applicationNumber = getApplicationNumber(
-          applicationNo,
-          year,
-          type,
-        );
-        return (
-          <Item size={"sm"} variant={"muted"}>
-            <ItemHeader>
-              <div className="flex gap-2">
-                <ApplicantAvatar
-                  avatarUrl={avatarUrl}
-                  name={name}
-                  avatarSize={"40px"}
-                />
-                <div>
-                  <ItemTitle>{applicationType}</ItemTitle>
-                  <ItemDescription>{applicationNumber}</ItemDescription>
-                </div>
-              </div>
-              <Badge variant={variant}>{applicationStatus}</Badge>
-            </ItemHeader>
-            <ItemContent>
-              <p className="line-clamp-1 text-muted-foreground">
-                <MapPinIcon className="inline size-5 mr-1 fill-muted text-muted-foreground" />
-                {location}
-              </p>
-            </ItemContent>
-            <ItemFooter>
-              <p className="line-clamp-1">
-                <span className="italic text-muted-foreground">by</span> {name}
-              </p>
-              <span className="block flex-none">
-                <HistoryIcon className="inline size-4 mr-1" />
-                {formatDate(createdAt, "PP")}
-              </span>
-            </ItemFooter>
-          </Item>
-        );
-      }}
+      cardRenderer={(item) => <PpaFormItem item={item} />}
+      className="w-full"
     >
       <ButtonAddEditPpaForm1 size={"sm"} variant={"secondary"}>
         <PlusIcon /> New

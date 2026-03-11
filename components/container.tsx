@@ -28,7 +28,7 @@ export default function Container({
       )}
       <div
         className={cn(
-          "max-w-9xl w-full max-h-screen   px-3 py:3 sm:pt-12 pb-0 md:pb-12 space-y-4  md:space-y-6 mx-auto",
+          "max-w-9xl w-full max-h-[calc(100vh-var(--header-height))]   px-3 py:3 sm:pt-12 pb-0 md:pb-12 space-y-4  md:space-y-6 mx-auto",
           className,
         )}
         {...props}

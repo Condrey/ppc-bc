@@ -8,6 +8,7 @@ import { PlusIcon } from "lucide-react";
 import { Suspense } from "react";
 import ButtonAddEditPpaForm1 from "../ppaForm/button-add-edit-ppa-form1";
 import { useParentApplicationsQuery } from "../query";
+import FeesAssessmentItem from "./fees-assesment-item";
 import { usePaymentAssessmentsColumns } from "./payments/columns";
 
 interface Props {
@@ -44,6 +45,7 @@ export function ListOfFeesAssessments({ initialData }: Props) {
           label: "applicant",
         }}
         className="w-full"
+        cardRenderer={(item) => <FeesAssessmentItem item={item} navigateTo={`/admin/fees-assessments/fee/${item.application.type}/${item.id}`} />}
       >
         <ButtonAddEditPpaForm1>
           <PlusIcon /> PPA Form 1

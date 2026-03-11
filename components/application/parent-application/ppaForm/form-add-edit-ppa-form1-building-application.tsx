@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import LoadingButton from "@/components/ui/loading-button";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -18,6 +19,7 @@ import {
   ApplicationType,
 } from "@/lib/generated/prisma/enums";
 import { BuildingApplicationData, GeoJSONType } from "@/lib/types";
+import { formatCurrency, getApplicationFee } from "@/lib/utils";
 import {
   ApplicationSchema,
   LandUseSchema,
@@ -97,6 +99,15 @@ export default function FormAddEditPpaForm1BuildingApplication({
       },
     },
   });
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const watchedNatureOfInterest =
+    form.watch("natureOfInterest") || "CUSTOMARY_TENANT";
+  const applicationFee = formatCurrency(
+    getApplicationFee(watchedNatureOfInterest),
+    "UGX",
+    true,
+  );
+
   const query = useQuery({
     queryKey: ["applicants"],
     queryFn: getAllApplicants,
@@ -156,7 +167,7 @@ export default function FormAddEditPpaForm1BuildingApplication({
               <form onSubmit={form.handleSubmit(handleFormSubmit)}>
                 {/* <pre>{JSON.stringify(form.watch(), null, 2)}</pre> */}
                 {/* <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre> */}
-                <div className="grid lg:grid-cols-2 gap-6">
+                <div className="lg:grid lg:grid-cols-2 space-y-6 gap-6">
                   <div className="space-y-6">
                     <ApplicationSection
                       form={form}
@@ -175,7 +186,7 @@ export default function FormAddEditPpaForm1BuildingApplication({
                           <Checkbox checked disabled />
                           <ItemTitle>
                             By submitting, applicant shall be subjected to a
-                            charge of <strong>UGX 59,000</strong>
+                            charge of <strong>{applicationFee}</strong>
                           </ItemTitle>
                         </Label>
                       </ItemContent>
@@ -183,6 +194,7 @@ export default function FormAddEditPpaForm1BuildingApplication({
                   )}
                 </div>
                 <FormFooter className="my-6">
+                  <SheetClose className="">close</SheetClose>
                   <LoadingButton type="submit" loading={isPending} size={"lg"}>
                     {buildingApplication
                       ? "Update PPA 1 Form "

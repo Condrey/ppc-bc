@@ -89,7 +89,7 @@ export default function UtilitySection({ form }: Props) {
         />
 
         <Item variant={"muted"}>
-          <ItemContent>
+          <ItemContent className="space-y-4">
             <FormField
               control={form.control}
               name="ppaForm1.shouldHaveNewRoadAccess"
