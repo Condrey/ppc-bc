@@ -17,8 +17,9 @@ async function applicationInspections(applicationId: string) {
       },
       include: applicationDataInclude,
     });
+  } else {
+    return data;
   }
-  return data;
 }
 
 export const getApplicationInspections = cache(applicationInspections);

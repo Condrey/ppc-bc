@@ -17,6 +17,7 @@ export default function ButtonDownloadInspectionReport({
   ...props
 }: Props) {
   const [isPending, startTransition] = useTransition();
+const canDownload = inspection.decision!=='PENDING'
 
   async function handleOnClickEvent() {
     startTransition(async () => {
@@ -45,6 +46,7 @@ export default function ButtonDownloadInspectionReport({
       }
     });
   }
+  if(!canDownload) return null
   return (
     <LoadingButton
       loading={isPending}

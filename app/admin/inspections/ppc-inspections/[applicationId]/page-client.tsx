@@ -87,7 +87,7 @@ export function PageClient({ application: initialData, applicationId }: Props) {
             className={cn("space-y-8", manyInspections && "border-s ps-6")}
           >
             {/* header  */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap gap-3 items-center justify-between">
               <TypographyH4
                 text={`[Decision ${decisionMade}]`}
                 className={cn(
@@ -100,7 +100,7 @@ export function PageClient({ application: initialData, applicationId }: Props) {
                       : "text-success",
                 )}
               />
-              <div className="flex gap-2 items-center">
+              <div className="flex ms-auto gap-2 items-center">
                 {isLandApplication ? (
                   <ButtonEditLandInspection
                     inspection={i}
@@ -119,10 +119,10 @@ export function PageClient({ application: initialData, applicationId }: Props) {
                 <ButtonDownloadInspectionReport
                   application={application}
                   inspection={i}
-                  size={"icon"}
+                  size={"default"}
                   variant={"outline"}
                 >
-                  <DownloadIcon />
+                  <DownloadIcon className="inline" /> <span className="md:hidden">Download</span>
                 </ButtonDownloadInspectionReport>
               </div>
             </div>
