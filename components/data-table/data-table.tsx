@@ -149,7 +149,10 @@ export function DataTable<TData, TValue>({
       </div>
       {/* Desktop view  */}
       <div
-        className={cn("w-fit hidden md:block max-w-full rounded-md", className)}
+        className={cn(
+          "w-fit hidden md:block  max-w-full rounded-md",
+          className,
+        )}
       >
         <div className="w-full">{tableHeaderSection}</div>
         {/* filtering , column visibility and children */}
