@@ -69,7 +69,7 @@ export default async function Page({ params }: Props) {
           <PlusIcon className="inline" /> new inspection
         </ButtonAddInspection>
       </TypographyH2>
-      <PageClient application={application} />
+      <PageClient application={application} applicationId={applicationId} />
     </Container>
   );
 }

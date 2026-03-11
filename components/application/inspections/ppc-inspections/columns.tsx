@@ -17,19 +17,10 @@ import { ParentApplicationData } from "@/lib/types";
 import { cn, formatCurrency, getApplicationNumber } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns";
-import {
-  CheckIcon,
-  CircleIcon,
-  DotIcon,
-  DownloadIcon,
-  DropletsIcon,
-  LightbulbIcon,
-} from "lucide-react";
+import { CheckIcon, DotIcon, DropletsIcon, LightbulbIcon } from "lucide-react";
 import Link from "next/link";
 import { useTransition } from "react";
 import { DataTableColumnHeader } from "../../../data-table/data-table-column-header";
-import ButtonAddInspection from "./button-add-inspection";
-import ButtonDownloadInspectionReport from "./parent-application/button-download-inspection-report";
 
 export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
   {
@@ -40,7 +31,6 @@ export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
     cell({ row }) {
       return (
         <div>
-         
           <span>{row.index + 1}</span>
         </div>
       );
@@ -74,17 +64,15 @@ export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
     },
     cell({ row }) {
       const {
-        application: {  status },
+        application: { status },
       } = row.original;
       const inspected = status !== "SUBMITTED";
       return (
         <Badge
-          variant={inspected?'success':'destructive'}
+          variant={inspected ? "success" : "destructive"}
           className="font-bold"
         >
-          {status !== "SUBMITTED"
-              ? "Inspected"
-              : "Pending"}
+          {status !== "SUBMITTED" ? "Inspected" : "Pending"}
         </Badge>
       );
     },
@@ -189,12 +177,12 @@ export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
     cell({ row }) {
       const {
         natureOfInterest,
-        landUse: { acreage, landUseType,otherLandUseType },
+        landUse: { acreage, landUseType, otherLandUseType },
         site,
       } = row.original;
       const { title: _landUse } = landUseTypes[landUseType];
       const { title: landInterest } = naturesOfInterestInLand[natureOfInterest];
-  const usePurpose = landUseType==='OTHERS'?otherLandUseType:_landUse
+      const usePurpose = landUseType === "OTHERS" ? otherLandUseType : _landUse;
 
       return (
         <div>
@@ -262,13 +250,9 @@ export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
       return <DataTableColumnHeader column={column} title="Actions" />;
     },
     cell({ row }) {
-      const {
-        application: { inspections },
-        applicationId,
-      } = row.original;
+      const { applicationId } = row.original;
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const [isPending, startTransition] = useTransition();
-      const neverInspected = !inspections.length;
       const { getNavigationLinkWithPathnameWithoutUpdate } =
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useCustomSearchParams();
@@ -278,33 +262,13 @@ export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
       );
       return (
         <div className="flex gap-2 items-center">
-          {neverInspected ? (
-            <ButtonAddInspection
-              redirectUrl={url}
-              applicationId={applicationId}
-              size={"sm"}
-            >
-              Inspect
-            </ButtonAddInspection>
-          ) : (
-            <>
-              <ButtonDownloadInspectionReport
-                application={row.original.application}
-                inspection={inspections[inspections.length - 1]}
-                size={"icon-sm"}
-                variant={"outline"}
-              >
-                <DownloadIcon />
-              </ButtonDownloadInspectionReport>
-              <Link
-                href={url}
-                onClick={() => startTransition(() => {})}
-                className={buttonVariants({ size: "sm" })}
-              >
-                {isPending && <Spinner className="inline" />} View
-              </Link>
-            </>
-          )}
+          <Link
+            href={url}
+            onClick={() => startTransition(() => {})}
+            className={buttonVariants({ size: "sm" })}
+          >
+            {isPending && <Spinner className="inline" />} View
+          </Link>
         </div>
       );
     },

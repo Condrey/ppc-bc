@@ -71,7 +71,6 @@ const Content = ({
       type,
       status,
       createdAt,
-      feeAssessments,
       applicant: {
         name,
         user: { avatarUrl },
@@ -84,12 +83,6 @@ const Content = ({
   const { title: landInterest } = naturesOfInterestInLand[natureOfInterest];
   const usePurpose = landUseType === "OTHERS" ? otherLandUseType : _landUse;
   const { title: applicationType } = applicationTypes[type];
-  const isLandApplication = type === ApplicationType.LAND;
-  const fees = feeAssessments.filter((f) =>
-    isLandApplication
-      ? f.assessmentType === FeeAssessmentType.LAND_APPLICATION
-      : f.assessmentType === FeeAssessmentType.BUILDING_APPLICATION,
-  );
   const location = `${cell ? `${cell} cell, ` : ""}${village ? `${village} village, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty}, ` : ""} ${district}`;
   const inspected = status !== "SUBMITTED";
   const applicationNumber = getApplicationNumber(applicationNo, year, type);

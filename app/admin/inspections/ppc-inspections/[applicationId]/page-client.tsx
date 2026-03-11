@@ -23,11 +23,12 @@ import { DownloadIcon } from "lucide-react";
 
 interface Props {
   application: ApplicationData;
+  applicationId: string;
 }
-export function PageClient({ application: initialData }: Props) {
+export function PageClient({ application: initialData, applicationId }: Props) {
   const query = useQuery({
-    queryKey: ["inspection", "applicationId", initialData.id],
-    queryFn: () => getApplicationInspections(initialData.id),
+    queryKey: ["inspection", "applicationId", applicationId],
+    queryFn: () => getApplicationInspections(applicationId),
     initialData,
   });
   const { data: application, status } = query;
@@ -49,12 +50,14 @@ export function PageClient({ application: initialData }: Props) {
   }
   const { inspections, type, landApplication, buildingApplication } =
     application;
+
   const numberOfInspections = inspections.length;
   const manyInspections = numberOfInspections > 3;
   const isLandApplication = type === ApplicationType.LAND;
+  const inspection = inspections[0];
   return (
     <Tabs
-      defaultValue={inspections[0].id}
+      defaultValue={inspection.id}
       orientation={manyInspections ? "vertical" : "horizontal"}
       className="gap-6"
     >
