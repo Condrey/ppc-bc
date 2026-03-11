@@ -28,7 +28,7 @@ export default function Container({
       )}
       <div
         className={cn(
-          "max-w-9xl w-full max-h-[calc(100vh-var(--header-height))] overflow-x-clip py-16   p-3  sm:pt-12 sm:pb-4 md:pb-12 space-y-4  md:space-y-6 mx-auto",
+          "max-w-9xl w-full max-h-[calc(100vh-var(--header-height))] md:max-h-none overflow-x-clip py-16   p-3  sm:pt-12 sm:pb-4 md:pb-12 space-y-4  md:space-y-6 mx-auto",
           className,
         )}
         {...props}
