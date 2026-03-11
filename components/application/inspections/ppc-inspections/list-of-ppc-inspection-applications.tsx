@@ -8,6 +8,7 @@ import ErrorContainer from "../../../query-container/error-container";
 import ButtonAddEditPpaForm1 from "../../parent-application/ppaForm/button-add-edit-ppa-form1";
 import { useParentApplicationsQuery } from "../../parent-application/query";
 import { usePpcInspectionsColumns } from "./columns";
+import PpcInspectionItem from "./ppc-insection-item";
 
 export default function ListOfPpcInspectionApplications({
   initialData,
@@ -42,6 +43,8 @@ export default function ListOfPpcInspectionApplications({
       filterColumn={{ id: "application_applicant_name", label: "applicant" }}
       tableHeaderSection={<TypographyH4 text="Inspection Applications" />}
       className="w-full"
+      cardRenderer={(item) => 
+      <PpcInspectionItem item={item} navigateTo={`/admin/inspections/ppc-inspections/${item.applicationId}`}/>}
     ></DataTable>
   );
 }

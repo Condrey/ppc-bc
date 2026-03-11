@@ -38,20 +38,9 @@ export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
       return <DataTableColumnHeader column={column} title="s/n" />;
     },
     cell({ row }) {
-      const {
-        application: { inspections },
-      } = row.original;
-      const neverInspected = !inspections.length;
       return (
         <div>
-          <CircleIcon
-            className={cn(
-              "inline-flex size-4",
-              neverInspected
-                ? "text-destructive fill-destructive"
-                : "text-success fill-success",
-            )}
-          />
+         
           <span>{row.index + 1}</span>
         </div>
       );
@@ -85,23 +74,17 @@ export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
     },
     cell({ row }) {
       const {
-        application: { inspections, status },
+        application: {  status },
       } = row.original;
-      const neverInspected = !inspections.length;
-      const { title, variant } = applicationStatuses[status];
+      const inspected = status !== "SUBMITTED";
       return (
         <Badge
-          variant={
-            // neverInspected ? "destructive" : variant
-            "secondary"
-          }
+          variant={inspected?'success':'destructive'}
           className="font-bold"
         >
-          {neverInspected
-            ? "Pending"
-            : status === "APPROVED"
+          {status !== "SUBMITTED"
               ? "Inspected"
-              : title}
+              : "Pending"}
         </Badge>
       );
     },
@@ -206,11 +189,12 @@ export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
     cell({ row }) {
       const {
         natureOfInterest,
-        landUse: { acreage, landUseType },
+        landUse: { acreage, landUseType,otherLandUseType },
         site,
       } = row.original;
-      const { title: usePurpose } = landUseTypes[landUseType];
+      const { title: _landUse } = landUseTypes[landUseType];
       const { title: landInterest } = naturesOfInterestInLand[natureOfInterest];
+  const usePurpose = landUseType==='OTHERS'?otherLandUseType:_landUse
 
       return (
         <div>
