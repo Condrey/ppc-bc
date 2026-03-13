@@ -62,8 +62,8 @@ export function usePostponeMeetingMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: postponeMeeting,
-    async onSuccess(data, meetingId) {
-      const queryKey2: QueryKey = ["meeting", meetingId];
+    async onSuccess(data, variables) {
+      const queryKey2: QueryKey = ["meeting", variables.meetingId];
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
 

@@ -77,7 +77,7 @@ export default function CardStartMeeting({ meeting, className }: Props) {
         </ItemFooter>
       </ItemContent>
       <ItemActions className="justify-end items-end flex flex-row-reverse sm:flex-row">
-        {!meetingNotStarted && (
+        {meetingNotStarted && (
           <ButtonPostponeMeeting meeting={meeting} variant={"outline"}>
             Postpone
           </ButtonPostponeMeeting>

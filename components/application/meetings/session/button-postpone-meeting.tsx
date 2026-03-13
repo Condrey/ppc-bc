@@ -1,10 +1,12 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { ButtonProps } from "@/components/ui/button";
+import { Button, ButtonProps } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -22,7 +24,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
@@ -74,7 +75,7 @@ export default function ButtonPostponeMeeting({ meeting, ...props }: Props) {
     mutate(
       { meetingId: meeting.id, postponedOn: input.singleContentDate },
       {
-        onSuccess: () => setOpen(true),
+        onSuccess: () => setOpen(false),
       },
     );
   }
@@ -99,23 +100,20 @@ export default function ButtonPostponeMeeting({ meeting, ...props }: Props) {
           <DialogDescription>Title: {title}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <div className="space-y-0.5 mb-6">
+          <div className="gap-2 flex flex-wrap mb-6">
             <Badge>
               <strong>Current:</strong> {formatDate(date, "PPPp")}
             </Badge>
             <Badge variant={"outline"}>
-              {/* <strong>Postponed:</strong> {formatDate(dateValue, "PPPp")} */}
+              <strong>Postponed:</strong> {formatDate(dateValue, "PPPp")}
             </Badge>
           </div>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
-            <pre>{JSON.stringify(watchedDate, null, 2)}</pre>
-
             <FormField
               control={form.control}
               name="singleContentDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Enter postponed time and date</FormLabel>
                   <FormControl>
                     <FieldGroup>
                       <Field>
@@ -144,9 +142,9 @@ export default function ButtonPostponeMeeting({ meeting, ...props }: Props) {
                           />
                         </InputGroup>
                       </Field>
-                      <Field className="max-w-fit mx-auto">
+                      <Field>
                         <FieldLabel>Date of occurrence</FieldLabel>
-                        <FieldContent>
+                        <FieldContent className="max-w-fit mx-auto">
                           <Calendar
                             mode="single"
                             selected={field.value}
@@ -173,6 +171,14 @@ export default function ButtonPostponeMeeting({ meeting, ...props }: Props) {
                 </FormItem>
               )}
             />
+            <ButtonGroup className="justify-end w-full gap-3">
+              <Button variant={"outline"} asChild>
+                <DialogClose>Close</DialogClose>
+              </Button>
+              <LoadingButton variant={"destructive"} loading={isPending}>
+                Postpone
+              </LoadingButton>
+            </ButtonGroup>
           </form>
         </Form>
       </DialogContent>
