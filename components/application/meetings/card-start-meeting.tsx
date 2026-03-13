@@ -1,7 +1,6 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Item,
   ItemActions,
@@ -15,6 +14,7 @@ import { MeetingData } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { formatDate } from "date-fns";
 import { AlarmClockIcon, DotIcon, MapPinIcon } from "lucide-react";
+import ButtonPostponeMeeting from "./session/button-postpone-meeting";
 import ButtonStartMeeting from "./session/button-start-meeting";
 
 interface Props {
@@ -30,13 +30,19 @@ export default function CardStartMeeting({ meeting, className }: Props) {
     postponedOn,
     committee,
     applications,
-    id,
     status,
   } = meeting;
   const title = `${meetingTitle}`.substring(0, 25);
-  const meetingInProgress = status === MeetingStatus.IN_PROGRESS;
+  const meetingNotStarted =
+    status === MeetingStatus.PENDING || status === MeetingStatus.POSTPONED;
   return (
-    <Item variant={"muted"} className={cn("", className)}>
+    <Item
+      variant={"muted"}
+      className={cn(
+        "flex flex-col items-start sm:items-center sm:flex-row",
+        className,
+      )}
+    >
       <ItemContent>
         <ItemTitle>
           <Badge>{committee}</Badge>
@@ -70,15 +76,21 @@ export default function CardStartMeeting({ meeting, className }: Props) {
           )}
         </ItemFooter>
       </ItemContent>
-      <ItemActions className="justify-end items-end">
-        <Button variant={"outline"}>Postpone</Button>
-        <div className="flex flex-col gap-2 items-center">
-          <span>
-            <AlarmClockIcon className="inline size-4 mr-2" />
-            44 mins
-          </span>
+      <ItemActions className="justify-end items-end flex flex-row-reverse sm:flex-row">
+        {!meetingNotStarted && (
+          <ButtonPostponeMeeting meeting={meeting} variant={"outline"}>
+            Postpone
+          </ButtonPostponeMeeting>
+        )}
+        <div className="flex sm:flex-col flex-row gap-2 items-center">
+          {meetingNotStarted && (
+            <span>
+              <AlarmClockIcon className="inline size-4 mr-2" />
+              44 mins
+            </span>
+          )}
           <ButtonStartMeeting meeting={meeting} disabled={!applications.length}>
-            {meetingInProgress ? "Resume meeting" : "Start Meeting"}
+            {meetingNotStarted ? "Start meeting" : "Resume Meeting"}
           </ButtonStartMeeting>
         </div>
       </ItemActions>

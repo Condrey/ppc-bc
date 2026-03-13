@@ -8,6 +8,7 @@ import ErrorContainer from "../../query-container/error-container";
 import ButtonAddEditPpaForm1 from "../parent-application/ppaForm/button-add-edit-ppa-form1";
 import { useParentApplicationsQuery } from "../parent-application/query";
 import { useParcelsColumns } from "./columns";
+import ParcelItem from "./parcel-item";
 
 export default function ListOfParcels({
   initialData,
@@ -42,6 +43,12 @@ export default function ListOfParcels({
           <TypographyH4 text="Table showing Parcels and Plotting" />
         }
         className="w-full"
+        cardRenderer={(item) => (
+          <ParcelItem
+            item={item}
+            navigateTo={`/admin/plotting/${item.applicationId}`}
+          />
+        )}
       ></DataTable>
     </>
   );

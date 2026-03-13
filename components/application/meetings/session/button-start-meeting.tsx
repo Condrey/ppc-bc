@@ -31,7 +31,10 @@ export default function ButtonStartMeeting({ meeting, ...props }: Props) {
       <LoadingButton
         loading={isPending}
         title={meetingInProgress ? "Resume meeting" : "Start meeting"}
-        className={cn(meetingInProgress && "bg-success animate-pulse")}
+        className={cn(
+          meetingInProgress && "bg-success animate-pulse",
+          props.className,
+        )}
         {...props}
         onClick={handleClick}
       />

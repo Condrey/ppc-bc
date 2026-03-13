@@ -42,11 +42,11 @@ export default async function Page({ params }: Props) {
     >
       <TypographyH2
         text={`${title} Meetings`}
-        className="flex items-center flex-wrap justify-between"
+        className="flex items-center gap-3 flex-wrap justify-between"
       >
         <ButtonAddEditMeeting
           committee={committeeType}
-          className="ms-auto max-w-fit w-full"
+          className="ms-auto max-w-fit w-full "
           variant={"secondary"}
         >
           <PlusIcon className="inline" /> new meeting

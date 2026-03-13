@@ -106,6 +106,40 @@ export async function startMeeting(meetingId: string) {
     },
   });
 }
+export async function postponeMeeting({
+  meetingId,
+  postponedOn,
+}: {
+  meetingId: string;
+  postponedOn: Date;
+}) {
+  const { user } = await validateRequest();
+  const isAuthorized =
+    !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
+  if (!isAuthorized) throw Error("Unauthorized");
+
+  await prisma.meeting.update({
+    where: { id: meetingId },
+    data: {
+      status: MeetingStatus.POSTPONED,
+      postponedOn,
+    },
+  });
+}
+
+export async function endMeeting(meetingId: string) {
+  const { user } = await validateRequest();
+  const isAuthorized =
+    !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
+  if (!isAuthorized) throw Error("Unauthorized");
+
+  await prisma.meeting.update({
+    where: { id: meetingId },
+    data: {
+      status: MeetingStatus.COMPLETED,
+    },
+  });
+}
 
 export async function decideApplication({
   application,

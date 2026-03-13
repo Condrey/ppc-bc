@@ -453,6 +453,7 @@ model Parcel {
 
 model Meeting {
   id              String        @id @default(uuid())
+  meetingNo       Int           @default(autoincrement())
   committee       Committee     @default(PPC)
   title           String
   venue           String
@@ -462,10 +463,13 @@ model Meeting {
   sendInvitations Boolean       @default(true)
   happeningOn     DateTime
   postponedOn     DateTime?
+  endedAt         DateTime?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   status          MeetingStatus @default(PENDING)
   minute          Minute?
+
+  @@unique([meetingNo, createdAt])
 }
 
 model Minute {

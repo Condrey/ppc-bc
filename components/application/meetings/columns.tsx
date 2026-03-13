@@ -7,6 +7,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { committees, meetingStatuses } from "@/lib/enums";
 import { MeetingStatus } from "@/lib/generated/prisma/enums";
 import { MeetingData } from "@/lib/types";
+import { getMeetingNumber } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns";
 import Link from "next/link";
@@ -23,26 +24,20 @@ export const useMeetingsColumns: ColumnDef<MeetingData>[] = [
       return <span>{row.index + 1}</span>;
     },
   },
-  // {
-  //   accessorKey: "minute.minuteNumber",
-  //   header({ column }) {
-  //     return <DataTableColumnHeader column={column} title="Minute number" />;
-  //   },
-  //   cell({ row }) {
-  //     const { minute } = row.original;
-  //     return (
-  //       <div>
-  //         {!minute ? (
-  //           <div className="text-destructive">Not minuted</div>
-  //         ) : (
-  //           <div className="text-xs text-muted-foreground">
-  //             {minute.minuteNumber}
-  //           </div>
-  //         )}
-  //       </div>
-  //     );
-  //   },
-  // },
+  {
+    accessorKey: "meetingNo",
+    header({ column }) {
+      return <DataTableColumnHeader column={column} title="Meeting number" />;
+    },
+    cell({ row }) {
+      const { meetingNo, happeningOn, postponedOn } = row.original;
+      const date = postponedOn ? postponedOn : happeningOn;
+      const meetingNumber = getMeetingNumber(meetingNo, date);
+      return (
+        <div className="text-xs text-muted-foreground">{meetingNumber}</div>
+      );
+    },
+  },
 
   {
     accessorKey: "status",
@@ -107,8 +102,15 @@ export const useMeetingsColumns: ColumnDef<MeetingData>[] = [
       return <DataTableColumnHeader column={column} title="Date" />;
     },
     cell({ row }) {
-      const { happeningOn } = row.original;
-      return <span>{formatDate(happeningOn!, "PPp")}</span>;
+      const { happeningOn, postponedOn } = row.original;
+      const date = postponedOn ? postponedOn : happeningOn;
+
+      return (
+        <span>
+          {formatDate(date!, "PPp")}
+          {postponedOn && "(postponed)"}
+        </span>
+      );
     },
   },
 

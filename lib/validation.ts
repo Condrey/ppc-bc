@@ -499,3 +499,8 @@ export type EmailSchema = z.infer<typeof emailSchema>;
 
 export const singleContentSchema = z.object({ singleContent: requiredString });
 export type SingleContentSchema = z.infer<typeof singleContentSchema>;
+
+export const singleContentDateSchema = z.object({
+  singleContentDate: z.date({ error: "Please enter a correct date." }),
+});
+export type SingleContentDateSchema = z.infer<typeof singleContentDateSchema>;

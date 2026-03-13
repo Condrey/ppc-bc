@@ -3,6 +3,7 @@
 import { getAllCommitteeMeetings } from "@/components/application/meetings/action";
 import { useMeetingsColumns } from "@/components/application/meetings/columns";
 import ButtonAddEditMeeting from "@/components/application/meetings/form-components/button-add-edit-meeting";
+import MeetingItem from "@/components/application/meetings/meeting-item";
 import { DataTable } from "@/components/data-table/data-table";
 import { EmptyContainer } from "@/components/query-container/empty-container";
 import ErrorContainer from "@/components/query-container/error-container";
@@ -43,8 +44,14 @@ export function PageClient({ meetings: initialData, committeeType }: Props) {
     <DataTable
       data={meetings}
       columns={useMeetingsColumns}
-      // filterColumn={{ id: "minute_minuteNumber", label: "minute number" }}
+      filterColumn={{ id: "meetingNo", label: "meeting number" }}
       className="w-full"
+      cardRenderer={(item) => (
+        <MeetingItem
+          item={item}
+          navigateTo={`/admin/meetings/${item.committee}/${item.id}`}
+        />
+      )}
     ></DataTable>
   );
 }

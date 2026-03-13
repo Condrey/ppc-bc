@@ -138,10 +138,10 @@ export const useParcelsColumns: ColumnDef<ParentApplicationData>[] = [
     cell({ row }) {
       const {
         natureOfInterest,
-        landUse: { landUseType },
-        application: { landApplication },
+        landUse: { landUseType, otherLandUseType },
+        application: { type },
       } = row.original;
-      const isLAndApplication = !!landApplication;
+      const isLAndApplication = type === "LAND";
       const { title: usePurpose } = landUseTypes[landUseType];
       const { title: landInterest } = naturesOfInterestInLand[natureOfInterest];
 
@@ -149,9 +149,9 @@ export const useParcelsColumns: ColumnDef<ParentApplicationData>[] = [
         <div className="max-w-36 *:text-wrap">
           <div>
             {isLAndApplication ? (
-              <>Applying for {landInterest} certificate</>
+              <>Application for {landInterest} certificate</>
             ) : (
-              <>{`Building on a ${landInterest} land for ${usePurpose} use`}</>
+              <>{`Development permission for ${landUseType === "OTHERS" ? otherLandUseType : usePurpose} purpose on ${landInterest} land`}</>
             )}
           </div>
           <div className="text-muted-foreground"></div>

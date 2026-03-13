@@ -2,7 +2,11 @@ import { clsx, type ClassValue } from "clsx";
 import { formatDuration, intervalToDuration } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import { applicationTypes, naturesOfInterestInLand } from "./enums";
-import { ApplicationType, Committee, NatureOfInterestInLand } from "./generated/prisma/enums";
+import {
+  ApplicationType,
+  Committee,
+  NatureOfInterestInLand,
+} from "./generated/prisma/enums";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -110,6 +114,11 @@ export const getApplicationNumber = (
   );
 };
 
+export const getMeetingNumber = (meetingNo: number, date: Date) => {
+  const year = date.getFullYear();
+  return `Meeting ${String(meetingNo).padStart(3, "0")}/${year}`;
+};
+
 export const getMinuteNumber = ({
   number,
   date: now,
@@ -164,6 +173,6 @@ export function useDebounce<T extends (...args: any[]) => void>(
   };
 }
 
-export function getApplicationFee(interest:NatureOfInterestInLand){
-  return naturesOfInterestInLand[interest].amount
+export function getApplicationFee(interest: NatureOfInterestInLand) {
+  return naturesOfInterestInLand[interest].amount;
 }

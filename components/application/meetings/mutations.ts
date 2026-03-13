@@ -2,7 +2,13 @@
 import { applicationStatuses } from "@/lib/enums";
 import { QueryKey, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { decideApplication, startMeeting, upsertMeeting } from "./action";
+import {
+  decideApplication,
+  endMeeting,
+  postponeMeeting,
+  startMeeting,
+  upsertMeeting,
+} from "./action";
 
 const queryKey: QueryKey = ["meetings"];
 
@@ -48,6 +54,52 @@ export function useStartMeetingMutation() {
     onError(error) {
       console.error(error);
       toast.error("Failed to start meeting");
+    },
+  });
+}
+
+export function usePostponeMeetingMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: postponeMeeting,
+    async onSuccess(data, meetingId) {
+      const queryKey2: QueryKey = ["meeting", meetingId];
+      await queryClient.cancelQueries({ queryKey });
+      await queryClient.cancelQueries({ queryKey: queryKey2 });
+
+      queryClient.invalidateQueries({ queryKey });
+      queryClient.invalidateQueries({ queryKey: queryKey2 });
+
+      toast.success("success", {
+        description: "Meeting postponed",
+      });
+    },
+    onError(error) {
+      console.error(error);
+      toast.error("Failed to postpone meeting");
+    },
+  });
+}
+
+export function useEndMeetingMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: endMeeting,
+    async onSuccess(data, meetingId) {
+      const queryKey2: QueryKey = ["meeting", meetingId];
+      await queryClient.cancelQueries({ queryKey });
+      await queryClient.cancelQueries({ queryKey: queryKey2 });
+
+      queryClient.invalidateQueries({ queryKey });
+      queryClient.invalidateQueries({ queryKey: queryKey2 });
+
+      toast.success("success", {
+        description: "Meeting ended",
+      });
+    },
+    onError(error) {
+      console.error(error);
+      toast.error("Failed to end meeting");
     },
   });
 }
