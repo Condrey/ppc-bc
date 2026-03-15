@@ -9,11 +9,13 @@ import {
   ItemFooter,
   ItemTitle,
 } from "@/components/ui/item";
+import { meetingStatuses } from "@/lib/enums";
 import { MeetingStatus } from "@/lib/generated/prisma/enums";
 import { MeetingData } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { formatDate } from "date-fns";
 import { AlarmClockIcon, DotIcon, MapPinIcon } from "lucide-react";
+import ButtonEndMeeting from "./session/button-end-meeting";
 import ButtonPostponeMeeting from "./session/button-postpone-meeting";
 import ButtonStartMeeting from "./session/button-start-meeting";
 
@@ -32,7 +34,7 @@ export default function CardStartMeeting({ meeting, className }: Props) {
     applications,
     status,
   } = meeting;
-  const title = `${meetingTitle}`.substring(0, 25);
+  const { title: meetingStatus, variant } = meetingStatuses[status];
   const meetingNotStarted =
     status === MeetingStatus.PENDING || status === MeetingStatus.POSTPONED;
   return (
@@ -45,8 +47,8 @@ export default function CardStartMeeting({ meeting, className }: Props) {
     >
       <ItemContent>
         <ItemTitle>
-          <Badge>{committee}</Badge>
-          {title}
+          <Badge variant={"outline"}>{committee} meeting</Badge>-
+          <Badge variant={variant}>{meetingStatus}</Badge>
         </ItemTitle>
         <ItemDescription>
           <span>
@@ -93,6 +95,9 @@ export default function CardStartMeeting({ meeting, className }: Props) {
             {meetingNotStarted ? "Start meeting" : "Resume Meeting"}
           </ButtonStartMeeting>
         </div>
+        <ButtonEndMeeting meeting={meeting} variant={"destructive"}>
+          End Meeting
+        </ButtonEndMeeting>
       </ItemActions>
     </Item>
   );

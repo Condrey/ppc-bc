@@ -127,7 +127,13 @@ export async function postponeMeeting({
   });
 }
 
-export async function endMeeting(meetingId: string) {
+export async function endMeeting({
+  meetingId,
+  endedAt,
+}: {
+  meetingId: string;
+  endedAt: Date;
+}) {
   const { user } = await validateRequest();
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
@@ -137,6 +143,7 @@ export async function endMeeting(meetingId: string) {
     where: { id: meetingId },
     data: {
       status: MeetingStatus.COMPLETED,
+      endedAt,
     },
   });
 }

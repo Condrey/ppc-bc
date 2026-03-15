@@ -176,3 +176,24 @@ export function useDebounce<T extends (...args: any[]) => void>(
 export function getApplicationFee(interest: NatureOfInterestInLand) {
   return naturesOfInterestInLand[interest].amount;
 }
+
+// Date time
+export const getTimeInput = (dateValue: Date) =>
+  dateValue.getHours() +
+  ":" +
+  dateValue.getMinutes() +
+  ":" +
+  dateValue.getSeconds();
+
+export const getDateTimeOutput = (
+  time: string,
+  date: Date | null | undefined,
+) => {
+  const [hours = "0", minutes = "0", seconds = "0"] = time.split(":");
+  const newDate = date ? new Date(date) : new Date();
+  newDate.setHours(Number(hours), Number(minutes), Number(seconds));
+  newDate.setDate(Number(date?.getDate()));
+  newDate.setMonth(Number(date?.getMonth()));
+  newDate.setFullYear(Number(date?.getFullYear()));
+  return newDate;
+};

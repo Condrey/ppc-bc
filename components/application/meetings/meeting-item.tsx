@@ -32,20 +32,26 @@ export default function MeetingItem({ item, navigateTo }: Props) {
     : "#";
 
   return (
-    <Item
-      size={"sm"}
-      variant={"muted"}
-      onClick={() => startTransition(() => {})}
-      asChild={!!navigateTo}
-    >
-      {navigateTo ? (
-        <Link href={url}>
-          <Content item={item} isPending={isPending} />
-        </Link>
-      ) : (
-        <Content item={item} isPending={isPending} />
-      )}
-    </Item>
+    <>
+      <Item
+        size={"sm"}
+        variant={"muted"}
+        onClick={() => startTransition(() => {})}
+        asChild={!!navigateTo}
+      >
+        {navigateTo ? (
+          <Link href={url}>
+            <Content
+              item={item}
+              navigateTo={navigateTo}
+              isPending={isPending}
+            />
+          </Link>
+        ) : (
+          <Content item={item} navigateTo={navigateTo} isPending={isPending} />
+        )}
+      </Item>
+    </>
   );
 }
 
@@ -64,7 +70,8 @@ const Content = ({
     happeningOn,
     postponedOn,
   } = item;
-  const date = postponedOn ? postponedOn : happeningOn;
+  const isPostponed = !!postponedOn;
+  const date = isPostponed ? postponedOn : happeningOn;
   const meetingNumber = getMeetingNumber(meetingNo, date);
   const { title: meetingStatus, variant } = meetingStatuses[status];
   const { title: meetingCommittee } = committees[committee];
@@ -103,7 +110,8 @@ const Content = ({
         </p>
         <span className="block flex-none">
           <HistoryIcon className="inline size-4 mr-1" />
-          {formatDate(date, "PPPp")}
+          {formatDate(date, "PPPp")}{" "}
+          {isPostponed && <strong className="text-warning">-P</strong>}
         </span>
       </ItemFooter>
     </>

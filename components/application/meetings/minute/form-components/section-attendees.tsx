@@ -35,23 +35,22 @@ export default function SectionAttendees({ form }: Props) {
   const { data: committeeMembers, status } = query;
   return (
     <Card>
-      <CardHeader>
-        <div className="flex flex-row w-full items-center justify-between">
-          <div className="space-y-2">
-            <CardTitle>Attendance</CardTitle>
-            <CardDescription>
-              List of members who were present in attendance.
-            </CardDescription>
-          </div>
-          <ButtonAddAttendee
-            thisForm={form}
-            committeeMembers={committeeMembers || []}
-            size={"sm"}
-            type="button"
-          >
-            <PlusIcon /> attendee
-          </ButtonAddAttendee>
+      <CardHeader className="w-full flex flex-col md:flex-row gap-3 justify-between  ">
+        <div className="space-y-2">
+          <CardTitle>Attendance</CardTitle>
+          <CardDescription>
+            List of members who were present in attendance.
+          </CardDescription>
         </div>
+        <ButtonAddAttendee
+          thisForm={form}
+          committeeMembers={committeeMembers || []}
+          size={"sm"}
+          type="button"
+          className=" ms-auto"
+        >
+          <PlusIcon /> attendee
+        </ButtonAddAttendee>
       </CardHeader>
       <CardContent className="space-y-6">
         <FormField

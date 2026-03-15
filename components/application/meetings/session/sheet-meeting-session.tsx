@@ -21,7 +21,7 @@ import { APPLICATION_TYPE_SEARCH_PARAMETER } from "@/lib/constants";
 import { allApplicationTypes, applicationTypes } from "@/lib/enums";
 import { ApplicationType } from "@/lib/generated/prisma/enums";
 import { MeetingData } from "@/lib/types";
-import { ChevronsUpDownIcon } from "lucide-react";
+import { ChevronsUpDownIcon, SlashIcon } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import MeetingSession from "./meeting-session";
 
@@ -56,17 +56,17 @@ export default function SheetMeetingSession({
           }}
         >
           <div className="max-w-7xl space-y-6 mx-auto w-full  ">
-            <SheetHeader className="w-full  items-center flex flex-row">
+            <SheetHeader className="w-full gap-0  items-center flex flex-row">
               <TabsList asChild>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
-                      className="max-w-3xs w-full flex justify-between gap-2"
+                      className="max-w-fit w-full flex justify-between gap-2"
                       variant={"outline"}
                     >
                       <div className="flex gap-2 items-center">
-                        <CurrentIcon /> {currentType}
-                      </div>{" "}
+                        <CurrentIcon className="hidden md:flex" /> {currentType}
+                      </div>
                       <ChevronsUpDownIcon />
                     </Button>
                   </DropdownMenuTrigger>
@@ -88,6 +88,7 @@ export default function SheetMeetingSession({
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TabsList>
+              <SlashIcon className="-rotate-45 text-muted-foreground" />
               <SheetTitle className="line-clamp-1">{title}</SheetTitle>
             </SheetHeader>
             {allApplicationTypes.map((appType) => {

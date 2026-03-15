@@ -2,18 +2,23 @@
 
 import { ButtonProps } from "@/components/ui/button";
 import LoadingButton from "@/components/ui/loading-button";
-import { MeetingData } from "@/lib/types";
+import { Meeting } from "@/lib/generated/prisma/client";
+import { MinuteData } from "@/lib/types";
 import ky from "ky";
 import { useTransition } from "react";
 import { toast } from "sonner";
 
 interface Props extends ButtonProps {
-  meeting: MeetingData;
+  meeting: Meeting;
+  minute?: MinuteData;
 }
-export default function ButtonDownloadMinute({ meeting, ...props }: Props) {
+export default function ButtonDownloadMinute({
+  minute,
+  meeting,
+  ...props
+}: Props) {
   const [isPending, startTransition] = useTransition();
-
-  async function handleOnClickEvent() {
+  function handleSubmission() {
     startTransition(async () => {
       const response = await ky.post(`/api/template/minutes`, {
         body: JSON.stringify(meeting),
@@ -36,11 +41,13 @@ export default function ButtonDownloadMinute({ meeting, ...props }: Props) {
     });
   }
   return (
-    <LoadingButton
-      loading={isPending}
-      onClick={handleOnClickEvent}
-      title={`Download Minutes`}
-      {...props}
-    />
+    <>
+      <LoadingButton
+        loading={isPending}
+        title={minute ? "Update minute" : "Start minuting"}
+        {...props}
+        onClick={handleSubmission}
+      />
+    </>
   );
 }

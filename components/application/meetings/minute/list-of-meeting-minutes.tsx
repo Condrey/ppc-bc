@@ -54,7 +54,7 @@ export default function ListOfMeetingMinutes({
                 />
               </div>
             </AccordionTrigger>
-            <AccordionContent>
+            <AccordionContent className="px-3">
               {shouldHaveBuildingApplications ? (
                 <SectionBuildingApplications meeting={meeting} />
               ) : shouldHaveLandApplications ? (
@@ -62,13 +62,13 @@ export default function ListOfMeetingMinutes({
               ) : (
                 <div className="flex gap-3 flex-col md:flex-row *:flex-1 divide-y md:divide-y-0 md:divide-x ">
                   <div className="pb-3 md:pb-0 md:pe-3">
-                    <h3 className="font-bold tracking-tight uppercase ">
+                    <h3 className="font-bold tracking-tight text-warning uppercase ">
                       Action by
                     </h3>
                     <TipTapViewer content={discussion} />
                   </div>
                   <div>
-                    <h3 className="font-bold tracking-tight uppercase ">
+                    <h3 className="font-bold text-success tracking-tight uppercase ">
                       Resolution
                     </h3>
                     <TipTapViewer content={wayForward} />

@@ -1,12 +1,10 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button, ButtonProps } from "@/components/ui/button";
+import { ButtonProps } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -36,28 +34,40 @@ import {
 } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {} from "@radix-ui/react-dialog";
-import { formatDate } from "date-fns";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { usePostponeMeetingMutation } from "../mutations";
+import { useEndMeetingMutation } from "../mutations";
 
 interface Props extends ButtonProps {
   meeting: MeetingData;
 }
 
-export default function ButtonPostponeMeeting({ meeting, ...props }: Props) {
+export default function ButtonEndMeeting({ meeting, ...props }: Props) {
   const [open, setOpen] = useState(false);
-  const { mutate, isPending } = usePostponeMeetingMutation();
+  const [withCustomDate, setWithCustomDate] = useState(false);
+  const { mutate, isPending } = useEndMeetingMutation();
   const { meetingNo, postponedOn, happeningOn, title } = meeting;
   const date = postponedOn ? postponedOn : happeningOn;
   const meetingNumber = getMeetingNumber(meetingNo, date);
   const form = useForm<SingleContentDateSchema>({
     resolver: zodResolver(singleContentDateSchema),
+    defaultValues: {
+      singleContentDate: meeting.endedAt || new Date(),
+    },
   });
-  function handleSubmit(input: SingleContentDateSchema) {
+  function handleSubmit(
+    input: SingleContentDateSchema,
+    event?: React.BaseSyntheticEvent,
+  ) {
+    const submitter = (event?.nativeEvent as SubmitEvent)
+      ?.submitter as HTMLButtonElement;
+    const action = submitter?.value;
     mutate(
-      { meetingId: meeting.id, postponedOn: input.singleContentDate },
+      {
+        meetingId: meeting.id,
+        endedAt: action === "now" ? new Date() : input.singleContentDate,
+      },
       {
         onSuccess: () => setOpen(false),
       },
@@ -79,20 +89,32 @@ export default function ButtonPostponeMeeting({ meeting, ...props }: Props) {
         />
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader className="items-start border-b">
-          <DialogTitle>Postpone {meetingNumber}</DialogTitle>
+        <DialogHeader className="items-start ">
+          <DialogTitle>End {meetingNumber}</DialogTitle>
           <DialogDescription>Title: {title}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <div className="gap-2 flex flex-wrap mb-6">
-            <Badge>
-              <strong>Current:</strong> {formatDate(date, "PPPp")}
-            </Badge>
-            <Badge variant={"outline"}>
-              <strong>Postponed:</strong> {formatDate(dateValue, "PPPp")}
-            </Badge>
-          </div>
-          <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-6"
+          >
+            <div className="w-full max-w-fit mx-auto">
+              <LoadingButton
+                size={"lg"}
+                variant={"destructive"}
+                loading={isPending}
+                value={"draft"}
+              >
+                End meeting now
+              </LoadingButton>
+            </div>
+
+            <div className="flex w-full text-muted-foreground gap-2 items-center">
+              <hr className="flex-1" />
+              Or
+              <hr className="flex-1" />
+            </div>
+            <h2 className="text-center">Use a custom time and date</h2>
             <FormField
               control={form.control}
               name="singleContentDate"
@@ -146,6 +168,7 @@ export default function ButtonPostponeMeeting({ meeting, ...props }: Props) {
                                 ),
                               });
                             }}
+                            className="border"
                           />
                         </FieldContent>
                       </Field>
@@ -155,12 +178,14 @@ export default function ButtonPostponeMeeting({ meeting, ...props }: Props) {
                 </FormItem>
               )}
             />
-            <ButtonGroup className="justify-end w-full gap-3">
-              <Button variant={"outline"} asChild>
-                <DialogClose>Close</DialogClose>
-              </Button>
-              <LoadingButton variant={"destructive"} loading={isPending}>
-                Postpone
+            <ButtonGroup className="justify-center w-full gap-1">
+              <LoadingButton
+                size={"lg"}
+                variant={"destructive"}
+                loading={isPending}
+                value={"custom"}
+              >
+                End using above date
               </LoadingButton>
             </ButtonGroup>
           </form>

@@ -81,12 +81,12 @@ export default function FormAddEditMinute({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(submitForm)} className="space-y-6">
             <div className="max-w-7xl space-y-6 mx-auto w-full  ">
-              <SheetHeader className="w-full flex gap-3 justify-between flex-row  ">
+              <SheetHeader className="w-full flex flex-col md:flex-row gap-3 justify-between   ">
                 <div>
                   <SheetTitle className="line-clamp-1">
                     {minute ? "Update this minute" : "Start minuting"}
                   </SheetTitle>
-                  <SheetDescription>
+                  <SheetDescription className="text-justify md:text-start hyphens-auto">
                     <strong>{statusOfTheMeeting}</strong> {titleOfTheMeeting},
                     venue: {venueOfTheMeeting}, date: {dateOfOccurrence}, time:{" "}
                     {timeOfOccurrence} organized by the {committee}

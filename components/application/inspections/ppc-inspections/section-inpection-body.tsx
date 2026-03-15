@@ -77,10 +77,10 @@ export default function SectionInspectionBody({
           application={application}
           inspection={inspection}
           size={"sm"}
-          className="float-end ms-3"
-          variant={"outline"}
+          className=""
+          variant={"secondary"}
         >
-          <DownloadIcon className="inline mr-2 " /> download inspection report
+          <DownloadIcon className="inline mr-2 " /> inspection report
         </ButtonDownloadInspectionReport>
 
         <p className=" tracking-wide leading-loose text-justify hyphens-auto ">

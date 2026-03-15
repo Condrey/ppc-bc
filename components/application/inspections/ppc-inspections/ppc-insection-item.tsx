@@ -16,10 +16,6 @@ import {
   landUseTypes,
   naturesOfInterestInLand,
 } from "@/lib/enums";
-import {
-  ApplicationType,
-  FeeAssessmentType,
-} from "@/lib/generated/prisma/enums";
 import { ParentApplicationData } from "@/lib/types";
 import { getApplicationNumber } from "@/lib/utils";
 import { formatDate } from "date-fns";
@@ -49,10 +45,10 @@ export default function PpcInspectionItem({ item, navigateTo }: Props) {
     >
       {navigateTo ? (
         <Link href={url}>
-          <Content item={item} isPending={isPending} />
+          <Content item={item} navigateTo={navigateTo} isPending={isPending} />
         </Link>
       ) : (
-        <Content item={item} isPending={isPending} />
+        <Content item={item} navigateTo={navigateTo} isPending={isPending} />
       )}
     </Item>
   );

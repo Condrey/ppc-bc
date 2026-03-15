@@ -60,19 +60,21 @@ export default function CardMeetingApplications({ meeting, className }: Props) {
             <Button>Add Applications</Button>
           </EmptyContainer>
         ) : (
-          <div className="flex flex-row gap-2 flex-wrap">
+          <div className="flex flex-col md:flex-row gap-2 flex-wrap">
             {_applications.map(({ count, title, icon: Icon }) => (
               <Item
                 key={title}
-                variant={"outline"}
-                className="first:bg-success first:text-success-foreground even:bg-warning even:text-warning-foreground last:bg-primary last:text-primary-foreground last:flex-1"
+                className={cn(
+                  "p-0",
+                  "md:p-4 md:border md:first:bg-success md:first:text-success-foreground md:even:bg-warning md:even:text-warning-foreground md:last:bg-primary md:last:text-primary-foreground md:last:flex-1",
+                )}
               >
-                <ItemContent>
+                <ItemContent className="flex-row justify-between items-center md:flex-col md:items-start">
                   <ItemTitle>
                     <Icon />
                     {title}
                   </ItemTitle>
-                  <ItemDescription className="text-inherit/50 font-sans slashed-zero oldstyle-nums">{`${formatNumber(count)} application${count === 1 ? "" : "s"}`}</ItemDescription>
+                  <ItemDescription className=" text-inherit/50 font-sans slashed-zero oldstyle-nums">{`${formatNumber(count)} application${count === 1 ? "" : "s"}`}</ItemDescription>
                 </ItemContent>
               </Item>
             ))}

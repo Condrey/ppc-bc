@@ -23,7 +23,7 @@ function SheetClose({
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Close> & ButtonProps) {
   return (
-    <Button variant={variant} size={size} {...props} asChild>
+    <Button type="button" variant={variant} size={size} {...props} asChild>
       <SheetPrimitive.Close data-slot="sheet-close" {...props} />
     </Button>
   );

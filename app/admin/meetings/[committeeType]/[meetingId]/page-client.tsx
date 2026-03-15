@@ -11,7 +11,6 @@ import Container from "@/components/container";
 import { TypographyH2 } from "@/components/headings";
 import { EmptyContainer } from "@/components/query-container/empty-container";
 import ErrorContainer from "@/components/query-container/error-container";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -30,9 +29,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Item, ItemContent, ItemTitle } from "@/components/ui/item";
-import { committees, meetingStatuses } from "@/lib/enums";
+import { committees } from "@/lib/enums";
 import { Committee } from "@/lib/generated/prisma/enums";
 import { MeetingData } from "@/lib/types";
+import { getMeetingNumber } from "@/lib/utils";
 import {
   AlertTriangleIcon,
   DownloadIcon,
@@ -59,11 +59,18 @@ export default function PageClient({ meeting: initialData, committee }: Props) {
     );
   }
   if (!meeting) return notFound();
-  const { minute, title: meetingTitle, invitedMembers, status } = meeting;
+  const {
+    meetingNo,
+    happeningOn,
+    postponedOn,
+    minute,
+    title: meetingTitle,
+    invitedMembers,
+  } = meeting;
   const { title: committeeType } = committees[committee];
-  const { title: meetingStatus, variant } = meetingStatuses[status];
-  const title = `${meetingTitle}`.substring(0, 25);
-
+  const title = `${meetingTitle}`;
+  const date = postponedOn ? postponedOn : happeningOn;
+  const meetingNumber = getMeetingNumber(meetingNo, date);
   return (
     <Container
       breadcrumbs={[
@@ -76,11 +83,9 @@ export default function PageClient({ meeting: initialData, committee }: Props) {
       ]}
     >
       <TypographyH2
-        text={title}
-        className="line-clamp-2 flex gap-3 items-center flex-row-reverse "
-      >
-        <Badge variant={variant}>{meetingStatus}</Badge>
-      </TypographyH2>
+        text={meetingNumber + ": " + title}
+        className="line-clamp-2 slashed-zero  oldstyle-nums flex gap-3 items-center  "
+      />
 
       <div className="flex flex-col lg:flex-row-reverse gap-4 w-full ">
         <CardStartMeeting meeting={meeting} className="lg:w-3/5" />
@@ -99,8 +104,8 @@ export default function PageClient({ meeting: initialData, committee }: Props) {
           </ButtonAddEditMinute>
         </EmptyContainer>
       ) : (
-        <Card>
-          <CardHeader>
+        <Card className="pb-0 gap-0">
+          <CardHeader className="">
             <div className="flex flex-row gap-3 justify-between items-center">
               <div className="space-y-1.5">
                 <CardTitle>Minutes of the meeting</CardTitle>
@@ -108,10 +113,10 @@ export default function PageClient({ meeting: initialData, committee }: Props) {
                   You can view the minute details in the minutes section below.
                 </CardDescription>
               </div>
-              <ButtonDownloadMinute meeting={meeting} variant={"ghost"}>
+              {/* <ButtonDownloadMinute meeting={meeting} variant={"ghost"}>
                 <DownloadIcon className="inline mr-2" /> Download minute
-              </ButtonDownloadMinute>
-              <DropdownMenu modal={false}>
+              </ButtonDownloadMinute> */}
+              <DropdownMenu modal={true}>
                 <DropdownMenuTrigger asChild>
                   <Button variant={"ghost"} size={"icon-lg"} className="">
                     <span className="sr-only">More actions</span>
@@ -148,7 +153,7 @@ export default function PageClient({ meeting: initialData, committee }: Props) {
               </DropdownMenu>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-0 md:px-0">
             <ListOfMeetingMinutes meeting={meeting} />
           </CardContent>
         </Card>

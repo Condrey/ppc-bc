@@ -49,16 +49,17 @@ export function TypographyH3({ text, className }: TypoGraphyProps) {
   );
 }
 
-export function TypographyH4({ text, className }: TypoGraphyProps) {
+export function TypographyH4({ text, className, children }: TypoGraphyProps) {
   return (
-    <h4
+    <div
       className={cn(
         "scroll-m-20 text-xl font-semibold tracking-tight",
         className,
       )}
     >
-      {text}
-    </h4>
+      <h4>{text}</h4>
+      {children}
+    </div>
   );
 }
 

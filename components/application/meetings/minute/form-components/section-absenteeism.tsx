@@ -36,7 +36,7 @@ export default function SectionAbsenteeism({ form }: Props) {
   return (
     <Card>
       <CardHeader>
-        <div className="flex flex-row w-full items-center justify-between">
+        <div className="w-full flex flex-col md:flex-row gap-3 justify-between  ">
           <div className="space-y-2">
             <CardTitle>Absenteeism</CardTitle>
             <CardDescription>
@@ -48,6 +48,7 @@ export default function SectionAbsenteeism({ form }: Props) {
             committeeMembers={committeeMembers || []}
             size={"sm"}
             type="button"
+            className="ms-auto"
           >
             <PlusIcon /> absentee
           </ButtonAddAbsentee>

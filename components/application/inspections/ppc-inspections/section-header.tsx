@@ -48,9 +48,9 @@ export default function SectionHeader({ application }: Props) {
           </ItemTitle>
           <ItemDescription>
             <HistoryIcon className="size-4 inline mr-1" />
-            {formatDate(createdAt, "PPp")}
+            submitted {formatDate(createdAt, "PPp")}
           </ItemDescription>
-          <ItemActions>
+          <ItemActions className="hidden md:block">
             <Badge variant={"outline"}>Status: {applicationStatus}</Badge>
           </ItemActions>
         </ItemContent>
@@ -59,7 +59,7 @@ export default function SectionHeader({ application }: Props) {
         applicant={applicant}
         isChecked={false}
         variant="muted"
-        className="p-3 w-full max-w-none sm:max-w-xs"
+        className="p-3 w-full  max-w-none sm:max-w-xs"
         avatarSize="60px"
         title="APPLICANT"
       />
@@ -115,13 +115,13 @@ function AddressDetails({ address }: { address: Address | undefined }) {
   const { cell, district, parish, location, street, subCounty, town, village } =
     address;
   return (
-    <Item variant={"muted"} className="max-w-sm">
+    <Item variant={"muted"} className="max-w-none md:max-w-sm">
       <ItemContent>
-        <ItemDescription>{location}</ItemDescription>
+        <ItemDescription>Precise location, {location}</ItemDescription>
         <p className="inline-flex items-center">
           <MapPinIcon className="inline fill-muted-foreground text-muted" />{" "}
           <span className="inline-flex">
-            {street}, {village ?? cell}, {parish ?? subCounty}
+            {`${street ? `${street}, ` : ""}${village ? `${village}, ` : ""}${cell ? `${cell}, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty} division.` : ""}`}
           </span>
           <DotIcon className="inline`" /> {town ?? district}
         </p>

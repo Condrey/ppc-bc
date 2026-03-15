@@ -40,10 +40,10 @@ export default function FeesAssessmentItem({ item, navigateTo }: Props) {
     >
       {navigateTo ? (
         <Link href={url}>
-          <Content item={item} isPending={isPending} />
+          <Content item={item} navigateTo={navigateTo} isPending={isPending} />
         </Link>
       ) : (
-        <Content item={item} isPending={isPending} />
+        <Content item={item} navigateTo={navigateTo} isPending={isPending} />
       )}
     </Item>
   );

@@ -71,21 +71,28 @@ function ApplicationContainer({ application }: ApplicationContainerProps) {
   return (
     <div className="space-y-6">
       {/* <pre>{JSON.stringify(application, null, 2)}</pre> */}
-      <div className="flex items-center justify-between">
-        <TypographyH4
-          text={`[Committee ${decisionMade}]`}
-          className={cn(
-            "font-black capitalize animate-pulse",
-            decision === ApplicationStatus.DEFERRED ||
-              decision === ApplicationStatus.REJECTED
-              ? "text-destructive"
-              : decision === ApplicationStatus.UNDER_REVIEW
-                ? "text-warning"
-                : decision === ApplicationStatus.APPROVED
-                  ? "text-success"
-                  : "text-muted-foreground animate-none",
-          )}
-        />
+      <TypographyH4
+        text={
+          isLandApplication
+            ? `Application for ${title} certificate`
+            : `Building on a ${title} land`
+        }
+        className="capitalize px-3 text-center"
+      />
+      <TypographyH4
+        text={`[Committee ${decisionMade}]`}
+        className={cn(
+          "font-black capitalize  flex-col md:flex-row px-3 flex md:items-center justify-between flex-wrap",
+          decision === ApplicationStatus.DEFERRED ||
+            decision === ApplicationStatus.REJECTED
+            ? "text-destructive"
+            : decision === ApplicationStatus.UNDER_REVIEW
+              ? "text-warning"
+              : decision === ApplicationStatus.APPROVED
+                ? "text-success"
+                : "text-muted-foreground animate-none",
+        )}
+      >
         <ButtonGroup className="flex ms-auto items-center gap-0.5  ">
           <ButtonDecideApplication
             application={application}
@@ -112,20 +119,13 @@ function ApplicationContainer({ application }: ApplicationContainerProps) {
             Approve
           </ButtonDecideApplication>
         </ButtonGroup>
-      </div>
+      </TypographyH4>
       <TypographyH3
         text={owners}
-        className='before:content-["Owner(s):_"] before:text-muted-foreground'
+        className='before:content-["Owned_by_"] before:text-muted-foreground px-3'
       />
       <SectionHeader application={application} />
-      <TypographyH4
-        text={
-          isLandApplication
-            ? `Applying for ${title} land application`
-            : `Building on a ${title} land`
-        }
-        className="capitalize"
-      />
+
       <div>
         <Accordion type="multiple" className="border rounded-md">
           <AccordionItem value="inspections">

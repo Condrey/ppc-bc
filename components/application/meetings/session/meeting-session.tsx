@@ -33,7 +33,7 @@ export default function MeetingSession({ meeting, open, onOpenChange }: Props) {
 
   return (
     <Tabs defaultValue={"pending"} activationMode="manual">
-      <TabsList className="w-full group-data-[orientation=horizontal]/tabs:h-fit *:py-2">
+      <TabsList className="w-full  group-data-[orientation=horizontal]/tabs:h-fit *:py-2">
         <TabsTrigger value="pending">
           Pending <Counter count={pendingApplications.length} />{" "}
         </TabsTrigger>

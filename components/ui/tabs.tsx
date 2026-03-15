@@ -50,7 +50,11 @@ function TabsList({
     <TabsPrimitive.List
       data-slot="tabs-list"
       data-variant={variant}
-      className={cn(tabsListVariants({ variant }), className)}
+      className={cn(
+        "overflow-y-auto md:overflow-y-hidden overflow-x-hidden ",
+        tabsListVariants({ variant }),
+        className,
+      )}
       {...props}
     />
   );
