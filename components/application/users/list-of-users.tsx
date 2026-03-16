@@ -44,7 +44,12 @@ export function ListOfUsers({ initialData }: Props) {
         columns={useUsersColumns}
         filterColumn={{ id: "name" }}
         className="w-full"
-        cardRenderer={(item) => <UserCardItem item={item} />}
+        cardRenderer={(item) => (
+          <UserCardItem
+            item={item}
+            navigateTo={`/admin/users/user/${item.id}`}
+          />
+        )}
       >
         <ButtonAddEditUser>
           <PlusIcon /> Member

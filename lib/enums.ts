@@ -6,6 +6,7 @@ import {
   FeeAssessmentType,
   LandUseType,
   MeetingStatus,
+  Membership,
   NatureOfInterestInLand,
   PaymentMethod,
   Role,
@@ -387,5 +388,28 @@ export const meetingStatuses: Record<
   POSTPONED: {
     title: "Postponed",
     variant: "default",
+  },
+};
+
+// Membership
+export const allMemberships = Object.values(Membership);
+export const memberships: Record<Membership, { title: string }> = {
+  MEMBER: {
+    title: "Member",
+  },
+  CO_OPTED: {
+    title: "Co-opted Member",
+  },
+  INTERN: {
+    title: "Internee",
+  },
+  LG: {
+    title: "From Local government",
+  },
+  CIVILIAN: {
+    title: "Public/ civilian",
+  },
+  PROFESSIONAL: {
+    title: "Professional",
   },
 };

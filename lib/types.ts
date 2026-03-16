@@ -8,6 +8,7 @@ export const userDataSelect = {
   email: true,
   username: true,
   role: true,
+  ppcMembership: true,
 } satisfies Prisma.UserSelect;
 export type UserData = Prisma.UserGetPayload<{
   select: typeof userDataSelect;

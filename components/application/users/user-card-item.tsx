@@ -1,24 +1,60 @@
 import ApplicantAvatar from "@/components/applicant-avatar";
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemMedia,
-  ItemTitle,
-} from "@/components/ui/item";
-import { roles } from "@/lib/enums";
+import { Item, ItemContent, ItemMedia, ItemTitle } from "@/components/ui/item";
+import { Spinner } from "@/components/ui/spinner";
+import { useCustomSearchParams } from "@/hooks/use-custom-search-param";
+import { memberships, roles } from "@/lib/enums";
 import { UserData } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { useTransition } from "react";
 
 interface Props {
   item: UserData;
+  navigateTo?: string;
 }
-export default function UserCardItem({ item }: Props) {
-  const { avatarUrl, email, name: fullName, role, username } = item;
-  const { title: userRole } = roles[role];
+export default function UserCardItem({ item, navigateTo }: Props) {
+  const [isPending, startTransition] = useTransition();
+  const { getNavigationLinkWithPathnameWithoutUpdate } =
+    useCustomSearchParams();
+  const url = navigateTo
+    ? getNavigationLinkWithPathnameWithoutUpdate(navigateTo)
+    : "#";
+
   return (
-    <Item variant={"muted"} className={cn(" w-full ")}>
+    <Item
+      size={"sm"}
+      variant={"muted"}
+      onClick={() => startTransition(() => {})}
+      asChild={!!navigateTo}
+    >
+      {navigateTo ? (
+        <Link href={url}>
+          <Content item={item} navigateTo={navigateTo} isPending={isPending} />
+        </Link>
+      ) : (
+        <Content item={item} navigateTo={navigateTo} isPending={isPending} />
+      )}
+    </Item>
+  );
+}
+
+const Content = ({
+  item,
+  navigateTo,
+  isPending,
+}: Props & { isPending: boolean }) => {
+  const {
+    avatarUrl,
+    email,
+    name: fullName,
+    role,
+    username,
+    ppcMembership,
+  } = item;
+  const { title: userRole } = roles[role];
+  const { title: userMembership } = memberships[ppcMembership];
+
+  return (
+    <>
       <ItemMedia>
         <ApplicantAvatar
           avatarUrl={avatarUrl}
@@ -31,9 +67,12 @@ export default function UserCardItem({ item }: Props) {
         <p className="inline-block line-clamp-1">
           {email}- <span className="text-muted-foreground">@{username}</span>
         </p>
-        <ItemDescription>{userRole}</ItemDescription>
+        <p>
+          {userRole}{" "}
+          <span className="text-muted-foreground">({userMembership})</span>
+        </p>
       </ItemContent>
-      <ItemActions></ItemActions>
-    </Item>
+      <ItemMedia>{isPending && navigateTo && <Spinner />}</ItemMedia>
+    </>
   );
-}
+};

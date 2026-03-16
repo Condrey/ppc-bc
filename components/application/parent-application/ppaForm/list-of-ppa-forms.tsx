@@ -53,7 +53,12 @@ export default function ListOfPpaForm1s({
           <PlusIcon />
         </ButtonAddEditPpaForm1>
       }
-      cardRenderer={(item) => <PpaFormItem item={item} />}
+      cardRenderer={(item) => (
+        <PpaFormItem
+          item={item}
+          navigateTo={`/admin/registration/ppa-form/${item.id}`}
+        />
+      )}
       className="w-full"
     >
       <ButtonAddEditPpaForm1 size={"sm"} variant={"secondary"}>

@@ -174,7 +174,7 @@ export const usePpaForm1Columns: ColumnDef<ParentApplicationData>[] = [
       const { getNavigationLinkWithPathnameWithoutUpdate } =
         useCustomSearchParams();
       const url = getNavigationLinkWithPathnameWithoutUpdate(
-        `/admin/registration/ppa-form${id}`,
+        `/admin/registration/ppa-form/${id}`,
       );
       return (
         <div className="flex gap-2 items-center">

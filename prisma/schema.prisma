@@ -12,17 +12,18 @@ datasource db {
  */
 
 model User {
-  id            String   @id @default(uuid())
+  id            String     @id @default(uuid())
   name          String
-  email         String   @unique
-  role          Role     @default(REGISTRAR)
-  createdAt     DateTime @default(now())
-  username      String   @unique
+  email         String     @unique
+  role          Role       @default(REGISTRAR)
+  ppcMembership Membership @default(CO_OPTED)
+  createdAt     DateTime   @default(now())
+  username      String     @unique
   avatarUrl     String?
   passwordHash  String?
-  isVerified    Boolean? @default(false)
-  isWelcomed    Boolean? @default(false)
-  emailVerified Boolean  @default(false)
+  isVerified    Boolean?   @default(false)
+  isWelcomed    Boolean?   @default(false)
+  emailVerified Boolean    @default(false)
 
   emailVerificationTokens EmailVerificationToken[]
   sessions                Session[]
@@ -521,6 +522,15 @@ enum Role {
   ENGINEER
   REGISTRAR
   APPLICANT
+}
+
+enum Membership {
+  MEMBER
+  CO_OPTED
+  INTERN
+  LG
+  CIVILIAN
+  PROFESSIONAL
 }
 
 enum ApplicationType {
