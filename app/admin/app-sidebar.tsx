@@ -80,6 +80,7 @@ function ParentMenuItem({
   item: NavLinkGroup;
   index: number;
 }) {
+  const { setOpenMobile } = useSidebar();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
   const { open: isOpen } = useSidebar();
@@ -119,7 +120,13 @@ function ParentMenuItem({
               tooltip={item.title}
               isActive={isActive}
               size={"lg"}
-              onClick={() => startTransition(() => {})}
+              onClick={() =>
+                startTransition(() => {
+                  if (noDropDown) {
+                    setOpenMobile(false);
+                  }
+                })
+              }
               className={cn("group/parent-link")}
               asChild
             >
@@ -168,6 +175,7 @@ function ParentMenuItem({
 }
 
 function MenuItem({ item, parentLink }: { item: NavLink; parentLink: string }) {
+  const { setOpenMobile } = useSidebar();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
   const isActive = pathname.startsWith(item.href) && pathname !== "/";
@@ -179,7 +187,11 @@ function MenuItem({ item, parentLink }: { item: NavLink; parentLink: string }) {
     <SidebarMenuSubItem key={item.title} className="">
       <SidebarMenuSubButton
         title={item.description}
-        onClick={() => startTransition(() => {})}
+        onClick={() =>
+          startTransition(() => {
+            setOpenMobile(false);
+          })
+        }
         asChild
         isActive={isActive}
         size="lg"
