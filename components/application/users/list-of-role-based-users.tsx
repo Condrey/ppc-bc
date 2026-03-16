@@ -12,6 +12,7 @@ import { Suspense } from "react";
 import { getAllRoleBasedUsers } from "./action";
 import ButtonAddEditUser from "./button-add-edit-user";
 import { useUsersColumns } from "./columns";
+import UserCardItem from "./user-card-item";
 
 interface Props {
   initialData: UserData[];
@@ -50,6 +51,12 @@ export function ListOfRoleBasedUsers({ initialData, role }: Props) {
         columns={useUsersColumns}
         filterColumn={{ id: "name" }}
         className="w-full"
+        cardRenderer={(item) => (
+          <UserCardItem
+            item={item}
+            navigateTo={`/admin/users/user/${item.id}`}
+          />
+        )}
       >
         <ButtonAddEditUser role={role}>
           <PlusIcon /> {title}
