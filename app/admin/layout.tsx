@@ -34,7 +34,7 @@ export default async function Layout({
             <AppSidebar />
             <SidebarInset className="  ">
               <div className=" mx-auto h-full  overflow-hidden flex flex-col  w-full">
-                <main className=" flex-1 w-full   overflow-y-auto scroll-auto flex flex-col gap-4 ">
+                <main className=" flex-1 w-full overflow-x-hidden    flex flex-col gap-4 ">
                   {children}
                   <footer className="w-full  hidden md:block">
                     <Footer className="bg-black/80 dark:bg-white/20 *:px-4 w-full  text-background dark:text-foreground " />

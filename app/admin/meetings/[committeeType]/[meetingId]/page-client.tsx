@@ -153,7 +153,7 @@ export default function PageClient({ meeting: initialData, committee }: Props) {
               </DropdownMenu>
             </div>
           </CardHeader>
-          <CardContent className="p-0 md:px-0">
+          <CardContent className="p-0 md:px-0 overflow-hidden">
             <ListOfMeetingMinutes meeting={meeting} />
           </CardContent>
         </Card>

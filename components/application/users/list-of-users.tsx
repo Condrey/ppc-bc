@@ -10,6 +10,7 @@ import { Suspense } from "react";
 import { getAllUsers } from "./action";
 import ButtonAddEditUser from "./button-add-edit-user";
 import { useUsersColumns } from "./columns";
+import UserCardItem from "./user-card-item";
 
 interface Props {
   initialData: UserData[];
@@ -43,6 +44,7 @@ export function ListOfUsers({ initialData }: Props) {
         columns={useUsersColumns}
         filterColumn={{ id: "name" }}
         className="w-full"
+        cardRenderer={(item) => <UserCardItem item={item} />}
       >
         <ButtonAddEditUser>
           <PlusIcon /> Member
