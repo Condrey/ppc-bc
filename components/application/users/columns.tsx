@@ -5,7 +5,7 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { useCustomSearchParams } from "@/hooks/use-custom-search-param";
-import { roles } from "@/lib/enums";
+import { memberships, roles } from "@/lib/enums";
 import { UserData } from "@/lib/types";
 import { formatNumber } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
@@ -41,11 +41,18 @@ export const useUsersColumns: ColumnDef<UserData>[] = [
   {
     accessorKey: "role",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Relationship" />
+      <DataTableColumnHeader column={column} title="Position" />
     ),
     cell({ row }) {
-      const { title } = roles[row.original.role];
-      return <Badge variant={"outline"}>{title}</Badge>;
+      const { role, ppcMembership } = row.original;
+      const { title } = roles[role];
+      const { title: membership } = memberships[ppcMembership];
+      return (
+        <div className="space-y-2 flex flex-col items-center">
+          <Badge variant={"outline"}>{title}</Badge>
+          <p>{membership}</p>
+        </div>
+      );
     },
   },
   {

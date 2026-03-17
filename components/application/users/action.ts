@@ -66,7 +66,8 @@ export const getUserById = cache(userById);
 export async function upsertUser(
   input: SignUpSchema,
 ): Promise<string | UserData> {
-  const { email, name, role, username, id } = signUpSchema.parse(input);
+  const { email, name, role, username, id, ppcMembership } =
+    signUpSchema.parse(input);
   // apply auth
   let _username = username || slugify(name);
   const password = DEFAULT_PASSWORD;
@@ -105,8 +106,15 @@ export async function upsertUser(
 
   return await prisma.user.upsert({
     where: { email },
-    create: { email, name, passwordHash, role, username: _username },
-    update: { email, name, role, username: _username },
+    create: {
+      email,
+      name,
+      passwordHash,
+      role,
+      username: _username,
+      ppcMembership,
+    },
+    update: { email, name, role, username: _username, ppcMembership },
     select: userDataSelect,
   });
 }

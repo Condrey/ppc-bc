@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import {
   Form,
   FormControl,
@@ -21,6 +22,7 @@ import { SignUpSchema, signUpSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
+import FieldMembership from "./field-membership";
 import FieldRole from "./field-role";
 import { useInsertUserMutation } from "./mutations";
 
@@ -41,8 +43,8 @@ export default function FormAddEditUser({
     values: {
       id: user?.id || "",
       email: user?.email || "",
-      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
       role: role || user?.role!,
+      ppcMembership: user?.ppcMembership!,
       password: "",
       username: user?.username || "",
       name: user?.name || "",
@@ -82,6 +84,7 @@ export default function FormAddEditUser({
                   </FormItem>
                 )}
               />
+              <FieldMembership form={form} />
 
               <div className="grid md:grid-cols-3 gap-3 ">
                 <FormField
@@ -103,7 +106,6 @@ export default function FormAddEditUser({
                 />
                 <FieldRole form={form} />
               </div>
-
               <FormFooter className="mt-6">
                 <LoadingButton
                   type="button"

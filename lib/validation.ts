@@ -6,6 +6,7 @@ import {
   Committee,
   FeeAssessmentType,
   LandUseType,
+  Membership,
   NatureOfInterestInLand,
   PaymentMethod,
   Role,
@@ -26,6 +27,9 @@ export const signUpSchema = z.object({
   username: requiredString.optional().describe("User username for the user."),
   password: z.string().optional().describe("Password for the user."),
   role: z.enum(Role, { error: "Please choose a correct role." }),
+  ppcMembership: z.enum(Membership, {
+    error: "Please choose a PPC membership.",
+  }),
 });
 export type SignUpSchema = z.infer<typeof signUpSchema>;
 
