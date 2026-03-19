@@ -43,7 +43,6 @@ export default async function Page({ params }: Props) {
           title: title + "s",
         },
       ]}
-      ITEMS_TO_DISPLAY={2}
     >
       <TypographyH1
         text={`All ${title} fee assessments`}
