@@ -30,7 +30,7 @@ export default async function Page({ params }: Props) {
   return (
     <Container
       breadcrumbs={[
-        { title: "Home", href: "/" },
+        { title: "Home", href: "/admin" },
         { title: "Users", href: "/admin/users" },
         { title: title + "s" },
       ]}

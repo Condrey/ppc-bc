@@ -13,7 +13,10 @@ export default async function Page() {
 
   return (
     <Container
-      breadcrumbs={[{ title: "Home", href: "/" }, { title: "Applications" }]}
+      breadcrumbs={[
+        { title: "Home", href: "/admin" },
+        { title: "Applications" },
+      ]}
       ITEMS_TO_DISPLAY={2}
     >
       <TypographyH1 text="All applications" className="uppercase" />

@@ -37,7 +37,7 @@ export default function PageClient({
   return (
     <Container
       breadcrumbs={[
-        { title: "Home", href: "/" },
+        { title: "Home", href: "/admin" },
         { title: "Fees assessments", href: "/admin/fees-assessments/" },
         {
           title: applicationNumber,
