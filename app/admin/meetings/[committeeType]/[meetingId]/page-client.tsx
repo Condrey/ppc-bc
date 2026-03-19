@@ -79,7 +79,7 @@ export default function PageClient({ meeting: initialData, committee }: Props) {
           title: `${committeeType} meetings`,
           href: `/admin/meetings/${committee}`,
         },
-        { title, href: `/admin/meetings/${committee}` },
+        { title },
       ]}
     >
       <TypographyH2

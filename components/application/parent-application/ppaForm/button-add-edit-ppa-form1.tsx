@@ -13,6 +13,7 @@ import {
 import { allApplicationTypes, applicationTypes } from "@/lib/enums";
 import { ApplicationType } from "@/lib/generated/prisma/enums";
 import { BuildingApplicationData, ParentApplicationData } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { useState } from "react";
 import FormAddEditPpaForm1BuildingApplication from "./form-add-edit-ppa-form1-building-application";
 import FormAddEditPpaForm1LandApplication from "./form-add-edit-ppa-form1-land-application";
@@ -22,6 +23,7 @@ interface Props extends ButtonProps {
 }
 export default function ButtonAddEditPpaForm1({
   parentApplication,
+  className,
   ...props
 }: Props) {
   const [openLandApplication, setOpenLandApplication] = useState(false);
@@ -33,6 +35,7 @@ export default function ButtonAddEditPpaForm1({
       parentApplication.application.type === ApplicationType.LAND ? (
         <Button
           title={"Update ppa Form1 for land application"}
+          className={cn("[&_svg]:inline", className)}
           {...props}
           onClick={() => setOpenLandApplication(true)}
         />
@@ -40,6 +43,7 @@ export default function ButtonAddEditPpaForm1({
         parentApplication.application.type === ApplicationType.BUILDING ? (
         <Button
           title={"Update ppa Form1 for building application"}
+          className={cn("[&_svg]:inline", className)}
           {...props}
           onClick={() => setOpenBuildingApplication(true)}
         />

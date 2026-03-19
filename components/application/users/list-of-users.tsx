@@ -7,7 +7,7 @@ import { UserData } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
 import { Suspense } from "react";
-import { getAllUsers } from "./action";
+import { getAllCommitteeMembers } from "./action";
 import ButtonAddEditUser from "./button-add-edit-user";
 import { useUsersColumns } from "./columns";
 import UserCardItem from "./user-card-item";
@@ -18,7 +18,7 @@ interface Props {
 export function ListOfUsers({ initialData }: Props) {
   const query = useQuery({
     queryKey: ["users"],
-    queryFn: getAllUsers,
+    queryFn: getAllCommitteeMembers,
     initialData,
   });
   const { status, data } = query;

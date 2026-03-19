@@ -33,7 +33,6 @@ import { useCustomSearchParams } from "@/hooks/use-custom-search-param";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { BreadcrumbItem as BreadcrumbType } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { ChevronRightIcon } from "lucide-react";
 import { SidebarTrigger } from "./ui/sidebar";
 import { Spinner } from "./ui/spinner";
 
@@ -66,21 +65,30 @@ export function ResponsiveBreadcrumb({
             className="flex-inline size-8 mr-10   "
           />
         )}
-        <BreadcrumbItem>
-          <BreadcrumbLink onClick={() => startTransition(() => {})} asChild>
-            <Link
-              href={getNavigationLinkWithPathnameWithoutUpdate(
-                items[0].href ?? "/",
-              )}
-              className="flex items-center gap-2"
-            >
-              {isPending && <Spinner />}
-              {items[0].title}
-            </Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        {items.length > ITEMS_TO_DISPLAY ? (
+        {ITEMS_TO_DISPLAY === 1 ? (
+          <BreadcrumbItem>
+            <BreadcrumbPage>{items[0].title}</BreadcrumbPage>
+          </BreadcrumbItem>
+        ) : (
+          <>
+            <BreadcrumbItem>
+              <BreadcrumbLink onClick={() => startTransition(() => {})} asChild>
+                <Link
+                  href={getNavigationLinkWithPathnameWithoutUpdate(
+                    items[0].href ?? "/",
+                  )}
+                  className="flex items-center gap-2"
+                >
+                  {isPending && <Spinner />}
+                  {items[0].title}
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+          </>
+        )}
+
+        {items.length > 1 && items.length > ITEMS_TO_DISPLAY ? (
           <>
             <BreadcrumbItem>
               {isDesktop ? (
@@ -133,9 +141,12 @@ export function ResponsiveBreadcrumb({
             <BreadcrumbSeparator />
           </>
         ) : null}
-        {items.slice(-ITEMS_TO_DISPLAY + 1).map((item, index) => (
-          <CustomBreadcrumbItem key={index} item={item} />
-        ))}
+        {ITEMS_TO_DISPLAY > 1 &&
+          items
+            .slice(-ITEMS_TO_DISPLAY + 1)
+            .map((item, index) => (
+              <CustomBreadcrumbItem key={index} item={item} />
+            ))}
       </BreadcrumbList>
     </Breadcrumb>
   );
@@ -186,7 +197,7 @@ function CustomBreadcrumbItem({ item }: { item: BreadcrumbType }) {
           <BreadcrumbLink asChild className="max-w-20 truncate md:max-w-none">
             <Link href={url}>{item.title}</Link>
           </BreadcrumbLink>
-          <ChevronRightIcon className="size-3.5" />
+          <BreadcrumbSeparator className="size-3.5 " />
         </>
       ) : (
         <BreadcrumbPage className="max-w-20 truncate md:max-w-none">

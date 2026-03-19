@@ -1,4 +1,5 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { validateRequest } from "../(auth)/auth";
 import SessionProvider from "../(auth)/session-provider";
@@ -23,9 +24,12 @@ export default async function Layout({
   } else if (!user) {
     redirect("/login");
   }
+  const cookieStore = await cookies();
+  const open = cookieStore.get("sidebar_state")?.value ?? false;
   return (
     <SessionProvider value={{ session, user }}>
       <div className="[--header-height:calc(--spacing(14))]">
+        {/* <pre>{JSON.stringify({ cookieStore, open }, null, 2)}</pre> */}
         <SidebarProvider className="flex flex-col ">
           <header className="sticky top-0 z-50 h-(--header-height) flex items-center w-full  bg-accent text-accent-foreground border-b shadow-xl  dark:border-b">
             <TopAppBar className="w-full max-w-9xl  py-2 mx-auto  px-3  " />

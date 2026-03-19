@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 import { EmptyContainer } from "@/components/query-container/empty-container";
 import ErrorContainer from "@/components/query-container/error-container";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -95,9 +96,13 @@ export default function FormAddEditPpaForm1LandApplication({
       } as ParcelSchema,
     },
   });
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const watchedNatureOfInterest = form.watch("natureOfInterest")||'CUSTOMARY_TENANT';
-    const applicationFee = formatCurrency(getApplicationFee(watchedNatureOfInterest),'UGX',true)
+  const watchedNatureOfInterest =
+    form.watch("natureOfInterest") || "CUSTOMARY_TENANT";
+  const applicationFee = formatCurrency(
+    getApplicationFee(watchedNatureOfInterest, "LAND"),
+    "UGX",
+    true,
+  );
   const query = useQuery({
     queryKey: ["applicants"],
     queryFn: getAllApplicants,
@@ -176,10 +181,7 @@ export default function FormAddEditPpaForm1LandApplication({
                           <Checkbox checked disabled />
                           <ItemTitle>
                             By submitting, applicant shall be subjected to a
-                            charge of{" "}
-                            <strong>
-                              {applicationFee}
-                            </strong>
+                            charge of <strong>{applicationFee}</strong>
                           </ItemTitle>
                         </Label>
                       </ItemContent>

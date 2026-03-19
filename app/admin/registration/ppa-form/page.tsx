@@ -13,7 +13,7 @@ export default async function Page() {
       breadcrumbs={[
         { title: "Home", href: "/admin" },
         { title: "Registration", href: "/admin/registration" },
-        { title: "PPA1 Forms", href: "/admin/registration/ppa-form" },
+        { title: "PPA1 Forms" },
       ]}
       className=""
     >

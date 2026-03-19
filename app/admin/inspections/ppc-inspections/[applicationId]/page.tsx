@@ -52,7 +52,6 @@ export default async function Page({ params }: Props) {
         },
         {
           title: applicationNumber,
-          href: `/admin/inspections/ppc-inspections/${applicationId}`,
         },
       ]}
     >

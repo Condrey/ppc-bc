@@ -5,7 +5,7 @@ export default async function Page() {
     <Container
       breadcrumbs={[
         { title: "Home", href: "/admin" },
-        { title: "Registration", href: "/admin/registration" },
+        { title: "Registration" },
       ]}
       ITEMS_TO_DISPLAY={2}
     >

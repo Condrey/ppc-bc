@@ -41,7 +41,6 @@ export default function PageClient({
         { title: "Fees assessments", href: "/admin/fees-assessments/" },
         {
           title: applicationNumber,
-          href: `/admin/fees-assessments/fee/${type}/${id}`,
         },
       ]}
     >

@@ -24,7 +24,7 @@ export default function PageClient({ initialData }: { initialData: UserData }) {
       breadcrumbs={[
         { title: "Home", href: "/admin" },
         { title: "All Users", href: "/admin/users" },
-        { title: name, href: `/admin/users/user/${id}` },
+        { title: name },
       ]}
     >
       <div className="flex gap-3">

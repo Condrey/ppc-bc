@@ -29,6 +29,8 @@ export async function upsertPpaForm1ForLandApplication(
     site,
   } = parentApplicationSchema.parse(input);
 
+  const isLandApplication = application?.type === "LAND";
+
   const currentYear = new Date().getFullYear();
   const { user } = await validateRequest();
   const isAuthorized =
@@ -105,7 +107,10 @@ export async function upsertPpaForm1ForLandApplication(
         await tx.feeAssessment.create({
           data: {
             applicationId,
-            amountAssessed: getApplicationFee(natureOfInterest),
+            amountAssessed: getApplicationFee(
+              natureOfInterest,
+              application?.type || "LAND",
+            ),
             assessmentType: FeeAssessmentType.LAND_APPLICATION,
             currency: "Ugx",
             assessedById: application?.applicant.userId ?? "",
@@ -265,7 +270,10 @@ export async function upsertPpaForm1ForBuildingApplication(
         await tx.feeAssessment.create({
           data: {
             applicationId,
-            amountAssessed: getApplicationFee(natureOfInterest),
+            amountAssessed: getApplicationFee(
+              natureOfInterest,
+              application?.type || "BUILDING",
+            ),
             assessmentType: FeeAssessmentType.BUILDING_APPLICATION,
             currency: "Ugx",
             assessedById: application?.applicant.userId ?? "",

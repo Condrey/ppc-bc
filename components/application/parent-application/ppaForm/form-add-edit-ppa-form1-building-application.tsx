@@ -99,11 +99,11 @@ export default function FormAddEditPpaForm1BuildingApplication({
       },
     },
   });
-  // eslint-disable-next-line react-hooks/incompatible-library
+
   const watchedNatureOfInterest =
     form.watch("natureOfInterest") || "CUSTOMARY_TENANT";
   const applicationFee = formatCurrency(
-    getApplicationFee(watchedNatureOfInterest),
+    getApplicationFee(watchedNatureOfInterest, "BUILDING"),
     "UGX",
     true,
   );

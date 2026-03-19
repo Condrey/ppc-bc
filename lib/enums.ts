@@ -252,12 +252,12 @@ export const feesAssessmentTypes: Record<
     icon: BuildingIcon,
   },
   INSPECTION: {
-    title: "Inspection",
+    title: "Inspection fee",
     description: "Fee from inspections",
     icon: TelescopeIcon,
   },
   PENALTY: {
-    title: "Penalty",
+    title: "Penalty fee",
     description: "Fee from penalties",
     icon: GavelIcon,
   },

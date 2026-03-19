@@ -1,5 +1,10 @@
 import { clsx, type ClassValue } from "clsx";
-import { formatDuration, intervalToDuration } from "date-fns";
+import {
+  endOfDay,
+  formatDuration,
+  intervalToDuration,
+  startOfDay,
+} from "date-fns";
 import { twMerge } from "tailwind-merge";
 import { applicationTypes, naturesOfInterestInLand } from "./enums";
 import {
@@ -7,7 +12,6 @@ import {
   Committee,
   NatureOfInterestInLand,
 } from "./generated/prisma/enums";
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -173,8 +177,13 @@ export function useDebounce<T extends (...args: any[]) => void>(
   };
 }
 
-export function getApplicationFee(interest: NatureOfInterestInLand) {
-  return naturesOfInterestInLand[interest].amount;
+export function getApplicationFee(
+  interest: NatureOfInterestInLand,
+  applicationType: ApplicationType,
+) {
+  return applicationType === "BUILDING"
+    ? 59000
+    : naturesOfInterestInLand[interest].amount;
 }
 
 // Date time
@@ -196,4 +205,18 @@ export const getDateTimeOutput = (
   newDate.setMonth(Number(date?.getMonth()));
   newDate.setFullYear(Number(date?.getFullYear()));
   return newDate;
+};
+
+export const getFiscalYearRange = (inputDate = new Date()) => {
+  const year = inputDate.getFullYear();
+  const month = inputDate.getMonth(); // 0–11
+
+  // If current month is before July, fiscal year started previous year
+  const fiscalStartYear = month < 6 ? year - 1 : year;
+  const fiscalEndYear = fiscalStartYear + 1;
+
+  const start = startOfDay(new Date(fiscalStartYear, 6, 1)); // July = 6
+  const end = endOfDay(new Date(fiscalEndYear, 5, 30)); // June = 5
+
+  return { start, end };
 };

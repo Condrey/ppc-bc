@@ -32,7 +32,7 @@ export default async function Page({ params }: Props) {
       breadcrumbs={[
         { title: "Home", href: "/" },
         { title: "Users", href: "/admin/users" },
-        { title: title + "s", href: `/admin/users/${role}` },
+        { title: title + "s" },
       ]}
       ITEMS_TO_DISPLAY={2}
     >

@@ -88,9 +88,10 @@ export async function upsertUser(
   if (existingUserName) {
     if (!id) {
       _username = slugify(username + role);
-    } else {
-      return "Username is already taken, please select another";
     }
+    // else {
+    //   return "Username is already taken, please select another";
+    // }
   }
   const existingEmail = await prisma.user.findFirst({
     where: {

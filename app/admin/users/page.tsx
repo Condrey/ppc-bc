@@ -1,4 +1,4 @@
-import { getAllUsers } from "@/components/application/users/action";
+import { getAllCommitteeMembers } from "@/components/application/users/action";
 import { ListOfUsers } from "@/components/application/users/list-of-users";
 import Container from "@/components/container";
 import { TypographyH1 } from "@/components/headings";
@@ -9,14 +9,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const users = await getAllUsers();
+  const users = await getAllCommitteeMembers();
 
   return (
     <Container
-      breadcrumbs={[
-        { title: "Home", href: "/" },
-        { title: "Users", href: "/users" },
-      ]}
+      breadcrumbs={[{ title: "Home", href: "/" }, { title: "Users" }]}
       ITEMS_TO_DISPLAY={2}
     >
       <TypographyH1 text="All Committee Members" className="uppercase" />

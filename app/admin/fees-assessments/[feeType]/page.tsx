@@ -41,7 +41,6 @@ export default async function Page({ params }: Props) {
         { title: "Fees assessments", href: "/admin/fees-assessments/" },
         {
           title: title + "s",
-          href: `/admin/fees-assessments/${feeAssessmentType}`,
         },
       ]}
       ITEMS_TO_DISPLAY={2}

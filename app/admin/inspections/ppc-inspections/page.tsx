@@ -16,7 +16,6 @@ export default async function Page() {
         { title: "Inspections", href: "/admin/inspections" },
         {
           title: "PPC inspections",
-          href: "/admin/inspections/ppc-inspections",
         },
       ]}
     >

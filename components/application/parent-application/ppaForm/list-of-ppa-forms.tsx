@@ -50,7 +50,7 @@ export default function ListOfPpaForm1s({
           className="rounded-full shadow-2xs"
           size={"icon-xl"}
         >
-          <PlusIcon />
+          <PlusIcon className="inline" />
         </ButtonAddEditPpaForm1>
       }
       cardRenderer={(item) => (

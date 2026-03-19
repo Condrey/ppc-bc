@@ -1,4 +1,10 @@
-import { Prisma } from "./generated/prisma/client";
+import {
+  Committee,
+  FeeAssessmentType,
+  LandUseType,
+  MeetingStatus,
+  Prisma,
+} from "./generated/prisma/client";
 
 // Applicant
 export const userDataSelect = {
@@ -182,3 +188,51 @@ export type BreadcrumbItem = {
 export type GeoJSONType =
   | { type: "Polygon"; coordinates: [number, number][][] }
   | { type: "MultiPolygon"; coordinates: [number, number][][][] };
+
+export type DashboardItems = {
+  admins: number;
+  applicants: number;
+  feesAssessment: {
+    fees: {
+      month: string;
+      type: FeeAssessmentType;
+      amount: number;
+    }[];
+    start: Date;
+    end: Date;
+  };
+  landUsage: {
+    type: LandUseType;
+    count: number;
+  }[];
+  meeting: {
+    recentMeeting:
+      | {
+          id: string;
+          createdAt: Date;
+          meetingNo: number;
+          committee: Committee;
+          title: string;
+          venue: string;
+          message: string | null;
+          sendInvitations: boolean;
+          happeningOn: Date;
+          postponedOn: Date | null;
+          endedAt: Date | null;
+          updatedAt: Date;
+          status: MeetingStatus;
+        }
+      | undefined;
+    count: number;
+  };
+  landApplication: {
+    approvedLandApplications: number;
+    deferredLandApplications: number;
+    rejectedLandApplications: number;
+  };
+  buildingApplication: {
+    approvedBuildingApplications: number;
+    deferredBuildingApplications: number;
+    rejectedBuildingApplications: number;
+  };
+};
