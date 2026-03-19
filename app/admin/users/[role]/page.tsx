@@ -34,7 +34,6 @@ export default async function Page({ params }: Props) {
         { title: "Users", href: "/admin/users" },
         { title: title + "s" },
       ]}
-      ITEMS_TO_DISPLAY={2}
     >
       <TypographyH1 text={`All ${title}s`} className="uppercase" />
       <ListOfRoleBasedUsers role={role} initialData={users} />
