@@ -1,6 +1,6 @@
 "use client";
 
-import { TypographyH4 } from "@/components/headings";
+import { ApplicationType } from "@/lib/generated/prisma/enums";
 import { ParentApplicationData } from "@/lib/types";
 import { PlusIcon } from "lucide-react";
 import { DataTable } from "../../../data-table/data-table";
@@ -13,10 +13,12 @@ import PpaFormItem from "./ppa-form-item";
 
 export default function ListOfPpaForm1s({
   initialData,
+  applicationType,
 }: {
   initialData: ParentApplicationData[];
+  applicationType?: ApplicationType;
 }) {
-  const query = useParentApplicationsQuery(initialData);
+  const query = useParentApplicationsQuery(initialData, applicationType);
   const { data: parentApplications, status } = query;
 
   if (status === "error") {
@@ -42,9 +44,6 @@ export default function ListOfPpaForm1s({
         id: "application_applicant_name",
         label: "applicant",
       }}
-      tableHeaderSection={
-        <TypographyH4 text="Applications for Development Permit" />
-      }
       fab={
         <ButtonAddEditPpaForm1
           className="rounded-full shadow-2xs"

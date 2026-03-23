@@ -1,7 +1,7 @@
 "use client";
 
+import { extractTextFromHTML } from "@/app/(auth)/(email)/extract-text-from-html";
 import ApplicantAvatar from "@/components/applicant-avatar";
-import TipTapViewer from "@/components/tip-tap-editor/tip-tap-viewer";
 import {
   Item,
   ItemActions,
@@ -51,12 +51,11 @@ export default function CommandItemApplicant({
         {title && <ItemTitle className="font-bold">{title}</ItemTitle>}
         <ItemTitle className="line-clamp-1">{name}</ItemTitle>
         <ItemTitle className="line-clamp-1 text-xs">{contact}</ItemTitle>
-        <div className="flex gap-0.5  items-center">
-          <MapPinIcon className="fill-muted-foreground size-3.5 text-muted" />
-          <TipTapViewer
-            content={address}
-            className="text-muted-foreground line-clamp-2 text-xs leading-normal font-normal text-balance"
-          />
+        <div className=" gap-0.5 inline *:inline ">
+          <MapPinIcon className="fill-muted-foreground size-4 flex-none text-muted" />
+          <p className="text-muted-foreground line-clamp-2 text-xs leading-normal font-normal text-balance">
+            {extractTextFromHTML(address)}
+          </p>
         </div>
       </ItemContent>
       <ItemActions>

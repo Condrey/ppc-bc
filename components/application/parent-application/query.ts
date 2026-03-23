@@ -1,9 +1,13 @@
-import { FeeAssessmentType } from "@/lib/generated/prisma/enums";
+import {
+  ApplicationType,
+  FeeAssessmentType,
+} from "@/lib/generated/prisma/enums";
 import { LandApplicationData, ParentApplicationData } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import {
   getAllLandApplications,
   getAllParentApplications,
+  getAllParentApplicationsByApplicationType,
   getAllParentApplicationsByFeeAssessmentType,
 } from "./actions";
 
@@ -18,10 +22,14 @@ export function useLandApplicationsQuery(initialData: LandApplicationData[]) {
 
 export function useParentApplicationsQuery(
   initialData: ParentApplicationData[],
+  applicationType?: ApplicationType,
 ) {
   return useQuery({
-    queryKey: ["parent-applications"],
-    queryFn: getAllParentApplications,
+    queryKey: ["parent-applications", applicationType],
+    queryFn: async () =>
+      applicationType
+        ? getAllParentApplicationsByApplicationType(applicationType)
+        : getAllParentApplications(),
     initialData,
     refetchOnWindowFocus: false,
   });

@@ -60,6 +60,7 @@ async function allParentApplications(): Promise<ParentApplicationData[]> {
 
   return data;
 }
+
 export const getAllParentApplications = cache(allParentApplications);
 
 async function allParentApplicationsByFeeAssessmentType(
@@ -82,4 +83,26 @@ async function allParentApplicationsByFeeAssessmentType(
 }
 export const getAllParentApplicationsByFeeAssessmentType = cache(
   allParentApplicationsByFeeAssessmentType,
+);
+
+async function allParentApplicationsByApplicationType(
+  applicationType: ApplicationType,
+): Promise<ParentApplicationData[]> {
+  const _data = await prisma.application.findMany({
+    where: { type: applicationType },
+    select: {
+      buildingApplication: { include: { ...buildingApplicationDataInclude } },
+      landApplication: { include: landApplicationDataInclude },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+  const data = _data
+    .map((d) => [d.buildingApplication, d.landApplication!])
+    .flat()
+    .filter(Boolean) as ParentApplicationData[];
+
+  return data;
+}
+export const getAllParentApplicationsByApplicationType = cache(
+  allParentApplicationsByApplicationType,
 );

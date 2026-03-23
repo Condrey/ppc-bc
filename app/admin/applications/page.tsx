@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const users = await getAllParentApplications();
+  const applications = await getAllParentApplications();
 
   return (
     <Container
@@ -20,7 +20,7 @@ export default async function Page() {
       ITEMS_TO_DISPLAY={2}
     >
       <TypographyH1 text="All applications" className="uppercase" />
-      <ListOfPpaForm1s initialData={users} />
+      <ListOfPpaForm1s initialData={applications} />
     </Container>
   );
 }
