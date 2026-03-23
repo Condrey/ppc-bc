@@ -13,7 +13,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useCustomSearchParams } from "@/hooks/use-custom-search-param";
 import { applicationTypes, naturesOfInterestInLand } from "@/lib/enums";
 import { ParentApplicationData } from "@/lib/types";
-import { formatCurrency, getApplicationNumber } from "@/lib/utils";
+import { formatCurrency, getApplicationNumber, getLocation } from "@/lib/utils";
 import { formatDate } from "date-fns";
 import { CheckIcon, CoinsIcon, DotIcon, HistoryIcon } from "lucide-react";
 import Link from "next/link";
@@ -55,7 +55,7 @@ const Content = ({
   isPending,
 }: Props & { isPending: boolean }) => {
   const {
-    address: { cell, district, village, subCounty, parish },
+    address,
     application: {
       applicationNo,
       year,
@@ -71,7 +71,7 @@ const Content = ({
   } = item;
 
   const { title: applicationType } = applicationTypes[type];
-  const location = `${cell ? `${cell} cell, ` : ""}${village ? `${village} village, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty}, ` : ""} ${district}`;
+  const location = getLocation(address);
   const { title: interest } = naturesOfInterestInLand[natureOfInterest];
   const applicationNumber = getApplicationNumber(applicationNo, year, type);
   const allAssessments = feeAssessments.map(
@@ -113,7 +113,7 @@ const Content = ({
 
       <ItemContent>
         <p className="line-clamp-1 font-semibold">{name}</p>
-        <p className="line-clamp-1  ">
+        <p className="line-clamp-1 inline *:inline  ">
           <span>{interest},</span>{" "}
           <span className="text-muted-foreground">{location}</span>
         </p>

@@ -8,6 +8,7 @@ import {
 import { MeetingData } from "@/lib/types";
 import {
   getApplicationNumber,
+  getLocation,
   getMinuteNumber,
   sanitizeFilename,
 } from "@/lib/utils";
@@ -38,20 +39,13 @@ export async function POST(req: NextRequest) {
     if (a.landApplication) {
       const {
         natureOfInterest,
-        address: {
-          cell,
-          parish,
-          subCounty,
-          district,
-          location: _preciseLocation,
-          village,
-          street,
-        },
+        address,
         parcel,
         landUse: { landUseType: _landUseType, otherLandUseType },
       } = a.landApplication;
+      const { location: _preciseLocation, street } = address;
       const { title: tenure } = naturesOfInterestInLand[natureOfInterest];
-      const location = `${cell ? `${cell} cell, ` : ""}${village ? `${village} village, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty}, ` : ""} ${district}`;
+      const location = getLocation(address);
       const preciseLocation = _preciseLocation
         ? `Precise location: ${_preciseLocation}`
         : "";
@@ -88,17 +82,11 @@ export async function POST(req: NextRequest) {
       };
     }
     const {
-      address: {
-        cell,
-        parish,
-        subCounty,
-        district,
-        location: _preciseLocation,
-        village,
-      },
+      address,
       landUse: { landUseType: _landUseType, otherLandUseType },
     } = a.buildingApplication!;
-    const location = `${cell ? `${cell} cell, ` : ""}${village ? `${village} village, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty}, ` : ""} ${district}`;
+    const { location: _preciseLocation } = address;
+    const location = getLocation(address);
     const preciseLocation = _preciseLocation
       ? `Precise location: ${location}`
       : "";

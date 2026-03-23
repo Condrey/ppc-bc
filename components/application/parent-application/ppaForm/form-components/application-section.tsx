@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ApplicationType } from "@/lib/generated/prisma/enums";
 import { ParentApplicationSchema } from "@/lib/validation";
 import { UseFormReturn } from "react-hook-form";
 import FieldNatureOfInterest from "./field-nature-of-interest-of-land";
@@ -22,8 +23,13 @@ import ResubmissionSection from "./resubmission-section";
 interface Props {
   form: UseFormReturn<ParentApplicationSchema>;
   isNewApplication: boolean;
+  applicationType: ApplicationType;
 }
-export default function ApplicationSection({ form, isNewApplication }: Props) {
+export default function ApplicationSection({
+  form,
+  isNewApplication,
+  applicationType,
+}: Props) {
   return (
     <Card>
       <CardHeader>
@@ -81,7 +87,7 @@ export default function ApplicationSection({ form, isNewApplication }: Props) {
 
         {/* <FieldApplicationStatus form={form} />
         <FieldApplicationType form={form} /> */}
-        <FieldNatureOfInterest form={form} />
+        <FieldNatureOfInterest form={form} applicationType={applicationType} />
         {isNewApplication && <ResubmissionSection form={form} />}
       </CardContent>
     </Card>

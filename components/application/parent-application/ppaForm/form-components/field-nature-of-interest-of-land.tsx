@@ -18,13 +18,18 @@ import {
   allNaturesOfInterestInLand,
   naturesOfInterestInLand,
 } from "@/lib/enums";
+import { ApplicationType } from "@/lib/generated/prisma/enums";
 import { ParentApplicationSchema } from "@/lib/validation";
 import { UseFormReturn } from "react-hook-form";
 
 interface Props {
   form: UseFormReturn<ParentApplicationSchema>;
+  applicationType: ApplicationType;
 }
-export default function FieldNatureOfInterest({ form }: Props) {
+export default function FieldNatureOfInterest({
+  form,
+  applicationType,
+}: Props) {
   return (
     <FormField
       control={form.control}
@@ -48,8 +53,9 @@ export default function FieldNatureOfInterest({ form }: Props) {
               <SelectGroup>
                 <SelectLabel>Choose from here</SelectLabel>
                 {allNaturesOfInterestInLand.map((natureOfInterest) => {
-                  const { formDesc: title } =
+                  const { formDesc: title, type } =
                     naturesOfInterestInLand[natureOfInterest];
+                  if (type !== applicationType) return null;
                   return (
                     <SelectItem key={natureOfInterest} value={natureOfInterest}>
                       {title}

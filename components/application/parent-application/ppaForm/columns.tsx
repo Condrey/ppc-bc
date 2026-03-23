@@ -90,13 +90,16 @@ export const usePpaForm1Columns: ColumnDef<ParentApplicationData>[] = [
         landUse: { acreage, landUseType },
         site,
       } = row.original;
-      const { title } = landUseTypes[landUseType];
+      const { formDesc } = landUseTypes[landUseType];
       return (
         <div>
-          <div>{title}</div>
-          <div>{acreage}</div>
+          <div className="text-center">{formDesc}</div>
+          <div className="text-center">
+            <span className="text-muted-foreground">Acreage: </span>
+            {acreage}
+          </div>
           {!!site && (
-            <div className="flex gap-0.5">
+            <div className="flex justify-center w-full gap-0.5">
               {site.hasElectricity && (
                 <LightbulbIcon className="fill-amber-300 text-amber-500" />
               )}
@@ -121,9 +124,25 @@ export const usePpaForm1Columns: ColumnDef<ParentApplicationData>[] = [
       );
     },
     cell({ row }) {
-      const { natureOfInterest } = row.original;
+      const {
+        natureOfInterest,
+        application: { type },
+      } = row.original;
+      const isLandApplication = type === "LAND";
       const { title } = naturesOfInterestInLand[natureOfInterest];
-      return <div className="text-center w-full  ">{title}</div>;
+      return (
+        <div className="text-center  ">
+          {isLandApplication ? (
+            <p className="inline *:inline">
+              <strong>{title}</strong> Land Application certificate
+            </p>
+          ) : (
+            <p className="inline *:inline line-clamp-1">
+              Applicant is a <strong>{title}</strong> owner
+            </p>
+          )}
+        </div>
+      );
     },
   },
   {
@@ -142,7 +161,7 @@ export const usePpaForm1Columns: ColumnDef<ParentApplicationData>[] = [
           <div>{district}</div>
           <div>{street}</div>
           {!!parcel && (
-            <div className="flex items-center text-xs text-muted-foreground">
+            <div className=" items-center inline *:inline text-xs text-muted-foreground">
               Plot {parcel.plotNumber} <DotIcon /> Block {parcel.blockNumber}
             </div>
           )}

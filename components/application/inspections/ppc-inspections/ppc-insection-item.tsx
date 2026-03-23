@@ -17,7 +17,7 @@ import {
   naturesOfInterestInLand,
 } from "@/lib/enums";
 import { ParentApplicationData } from "@/lib/types";
-import { getApplicationNumber } from "@/lib/utils";
+import { getApplicationNumber, getLocation } from "@/lib/utils";
 import { formatDate } from "date-fns";
 import { CheckIcon, HistoryIcon, MapPinIcon, XIcon } from "lucide-react";
 import Link from "next/link";
@@ -60,7 +60,7 @@ const Content = ({
   isPending,
 }: Props & { isPending: boolean }) => {
   const {
-    address: { cell, district, village, subCounty, parish },
+    address,
     application: {
       applicationNo,
       year,
@@ -79,7 +79,7 @@ const Content = ({
   const { title: landInterest } = naturesOfInterestInLand[natureOfInterest];
   const usePurpose = landUseType === "OTHERS" ? otherLandUseType : _landUse;
   const { title: applicationType } = applicationTypes[type];
-  const location = `${cell ? `${cell} cell, ` : ""}${village ? `${village} village, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty}, ` : ""} ${district}`;
+  const location = getLocation(address);
   const inspected = status !== "SUBMITTED";
   const applicationNumber = getApplicationNumber(applicationNo, year, type);
 
@@ -123,7 +123,7 @@ const Content = ({
       <ItemContent>
         <div>{`${landInterest} for ${usePurpose}`} purpose</div>
 
-        <p className="line-clamp-1  text-muted-foreground">
+        <p className="line-clamp-1 inline *:inline text-muted-foreground">
           <MapPinIcon className="inline size-5 mr-1 fill-muted text-muted-foreground" />
           {location}
         </p>

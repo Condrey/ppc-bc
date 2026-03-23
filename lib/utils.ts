@@ -7,6 +7,7 @@ import {
 } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import { applicationTypes, naturesOfInterestInLand } from "./enums";
+import { Address } from "./generated/prisma/client";
 import {
   ApplicationType,
   Committee,
@@ -219,4 +220,10 @@ export const getFiscalYearRange = (inputDate = new Date()) => {
   const end = endOfDay(new Date(fiscalEndYear, 5, 30)); // June = 5
 
   return { start, end };
+};
+
+export const getLocation = (address: Address | null | undefined): string => {
+  if (!address) return "";
+  const { cell, parish, street, subCounty, village, district } = address;
+  return `${street ? `${street}, ` : ""}${village ? `${village}, ` : ""}${cell ? `${cell}, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty} division.` : ""} ${district}`;
 };

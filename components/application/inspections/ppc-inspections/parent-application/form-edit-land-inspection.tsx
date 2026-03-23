@@ -99,7 +99,7 @@ export default function FormAddEditLandInspection({
               <div className="grid lg:grid-cols-2 gap-6">
                 <div className="space-y-6">
                   <ApplicantSection form={form} applicant={applicant} />
-                  <LandUseSection form={form} />
+                  <LandUseSection form={form} applicationType="LAND" />
                   <InspectorsSection form={form} />
                 </div>
                 <div className="space-y-6">

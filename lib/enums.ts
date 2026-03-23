@@ -127,6 +127,7 @@ export const allNaturesOfInterestInLand = Object.values(NatureOfInterestInLand);
 export const naturesOfInterestInLand: Record<
   NatureOfInterestInLand,
   {
+    type: ApplicationType;
     formDesc: string;
     title: string;
     amount: number;
@@ -144,42 +145,49 @@ export const naturesOfInterestInLand: Record<
     formDesc: "A registered owner",
     variant: "outline",
     amount: 59000,
+    type: "BUILDING",
   },
   LEASE: {
     title: "Leasehold Renewal",
     formDesc: "For leasehold renewal",
     variant: "outline",
     amount: 118000,
+    type: "LAND",
   },
   TENANT_BY_OCCUPANCY: {
     title: "Tenant by occupancy",
     formDesc: "Tenant by occupancy",
     variant: "outline",
     amount: 59000,
+    type: "BUILDING",
   },
   FREEHOLD: {
     title: "Freehold",
     formDesc: "For freehold",
     variant: "outline",
     amount: 59000,
+    type: "LAND",
   },
   CUSTOMARY_TENANT: {
     title: "Customary tenant",
     formDesc: "Customary tenant",
     variant: "outline",
     amount: 10000,
+    type: "BUILDING",
   },
   INITIAL_LEASE: {
-    formDesc: "As initial leasehold",
+    formDesc: "For initial leasehold",
     title: "Initial Leasehold",
     variant: "outline",
     amount: 118000,
+    type: "LAND",
   },
   LEASE_EXTENSION: {
-    formDesc: "As a leasehold extension",
+    formDesc: "For a leasehold extension",
     title: "Leasehold extension",
     variant: "outline",
     amount: 118000,
+    type: "LAND",
   },
 };
 

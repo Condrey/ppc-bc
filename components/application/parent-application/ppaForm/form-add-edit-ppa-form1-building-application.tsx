@@ -172,6 +172,7 @@ export default function FormAddEditPpaForm1BuildingApplication({
                     <ApplicationSection
                       form={form}
                       isNewApplication={!buildingApplication}
+                      applicationType="BUILDING"
                     />
                     <ApplicantSection form={form} applicants={applicants} />
                   </div>

@@ -20,14 +20,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ApplicationType } from "@/lib/generated/prisma/enums";
 import { ParentApplicationSchema } from "@/lib/validation";
 import { UseFormReturn } from "react-hook-form";
 import FieldCarriedOnDate from "./field-carried-on-date";
 
 interface Props {
   form: UseFormReturn<ParentApplicationSchema>;
+  applicationType: ApplicationType;
 }
-export default function LandUseSection({ form }: Props) {
+export default function LandUseSection({ form, applicationType }: Props) {
   return (
     <Card>
       <CardHeader>
@@ -38,7 +40,7 @@ export default function LandUseSection({ form }: Props) {
       </CardHeader>
       <CardContent className="space-y-6">
         <FieldCarriedOnDate form={form} />
-        <FieldNatureOfInterest form={form} />
+        <FieldNatureOfInterest applicationType={applicationType} form={form} />
         <FormField
           control={form.control}
           name="site.currentUseAndSurrounding"

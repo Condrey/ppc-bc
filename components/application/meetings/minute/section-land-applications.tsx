@@ -16,7 +16,7 @@ import {
 } from "@/lib/enums";
 import { ApplicationStatus } from "@/lib/generated/prisma/enums";
 import { ApplicationData, MeetingData } from "@/lib/types";
-import { formatNumber, getApplicationNumber } from "@/lib/utils";
+import { formatNumber, getApplicationNumber, getLocation } from "@/lib/utils";
 
 export default function SectionLandApplications({
   meeting,
@@ -113,19 +113,12 @@ function DecisionSection({
           : inspections[inspections.length - 1];
         if (!landApplication) return null;
         const {
-          address: {
-            cell,
-            parish,
-            subCounty,
-            district,
-            location,
-            village,
-            street,
-          },
+          address,
           parcel,
           natureOfInterest: _natureOfInterest,
           landUse: { landUseType: _landUseType, otherLandUseType },
         } = landApplication;
+        const { location, street } = address;
         const { title: landUseType } = landUseTypes[_landUseType];
         const { title: natureOfInterest } =
           naturesOfInterestInLand[_natureOfInterest];
@@ -144,9 +137,7 @@ function DecisionSection({
             </TableCell>
             <TableCell>{natureOfInterest}</TableCell>
             <TableCell>
-              <p>
-                {`${cell ? `${cell} cell, ` : ""}${village ? `${village} village, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty}, ` : ""} ${district}`}
-              </p>
+              <p>{getLocation(address)}</p>
               {location && <p>Precise location: {location}</p>}
             </TableCell>
             <TableCell>

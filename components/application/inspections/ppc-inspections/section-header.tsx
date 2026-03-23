@@ -16,9 +16,14 @@ import {
 } from "@/lib/enums";
 import { Address } from "@/lib/generated/prisma/client";
 import { ApplicationType } from "@/lib/generated/prisma/enums";
-import { cn, formatCurrency, getApplicationNumber } from "@/lib/utils";
+import {
+  cn,
+  formatCurrency,
+  getApplicationNumber,
+  getLocation,
+} from "@/lib/utils";
 import { formatDate } from "date-fns";
-import { CheckIcon, DotIcon, HistoryIcon, MapPinIcon } from "lucide-react";
+import { CheckIcon, HistoryIcon, MapPinIcon } from "lucide-react";
 
 interface Props {
   application: ApplicationData;
@@ -75,7 +80,7 @@ export default function SectionHeader({ application }: Props) {
           return (
             <Item key={id} variant={"muted"}>
               <ItemContent>
-                <ItemTitle className="font-bold">{title} fee</ItemTitle>
+                <ItemTitle className="font-bold">{title}</ItemTitle>
                 <ItemTitle>
                   {formatCurrency(amountAssessed, currency, true)}
                 </ItemTitle>
@@ -112,18 +117,14 @@ export default function SectionHeader({ application }: Props) {
 
 function AddressDetails({ address }: { address: Address | undefined }) {
   if (!address) return null;
-  const { cell, district, parish, location, street, subCounty, town, village } =
-    address;
+  const { location } = address;
   return (
     <Item variant={"muted"} className="max-w-none md:max-w-sm">
       <ItemContent>
         <ItemDescription>Precise location, {location}</ItemDescription>
-        <p className="inline-flex items-center">
+        <p className="inline *:inline items-center">
           <MapPinIcon className="inline fill-muted-foreground text-muted" />{" "}
-          <span className="inline-flex">
-            {`${street ? `${street}, ` : ""}${village ? `${village}, ` : ""}${cell ? `${cell}, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty} division.` : ""}`}
-          </span>
-          <DotIcon className="inline`" /> {town ?? district}
+          <span className="inline-flex">{getLocation(address)}</span>
         </p>
       </ItemContent>
     </Item>

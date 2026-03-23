@@ -1,8 +1,8 @@
 import {
-  Committee,
+  Application,
   FeeAssessmentType,
   LandUseType,
-  MeetingStatus,
+  Meeting,
   Prisma,
 } from "./generated/prisma/client";
 
@@ -206,33 +206,21 @@ export type DashboardItems = {
     count: number;
   }[];
   meeting: {
-    recentMeeting:
-      | {
-          id: string;
-          createdAt: Date;
-          meetingNo: number;
-          committee: Committee;
-          title: string;
-          venue: string;
-          message: string | null;
-          sendInvitations: boolean;
-          happeningOn: Date;
-          postponedOn: Date | null;
-          endedAt: Date | null;
-          updatedAt: Date;
-          status: MeetingStatus;
-        }
-      | undefined;
+    recentMeeting: Meeting | undefined;
     count: number;
   };
   landApplication: {
+    firstApplication: { application: Application } | undefined;
     approvedLandApplications: number;
     deferredLandApplications: number;
     rejectedLandApplications: number;
+    count: number;
   };
   buildingApplication: {
+    firstApplication: { application: Application } | undefined;
     approvedBuildingApplications: number;
     deferredBuildingApplications: number;
     rejectedBuildingApplications: number;
+    count: number;
   };
 };

@@ -18,9 +18,13 @@ async function dashboardInfo() {
     await prisma.user.findMany({
       where: { role: { notIn: ["SUPER_ADMIN"] } },
     }),
-    await prisma.landApplication.findMany({ select: { application: true } }),
+    await prisma.landApplication.findMany({
+      select: { application: true },
+      orderBy: { application: { createdAt: "desc" } },
+    }),
     await prisma.buildingApplication.findMany({
       select: { application: true },
+      orderBy: { application: { createdAt: "desc" } },
     }),
     await prisma.$queryRaw`
     SELECT 
@@ -61,6 +65,12 @@ async function dashboardInfo() {
   const rejectedBuildingApplications = buildingApplications.filter(
     (l) => l.application.status === "REJECTED",
   ).length;
+  const firstLandApplication = !landApplications.length
+    ? undefined
+    : landApplications[0];
+  const firstBuildingApplication = !buildingApplications.length
+    ? undefined
+    : buildingApplications[0];
 
   const landUsage = landUse.map((a) => ({
     type: a.landUseType,
@@ -79,15 +89,20 @@ async function dashboardInfo() {
     feesAssessment: { fees, start, end },
     landUsage,
     meeting: { recentMeeting, count },
+
     landApplication: {
       approvedLandApplications,
       deferredLandApplications,
       rejectedLandApplications,
+      count: landApplications.length,
+      firstApplication: firstLandApplication,
     },
     buildingApplication: {
       approvedBuildingApplications,
       deferredBuildingApplications,
       rejectedBuildingApplications,
+      count: buildingApplications.length,
+      firstApplication: firstBuildingApplication,
     },
   } satisfies DashboardItems;
 }

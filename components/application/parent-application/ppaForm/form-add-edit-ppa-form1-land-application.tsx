@@ -165,6 +165,7 @@ export default function FormAddEditPpaForm1LandApplication({
                 <div className="lg:grid lg:grid-cols-1  gap-6 space-y-6">
                   <div className="space-y-6">
                     <ApplicationSection
+                      applicationType={"LAND"}
                       form={form}
                       isNewApplication={!landApplication}
                     />

@@ -75,7 +75,7 @@ function ApplicationContainer({ application }: ApplicationContainerProps) {
         text={
           isLandApplication
             ? `Application for ${title} certificate`
-            : `Building on a ${title} land`
+            : `Building permission on a ${title} land`
         }
         className="capitalize px-3 text-center"
       />
