@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "@/app/(auth)/session-provider";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -18,7 +19,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { roles } from "@/lib/enums";
+import { myPrivileges, roles } from "@/lib/enums";
+import { Role } from "@/lib/generated/prisma/enums";
 import { UserData } from "@/lib/types";
 import { MinuteSchema } from "@/lib/validation";
 import { useState } from "react";
@@ -33,6 +35,10 @@ export default function ButtonAddAbsentee({
   committeeMembers,
   ...props
 }: Props) {
+  const { user } = useSession();
+  const isAuthorized =
+    user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
+
   const [open, setOpen] = useState(false);
   const { append } = useFieldArray({
     control: form.control,
@@ -45,9 +51,11 @@ export default function ButtonAddAbsentee({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button title={"Add absentee"} {...props} onClick={onButtonClick} />
-      </DialogTrigger>
+      {isAuthorized && (
+        <DialogTrigger asChild>
+          <Button title={"Add absentee"} {...props} onClick={onButtonClick} />
+        </DialogTrigger>
+      )}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add absentee</DialogTitle>

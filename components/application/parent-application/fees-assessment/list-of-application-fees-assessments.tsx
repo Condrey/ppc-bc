@@ -66,8 +66,9 @@ export function ListOfApplicationFeesAssessments({ parentApplication }: Props) {
           id: "application_applicant_name",
           label: "applicant",
         }}
-        cardRenderer={(item) => <ApplicationFeesAssessmentItem item={item}
-         navigateTo="" />}
+        cardRenderer={(item) => (
+          <ApplicationFeesAssessmentItem item={item} navigateTo="" />
+        )}
         className="w-full"
       >
         <DropDownMenuFeesAssessment

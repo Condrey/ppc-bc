@@ -114,7 +114,7 @@ export default function TipTapEditorWithHeader({
 
             // only allow protocols specified in ctx.protocols
             const allowedProtocols = ctx.protocols.map((p) =>
-              typeof p === "string" ? p : p.scheme
+              typeof p === "string" ? p : p.scheme,
             );
 
             if (!allowedProtocols.includes(protocol)) {
@@ -168,7 +168,7 @@ export default function TipTapEditorWithHeader({
     <div
       className={cn(
         "flex size-full max-h-none md:max-h-80 flex-col gap-y-3 overflow-y-auto rounded-md border border-input bg-background pb-4 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-        className
+        className,
       )}
     >
       {includeHeader && <TipTapEditorHeader editor={editor} />}

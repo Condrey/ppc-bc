@@ -94,7 +94,7 @@ const TipTapViewer = ({
 
             // only allow protocols specified in ctx.protocols
             const allowedProtocols = ctx.protocols.map((p) =>
-              typeof p === "string" ? p : p.scheme
+              typeof p === "string" ? p : p.scheme,
             );
 
             if (!allowedProtocols.includes(protocol)) {

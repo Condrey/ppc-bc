@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "@/app/(auth)/session-provider";
 import { Badge } from "@/components/ui/badge";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
@@ -28,6 +29,8 @@ import {
 } from "@/components/ui/form";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import LoadingButton from "@/components/ui/loading-button";
+import { myPrivileges } from "@/lib/enums";
+import { Role } from "@/lib/generated/prisma/enums";
 import { MeetingData } from "@/lib/types";
 import { getDateTimeOutput, getMeetingNumber, getTimeInput } from "@/lib/utils";
 import {
@@ -47,6 +50,8 @@ interface Props extends ButtonProps {
 }
 
 export default function ButtonPostponeMeeting({ meeting, ...props }: Props) {
+  const { user } = useSession();
+  const isAuthorized = user && myPrivileges[user.role].includes(Role.REGISTRAR);
   const [open, setOpen] = useState(false);
   const { mutate, isPending } = usePostponeMeetingMutation();
   const { meetingNo, postponedOn, happeningOn, title } = meeting;
@@ -71,13 +76,15 @@ export default function ButtonPostponeMeeting({ meeting, ...props }: Props) {
   const [time, setTime] = useState(defaultValue);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <LoadingButton
-          loading={isPending}
-          title={"Postpone meeting"}
-          {...props}
-        />
-      </DialogTrigger>
+      {isAuthorized && (
+        <DialogTrigger asChild>
+          <LoadingButton
+            loading={isPending}
+            title={"Postpone meeting"}
+            {...props}
+          />
+        </DialogTrigger>
+      )}
       <DialogContent>
         <DialogHeader className="items-start border-b">
           <DialogTitle>Postpone {meetingNumber}</DialogTitle>

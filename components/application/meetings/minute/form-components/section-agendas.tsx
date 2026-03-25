@@ -92,7 +92,7 @@ export default function SectionAgendas({
                       ></EmptyContainer>
                     ) : (
                       <SectionEditAgenda
-                      form={form}
+                        form={form}
                         index={index}
                         agenda={{ ...agenda, number }}
                       />

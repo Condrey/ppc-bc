@@ -45,7 +45,12 @@ export function ListOfFeesAssessments({ initialData }: Props) {
           label: "applicant",
         }}
         className="w-full"
-        cardRenderer={(item) => <FeesAssessmentItem item={item} navigateTo={`/admin/fees-assessments/fee/${item.application.type}/${item.id}`} />}
+        cardRenderer={(item) => (
+          <FeesAssessmentItem
+            item={item}
+            navigateTo={`/admin/fees-assessments/fee/${item.application.type}/${item.id}`}
+          />
+        )}
       >
         <ButtonAddEditPpaForm1>
           <PlusIcon /> PPA Form 1

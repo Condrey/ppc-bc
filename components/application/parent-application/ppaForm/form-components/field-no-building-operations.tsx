@@ -20,7 +20,7 @@ interface Props {
 export default function FieldNoBuildingOperations({ form }: Props) {
   const doesNotInvolveBuilding = form.watch("landUse.doesNotInvolveBuilding");
   return (
-    <Item variant={doesNotInvolveBuilding?"success":"muted"}>
+    <Item variant={doesNotInvolveBuilding ? "success" : "muted"}>
       <ItemContent className="space-y-5">
         <FormField
           control={form.control}

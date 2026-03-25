@@ -64,7 +64,7 @@ export const useCustomSearchParams = (): UseCustomSearchParamsReturn => {
       params.set(name, value);
       return params.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   /**
@@ -80,7 +80,7 @@ export const useCustomSearchParams = (): UseCustomSearchParamsReturn => {
       params.set(name, value);
       router.push(currentPathname + "?" + params.toString());
     },
-    [searchParams, currentPathname, router]
+    [searchParams, currentPathname, router],
   );
 
   /**
@@ -97,7 +97,7 @@ export const useCustomSearchParams = (): UseCustomSearchParamsReturn => {
       params.set(name, value);
       router.push((!pathname ? "" : pathname) + "?" + params.toString());
     },
-    [searchParams, router]
+    [searchParams, router],
   );
 
   /**
@@ -117,7 +117,7 @@ export const useCustomSearchParams = (): UseCustomSearchParamsReturn => {
         params.toString()
       );
     },
-    [searchParams, currentPathname]
+    [searchParams, currentPathname],
   );
 
   /**
@@ -131,7 +131,7 @@ export const useCustomSearchParams = (): UseCustomSearchParamsReturn => {
       const params = new URLSearchParams(searchParams.toString());
       return pathname + "?" + params.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   /**
@@ -147,10 +147,10 @@ export const useCustomSearchParams = (): UseCustomSearchParamsReturn => {
         currentPathname +
           (!pathnameEndPoint ? "" : pathnameEndPoint) +
           "?" +
-          params.toString()
+          params.toString(),
       );
     },
-    [searchParams, router, currentPathname]
+    [searchParams, router, currentPathname],
   );
 
   /**
@@ -163,7 +163,7 @@ export const useCustomSearchParams = (): UseCustomSearchParamsReturn => {
       const params = new URLSearchParams(searchParams.toString());
       router.push(pathname + "?" + params.toString());
     },
-    [searchParams, router]
+    [searchParams, router],
   );
 
   return {

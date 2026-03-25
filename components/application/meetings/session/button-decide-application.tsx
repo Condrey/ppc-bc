@@ -1,10 +1,11 @@
 "use client";
 
+import { useSession } from "@/app/(auth)/session-provider";
 import { ButtonProps } from "@/components/ui/button";
 import LoadingButton from "@/components/ui/loading-button";
-import { applicationStatuses } from "@/lib/enums";
+import { applicationStatuses, myPrivileges } from "@/lib/enums";
 import { Application } from "@/lib/generated/prisma/browser";
-import { ApplicationStatus } from "@/lib/generated/prisma/enums";
+import { ApplicationStatus, Role } from "@/lib/generated/prisma/enums";
 import { useDecideApplicationMutation } from "../mutations";
 
 interface Props extends ButtonProps {
@@ -16,6 +17,9 @@ export default function ButtonDecideApplication({
   decision,
   ...props
 }: Props) {
+  const { user } = useSession();
+  const isAuthorized =
+    user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
   const { mutate, isPending } = useDecideApplicationMutation();
   const { verb } = applicationStatuses[decision];
 
@@ -29,12 +33,14 @@ export default function ButtonDecideApplication({
   }
   return (
     <>
-      <LoadingButton
-        loading={isPending}
-        title={`${verb} application`}
-        {...props}
-        onClick={handleClick}
-      />
+      {isAuthorized && (
+        <LoadingButton
+          loading={isPending}
+          title={`${verb} application`}
+          {...props}
+          onClick={handleClick}
+        />
+      )}
     </>
   );
 }

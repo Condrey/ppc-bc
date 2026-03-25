@@ -17,10 +17,7 @@ const links = [
 ];
 export default function ComponentHeader() {
   return (
-    <section
-      id="home"
-      className="w-full p-3 sticky space-y-3 top-0 "
-    >
+    <section id="home" className="w-full p-3 sticky space-y-3 top-0 ">
       <div className="flex flex-row justify-between max-w-9xl   items-center mx-auto">
         <Image
           alt="coat-of-arms"
@@ -30,7 +27,7 @@ export default function ComponentHeader() {
           className="hidden sm:flex"
         />
         <NavigationMenu viewport={false} className="max-w-9xl mx-auto  py-3">
-          <NavigationMenuList className="flex-wrap *:flex-1"> 
+          <NavigationMenuList className="flex-wrap *:flex-1">
             {links.map(({ href, title }) => (
               <NavigationMenuItem key={href} asChild>
                 <NavigationMenuLink
@@ -39,7 +36,9 @@ export default function ComponentHeader() {
                     className: "bg-secondary",
                   })}
                 >
-                  <Link href={href} className="uppercase">{title}</Link>
+                  <Link href={href} className="uppercase">
+                    {title}
+                  </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             ))}

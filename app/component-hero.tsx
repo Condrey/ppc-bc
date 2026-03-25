@@ -11,9 +11,9 @@ export default function ComponentHero() {
         className="uppercase max-w-xl  text-shadow-2xs text-6xl font-black"
       />
       <p className="mx-auto max-w-prose text-lg text-pretty tracking-wide text-center text-shadow-2xs ">
-        An initiative of Lira City Council to accelerate land applications and building
-        applications, related permits including development permits, and
-        building permits.
+        An initiative of Lira City Council to accelerate land applications and
+        building applications, related permits including development permits,
+        and building permits.
       </p>
 
       <CardFooter className="space-x-3 flex-wrap justify-center">

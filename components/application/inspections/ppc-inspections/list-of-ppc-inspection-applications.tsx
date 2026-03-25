@@ -43,8 +43,12 @@ export default function ListOfPpcInspectionApplications({
       filterColumn={{ id: "application_applicant_name", label: "applicant" }}
       tableHeaderSection={<TypographyH4 text="Inspection Applications" />}
       className="w-full"
-      cardRenderer={(item) => 
-      <PpcInspectionItem item={item} navigateTo={`/admin/inspections/ppc-inspections/${item.applicationId}`}/>}
+      cardRenderer={(item) => (
+        <PpcInspectionItem
+          item={item}
+          navigateTo={`/admin/inspections/ppc-inspections/${item.applicationId}`}
+        />
+      )}
     ></DataTable>
   );
 }

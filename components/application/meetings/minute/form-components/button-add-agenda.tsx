@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "@/app/(auth)/session-provider";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -21,6 +22,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Item, ItemContent, ItemTitle } from "@/components/ui/item";
 import { Label } from "@/components/ui/label";
+import { myPrivileges } from "@/lib/enums";
+import { Role } from "@/lib/generated/prisma/enums";
 import { AgendaSchema, MinuteSchema } from "@/lib/validation";
 import { useState } from "react";
 import { useFieldArray, useForm, UseFormReturn } from "react-hook-form";
@@ -29,6 +32,9 @@ interface Props extends ButtonProps {
   thisForm: UseFormReturn<MinuteSchema>;
 }
 export default function ButtonAddAgenda({ thisForm: form, ...props }: Props) {
+  const { user } = useSession();
+  const isAuthorized =
+    user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
   const [open, setOpen] = useState(false);
   const { append } = useFieldArray({
     control: form.control,
@@ -54,9 +60,15 @@ export default function ButtonAddAgenda({ thisForm: form, ...props }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button title={"Add agenda"} {...props} onClick={() => setOpen(true)} />
-      </DialogTrigger>
+      {isAuthorized && (
+        <DialogTrigger asChild>
+          <Button
+            title={"Add agenda"}
+            {...props}
+            onClick={() => setOpen(true)}
+          />
+        </DialogTrigger>
+      )}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add agenda</DialogTitle>

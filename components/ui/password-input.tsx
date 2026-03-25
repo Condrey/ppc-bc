@@ -5,10 +5,8 @@ import React, { useState } from "react";
 import { FieldValues, UseControllerProps } from "react-hook-form";
 
 interface PasswordInputProps<T extends FieldValues>
-  extends Omit<
-      React.InputHTMLAttributes<HTMLInputElement>,
-      "defaultValue" | "name"
-    >,
+  extends
+    Omit<React.InputHTMLAttributes<HTMLInputElement>, "defaultValue" | "name">,
     UseControllerProps<T> {}
 
 const PasswordInput = React.forwardRef<

@@ -25,7 +25,7 @@ export const MAX_ATTACHMENTS = 5;
 export const REDIRECT_TO_URL_SEARCH_PARAMS = "redirectToUrl";
 export const APPLICATION_TYPE_SEARCH_PARAMETER = "application-type";
 export const DEFAULT_PASSWORD = "defaultPassword123!";
-export const MOBILE_MAX_ITEMS = 10
+export const MOBILE_MAX_ITEMS = 10;
 
 export type NavLink = { title: string; href: string; description: string };
 export type NavLinkGroup = {

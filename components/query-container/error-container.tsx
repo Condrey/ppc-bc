@@ -24,7 +24,7 @@ export default function ErrorContainer({
     <div
       className={cn(
         "bg-destructive/10 flex min-h-80 flex-col items-center justify-center gap-4 p-3 sm:bg-transparent",
-        className
+        className,
       )}
     >
       <p className="text-muted-foreground max-w-sm text-center">
