@@ -182,7 +182,10 @@ export default function FormAddEditPpaForm1LandApplication({
                           <Checkbox checked disabled />
                           <ItemTitle>
                             By submitting, applicant shall be subjected to a
-                            charge of <strong>{applicationFee}</strong>
+                            charge of{" "}
+                            <strong className="slashed-zero font-mono oldstyle-nums">
+                              {applicationFee}
+                            </strong>
                           </ItemTitle>
                         </Label>
                       </ItemContent>

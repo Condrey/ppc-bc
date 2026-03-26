@@ -54,7 +54,7 @@ export async function upsertMeeting(input: MeetingSchema) {
   const { user } = await validateRequest();
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
-  if (!isAuthorized) throw Error("Unauthorized");
+  if (!isAuthorized) return "Unauthorized";
 
   return await prisma.$transaction(
     async (tx) => {
@@ -97,7 +97,7 @@ export async function startMeeting(meetingId: string) {
   const { user } = await validateRequest();
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
-  if (!isAuthorized) throw Error("Unauthorized");
+  if (!isAuthorized) return "Unauthorized";
 
   await prisma.meeting.update({
     where: { id: meetingId },
@@ -116,7 +116,7 @@ export async function postponeMeeting({
   const { user } = await validateRequest();
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
-  if (!isAuthorized) throw Error("Unauthorized");
+  if (!isAuthorized) return "Unauthorized";
 
   await prisma.meeting.update({
     where: { id: meetingId },

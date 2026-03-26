@@ -40,7 +40,7 @@ export default function CommandItemApplicant({
       variant={variant || "default"}
       className={cn("p-0 w-full flex-nowrap max-w-xs", className)}
     >
-      <ItemMedia className="shrink hidden md:block ">
+      <ItemMedia className="hidden  xl:block ">
         <ApplicantAvatar
           avatarUrl={avatarUrl}
           name={name}

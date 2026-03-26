@@ -28,20 +28,3 @@ async function applicationInspections(applicationId: string) {
 }
 
 export const getApplicationInspections = cache(applicationInspections);
-
-// async function allApplications(applicationId: string) {
-//   return await prisma.landApplication.findUnique({
-//     include: applicationDataInclude,
-//   });
-// }
-
-// export const getAllApplications = cache(allApplications);
-
-// async function applicationInspections(applicationId: string) {
-//   return await prisma.application.findUnique({
-//     where: { id: applicationId },
-//     include: applicationDataInclude,
-//   });
-// }
-
-// export const getApplicationInspections = cache(applicationInspections);

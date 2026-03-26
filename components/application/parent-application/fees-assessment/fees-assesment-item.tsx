@@ -126,13 +126,17 @@ const Content = ({
           </Badge>
         ) : (
           <p>
-            <span className="italic text-muted-foreground">Paid</span>{" "}
+            <span className="italic font-mono oldstyle-nums slashed-zero text-muted-foreground">
+              Paid
+            </span>{" "}
             {allPayments === 0
               ? "Nothing"
               : formatCurrency(allPayments, "UGX", true)}
             <DotIcon className="inline" />{" "}
             <Badge variant={"destructive"}>
-              <span className="italic font-sans">Bal</span>{" "}
+              <span className="italic font-mono oldstyle-nums slashed-zero">
+                Bal
+              </span>{" "}
               {allBalances === 0
                 ? "Nothing"
                 : formatCurrency(allBalances, "UGX", true)}

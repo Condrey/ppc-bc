@@ -81,14 +81,17 @@ export default function SectionHeader({ application }: Props) {
             <Item key={id} variant={"muted"}>
               <ItemContent>
                 <ItemTitle className="font-bold">{title}</ItemTitle>
-                <ItemTitle>
+                <ItemTitle className="font-mono oldstyle-nums slashed-zero">
                   {formatCurrency(amountAssessed, currency, true)}
                 </ItemTitle>
-                <ItemDescription>
+                <ItemDescription className="font-mono oldstyle-nums slashed-zero">
                   Paid: {formatCurrency(amountPaid, currency, true)}
                 </ItemDescription>
                 <ItemDescription
-                  className={cn(hasBalance && "text-destructive")}
+                  className={cn(
+                    hasBalance &&
+                      " font-mono oldstyle-nums slashed-zero text-destructive",
+                  )}
                 >
                   {hasBalance ? (
                     `Bal: ${formatCurrency(balance, currency, true)}`

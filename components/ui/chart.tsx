@@ -284,7 +284,7 @@ function ChartTooltipContent({
                       </span>
                     </div>
                     {item.value && (
-                      <span className="font-mono font-medium text-foreground tabular-nums">
+                      <span className="font-mono font-medium text-foreground tabular-nums slashed-zero oldstyle-nums">
                         {formatValueAsCurrency
                           ? formatCurrency(Number(item.value))
                           : formatNumber(Number(item.value))}
@@ -299,7 +299,7 @@ function ChartTooltipContent({
       </div>
       <div className="flex justify-between border-y py-2 gap-2">
         <span>{`Total ${formatValueAsCurrency ? "amount" : "number"}:`}</span>
-        <span className="font-mono font-medium text-foreground tabular-nums">
+        <span className="font-mono font-medium text-foreground tabular-nums slashed-zero  oldstyle-nums">
           {formatValueAsCurrency ? formatCurrency(total) : formatNumber(total)}
         </span>
       </div>

@@ -1,6 +1,8 @@
 "use server";
 
+import { validateRequest } from "@/app/(auth)/auth";
 import { DEFAULT_PASSWORD } from "@/lib/constants";
+import { myPrivileges } from "@/lib/enums";
 import { Role } from "@/lib/generated/prisma/enums";
 import prisma from "@/lib/prisma";
 import { UserData, userDataSelect } from "@/lib/types";
@@ -68,7 +70,11 @@ export async function upsertUser(
 ): Promise<string | UserData> {
   const { email, name, role, username, id, ppcMembership } =
     signUpSchema.parse(input);
-  // apply auth
+
+  const { user } = await validateRequest();
+  const isAuthorized =
+    user && myPrivileges[user.role].includes(Role.IT_OFFICER);
+  if (!isAuthorized) return "You are not authorized to add or edit users";
   let _username = username || slugify(name);
   const password = DEFAULT_PASSWORD;
   const passwordHash = await hash(password, {

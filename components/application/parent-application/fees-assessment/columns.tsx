@@ -64,7 +64,10 @@ export const useApplicationFeeAssessmentsColumns: ColumnDef<FeeAssessmentData>[]
             <div>
               <span className="text-muted-foreground italic">Paid: </span>
               <span
-                className={cn(payments <= 0 ? "font-medium" : "text-success")}
+                className={cn(
+                  "font-mono oldstyle-nums slashed-zero",
+                  payments <= 0 ? "font-medium" : "text-success",
+                )}
               >
                 {payments <= 0
                   ? "Nothing"
@@ -79,7 +82,7 @@ export const useApplicationFeeAssessmentsColumns: ColumnDef<FeeAssessmentData>[]
             ) : (
               <div>
                 <span className="text-muted-foreground italic">bal: </span>
-                <span className="text-destructive">
+                <span className="text-destructive font-mono oldstyle-nums slashed-zero">
                   {formatCurrency(balance, currency, true)}
                 </span>
               </div>

@@ -22,16 +22,20 @@ import {
 } from "@/components/ui/sidebar";
 import { Spinner } from "@/components/ui/spinner";
 import { useCustomSearchParams } from "@/hooks/use-custom-search-param";
-import { NavLink, NavLinkGroup, navLinks } from "@/lib/constants";
+import { NavLink, NavLinkGroup, privilegeLinks } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { ChevronRight, Loader2Icon, MoveUpRightIcon } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import { useState, useTransition } from "react";
+import { useSession } from "../(auth)/session-provider";
 import { NavUser } from "./nav-user";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { open: isOpen } = useSidebar();
+  const { user } = useSession();
+  if (!user) redirect("/login");
+  const { navLinks } = privilegeLinks[user.role];
   return (
     <Sidebar
       className="top-(--header-height)  h-[calc(100svh-var(--header-height))]! not-only:bg-primary"
@@ -100,6 +104,7 @@ function ParentMenuItem({
     isActive ? "" : "text-sidebar-accent",
     !isOpen && "ms-1",
   );
+
   return (
     <>
       <Collapsible

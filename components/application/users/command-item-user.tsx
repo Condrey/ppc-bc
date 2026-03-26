@@ -34,15 +34,17 @@ export default function CommandItemUser({
   return (
     <Item
       variant={variant || "default"}
-      className={cn("p-0 w-full flex-nowrap max-w-xs", className)}
+      className={cn("p-0 w-full  max-w-xs", className)}
     >
-      <ItemMedia className="shrink ">
-        <ApplicantAvatar
-          avatarUrl={avatarUrl}
-          name={name}
-          avatarSize={avatarSize}
-        />
-      </ItemMedia>
+      <ItemContent>
+        <ItemMedia className="shrink ">
+          <ApplicantAvatar
+            avatarUrl={avatarUrl}
+            name={name}
+            avatarSize={avatarSize}
+          />
+        </ItemMedia>
+      </ItemContent>
       <ItemContent className="gap-0">
         {title && <ItemTitle className="font-bold">{title}</ItemTitle>}
         <ItemTitle className="line-clamp-1">{name}</ItemTitle>

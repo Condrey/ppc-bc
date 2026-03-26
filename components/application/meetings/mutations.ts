@@ -20,13 +20,17 @@ export function useUpsertMeetingMutation() {
       const queryKey2: QueryKey = ["meeting", variables.id];
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
+      if (typeof data === "string") {
+        toast.warning(data);
+        return;
+      } else {
+        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: queryKey2 });
 
-      queryClient.invalidateQueries({ queryKey });
-      queryClient.invalidateQueries({ queryKey: queryKey2 });
-
-      toast.success("success", {
-        description: !variables.id ? "Meeting added" : "Meeting updated",
-      });
+        toast.success("success", {
+          description: !variables.id ? "Meeting added" : "Meeting updated",
+        });
+      }
     },
     onError(error) {
       console.error(error);
@@ -43,13 +47,17 @@ export function useStartMeetingMutation() {
       const queryKey2: QueryKey = ["meeting", meetingId];
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
+      if (typeof data === "string") {
+        toast.warning(data);
+        return;
+      } else {
+        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: queryKey2 });
 
-      queryClient.invalidateQueries({ queryKey });
-      queryClient.invalidateQueries({ queryKey: queryKey2 });
-
-      toast.success("success", {
-        description: "Meeting started",
-      });
+        toast.success("success", {
+          description: "Meeting started",
+        });
+      }
     },
     onError(error) {
       console.error(error);
@@ -66,13 +74,17 @@ export function usePostponeMeetingMutation() {
       const queryKey2: QueryKey = ["meeting", variables.meetingId];
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
+      if (typeof data === "string") {
+        toast.warning(data);
+        return;
+      } else {
+        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: queryKey2 });
 
-      queryClient.invalidateQueries({ queryKey });
-      queryClient.invalidateQueries({ queryKey: queryKey2 });
-
-      toast.success("success", {
-        description: "Meeting postponed",
-      });
+        toast.success("success", {
+          description: "Meeting postponed",
+        });
+      }
     },
     onError(error) {
       console.error(error);

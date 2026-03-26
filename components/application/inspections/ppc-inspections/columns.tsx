@@ -7,7 +7,6 @@ import {
   applicationStatuses,
   applicationTypes,
   landUseTypes,
-  naturesOfInterestInLand,
 } from "@/lib/enums";
 import {
   ApplicationType,
@@ -144,7 +143,10 @@ export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
           <div>
             <span className="text-muted-foreground italic">Paid: </span>
             <span
-              className={cn(payments <= 0 ? "font-medium" : "text-success")}
+              className={cn(
+                "font-mono oldstyle-nums slashed-zero",
+                payments <= 0 ? "font-medium" : "text-success",
+              )}
             >
               {payments <= 0
                 ? "Nothing"
@@ -159,7 +161,7 @@ export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
           ) : (
             <div>
               <span className="text-muted-foreground italic">bal: </span>
-              <span className="text-destructive">
+              <span className="text-destructive font-mono oldstyle-nums slashed-zero">
                 {formatCurrency(balance, currency, true)}
               </span>
             </div>
@@ -176,30 +178,27 @@ export const usePpcInspectionsColumns: ColumnDef<ParentApplicationData>[] = [
     },
     cell({ row }) {
       const {
-        natureOfInterest,
-        landUse: { acreage, landUseType, otherLandUseType },
+        landUse: { acreage, landUseType },
         site,
       } = row.original;
-      const { title: _landUse } = landUseTypes[landUseType];
-      const { title: landInterest } = naturesOfInterestInLand[natureOfInterest];
-      const usePurpose = landUseType === "OTHERS" ? otherLandUseType : _landUse;
-
+      const { formDesc } = landUseTypes[landUseType];
       return (
         <div>
-          <div>{`${landInterest} for ${usePurpose}`}</div>
-          <div className="text-muted-foreground">
-            {acreage}{" "}
-            {!!site && (
-              <div className=" inline-flex gap-0.5 *:[&svg]:size-4">
-                {site.hasElectricity && (
-                  <LightbulbIcon className="fill-amber-300 text-amber-500" />
-                )}
-                {site.hasNationalWater && (
-                  <DropletsIcon className="fill-cyan-300 text-cyan-500" />
-                )}
-              </div>
-            )}
+          <div className="text-center">{formDesc}</div>
+          <div className="text-center">
+            <span className="text-muted-foreground">Acreage: </span>
+            {acreage}
           </div>
+          {!!site && (
+            <div className="flex justify-center w-full gap-0.5">
+              {site.hasElectricity && (
+                <LightbulbIcon className="fill-amber-300 text-amber-500" />
+              )}
+              {site.hasNationalWater && (
+                <DropletsIcon className="fill-cyan-300 text-cyan-500" />
+              )}
+            </div>
+          )}
         </div>
       );
     },

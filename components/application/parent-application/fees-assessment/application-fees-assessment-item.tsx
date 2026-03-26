@@ -113,7 +113,7 @@ const Content = ({
             <span className="text-muted-foreground font-semibold">Paid: </span>
             <span
               className={cn(
-                "slashed-zero font-mono",
+                "slashed-zero font-mono oldstyle-nums",
                 payments <= 0 ? "font-medium" : "text-success",
               )}
             >
@@ -135,7 +135,7 @@ const Content = ({
                 <span className="text-muted-foreground font-semibold">
                   bal:{" "}
                 </span>
-                <span className="text-destructive slashed-zero font-mono">
+                <span className="text-destructive slashed-zero font-mono oldstyle-nums">
                   {formatCurrency(balance, currency, true)}
                 </span>
               </div>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { EmptyContainer } from "@/components/query-container/empty-container";
 import ErrorContainer from "@/components/query-container/error-container";
@@ -187,7 +188,10 @@ export default function FormAddEditPpaForm1BuildingApplication({
                           <Checkbox checked disabled />
                           <ItemTitle>
                             By submitting, applicant shall be subjected to a
-                            charge of <strong>{applicationFee}</strong>
+                            charge of{" "}
+                            <strong className="slashed-zero font-mono oldstyle-nums">
+                              {applicationFee}
+                            </strong>
                           </ItemTitle>
                         </Label>
                       </ItemContent>
