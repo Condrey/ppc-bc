@@ -15,7 +15,7 @@ export default function TopAppBar({ className }: TopAppBarProps) {
         size={"xl"}
         variant={"destructive"}
       />
-      <p className="uppercase ms-2 inline">
+      <p className="uppercase ms-2 text-2xl w-full flex items-center ">
         <span className="md:hidden">{webName}</span>
         <span className="hidden md:block">{siteConfig.name}</span>
       </p>
