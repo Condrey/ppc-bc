@@ -13,6 +13,7 @@ import {
   Committee,
   NatureOfInterestInLand,
 } from "./generated/prisma/enums";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }

@@ -3,7 +3,6 @@
 import CardMeetingApplications from "@/components/application/meetings/card-meeting-applications";
 import CardStartMeeting from "@/components/application/meetings/card-start-meeting";
 import ButtonAddEditMinute from "@/components/application/meetings/minute/button-add-edit-minute";
-import ButtonDownloadMinute from "@/components/application/meetings/minute/button-download-minute";
 import ListOfMeetingMinutes from "@/components/application/meetings/minute/list-of-meeting-minutes";
 import { useMeetingQuery } from "@/components/application/meetings/query";
 import CommandItemUser from "@/components/application/users/command-item-user";
@@ -35,7 +34,6 @@ import { MeetingData } from "@/lib/types";
 import { getMeetingNumber } from "@/lib/utils";
 import {
   AlertTriangleIcon,
-  DownloadIcon,
   Edit3Icon,
   MoreVerticalIcon,
   Trash2Icon,
@@ -128,9 +126,9 @@ export default function PageClient({ meeting: initialData, committee }: Props) {
                     <DropdownMenuLabel>Minute Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <ButtonDownloadMinute meeting={meeting} variant={"ghost"}>
+                      {/* <ButtonDownloadMinute meeting={meeting} variant={"ghost"}>
                         <DownloadIcon className="inline mr-2" /> Download minute
-                      </ButtonDownloadMinute>
+                      </ButtonDownloadMinute> */}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
