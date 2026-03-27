@@ -5,7 +5,7 @@ import { formatDate } from "date-fns";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import PageClient from "./page-client";
+import PageClient from "./pageClient";
 
 interface Props {
   params: Promise<{ meetingId: string; committeeType: string }>;

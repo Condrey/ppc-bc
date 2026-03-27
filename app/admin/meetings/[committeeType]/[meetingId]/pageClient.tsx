@@ -32,7 +32,7 @@ import { Item, ItemContent, ItemTitle } from "@/components/ui/item";
 import { committees } from "@/lib/enums";
 import { Committee } from "@/lib/generated/prisma/enums";
 import { MeetingData } from "@/lib/types";
-// import { getMeetingNumber } from "@/lib/utils";
+import { getMeetingNumber } from "@/lib/utils";
 import {
   AlertTriangleIcon,
   DownloadIcon,
@@ -40,6 +40,7 @@ import {
   MoreVerticalIcon,
   Trash2Icon,
 } from "lucide-react";
+import { notFound } from "next/navigation";
 
 interface Props {
   committee: Committee;
@@ -57,13 +58,7 @@ export default function PageClient({ meeting: initialData, committee }: Props) {
       />
     );
   }
-  if (!meeting)
-    return (
-      <EmptyContainer
-        title="No meeting"
-        description="There is no such meeting."
-      />
-    );
+  if (!meeting) return notFound();
   const {
     meetingNo,
     happeningOn,
@@ -75,7 +70,7 @@ export default function PageClient({ meeting: initialData, committee }: Props) {
   const { title: committeeType } = committees[committee];
   const title = `${meetingTitle}`;
   const date = postponedOn ? postponedOn : happeningOn;
-  const meetingNumber = meetingNo; /* getMeetingNumber(meetingNo, date);*/
+  const meetingNumber = getMeetingNumber(meetingNo, date);
   return (
     <Container
       breadcrumbs={[
