@@ -18,9 +18,8 @@ import {
 import { ApplicationData, InspectionData } from "@/lib/types";
 import { cn, getApplicationNumber } from "@/lib/utils";
 import { formatDate } from "date-fns";
-import { AlertTriangle, DownloadIcon } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import ButtonAddInspection from "./button-add-inspection";
-import ButtonDownloadInspectionReport from "./parent-application/button-download-inspection-report";
 import ButtonEditBuildingInspection from "./parent-application/button-edit-building-inspection";
 import ButtonEditLandInspection from "./parent-application/button-edit-land-inspection";
 
@@ -73,7 +72,7 @@ export default function SectionInspectionBody({
       )}
     >
       <div className="space-y-2.5 max-w-3xl">
-        <ButtonDownloadInspectionReport
+        {/* <ButtonDownloadInspectionReport
           application={application}
           inspection={inspection}
           size={"sm"}
@@ -81,7 +80,7 @@ export default function SectionInspectionBody({
           variant={"secondary"}
         >
           <DownloadIcon className="inline mr-2 " /> inspection report
-        </ButtonDownloadInspectionReport>
+        </ButtonDownloadInspectionReport> */}
 
         <p className=" tracking-wide leading-loose text-justify hyphens-auto ">
           <span className="max-w-prose">
