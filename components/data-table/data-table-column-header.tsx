@@ -21,7 +21,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn, getColumnTitle } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { CheckIcon, XIcon } from "lucide-react";
 
 type DataTableColumnHeaderProps<TData, TValue> =
@@ -155,4 +155,16 @@ export function DataColumnFilter<TData>({
       {/* <pre>{JSON.stringify(columns, null, 2)}</pre> */}
     </>
   );
+}
+
+function getColumnTitle<TData>(column: Column<TData, unknown>) {
+  const header = column.columnDef.header;
+
+  if (typeof header === "string") return header;
+
+  if (typeof column.id === "string") {
+    return column.id.replace(/_/g, " ");
+  }
+
+  return "Column";
 }

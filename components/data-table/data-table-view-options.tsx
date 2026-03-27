@@ -2,7 +2,7 @@
 
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { MixerHorizontalIcon } from "@radix-ui/react-icons";
-import { Table } from "@tanstack/react-table";
+import { Column, Table } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +12,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { getColumnTitle } from "@/lib/utils";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
@@ -59,4 +58,15 @@ export function DataTableViewOptions<TData>({
       </DropdownMenuContent>
     </DropdownMenu>
   );
+}
+export function getColumnTitle<TData>(column: Column<TData, unknown>) {
+  const header = column.columnDef.header;
+
+  if (typeof header === "string") return header;
+
+  if (typeof column.id === "string") {
+    return column.id.replace(/_/g, " ");
+  }
+
+  return "Column";
 }

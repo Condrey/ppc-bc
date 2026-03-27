@@ -1,4 +1,3 @@
-import { Column } from "@tanstack/react-table";
 import { clsx, type ClassValue } from "clsx";
 import {
   endOfDay,
@@ -228,15 +227,3 @@ export const getLocation = (address: Address | null | undefined): string => {
   const { cell, parish, street, subCounty, village, district } = address;
   return `${street ? `${street}, ` : ""}${village ? `${village}, ` : ""}${cell ? `${cell}, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty} division.` : ""} ${district}`;
 };
-
-export function getColumnTitle<TData>(column: Column<TData, unknown>) {
-  const header = column.columnDef.header;
-
-  if (typeof header === "string") return header;
-
-  if (typeof column.id === "string") {
-    return column.id.replace(/_/g, " ");
-  }
-
-  return "Column";
-}

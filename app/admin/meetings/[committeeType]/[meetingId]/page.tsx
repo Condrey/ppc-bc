@@ -5,6 +5,7 @@ import { formatDate } from "date-fns";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import PageClient from "./pageClient";
 
 interface Props {
   params: Promise<{ meetingId: string; committeeType: string }>;
@@ -55,8 +56,8 @@ export default async function Page({ params }: Props) {
 
   return (
     <Suspense>
-      {/* <PageClient meeting={meeting} committee={committee} />
-       */}
+      <PageClient meeting={meeting} committee={committee} />
+
       {committee}
     </Suspense>
   );
