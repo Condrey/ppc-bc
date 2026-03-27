@@ -40,7 +40,6 @@ import {
   MoreVerticalIcon,
   Trash2Icon,
 } from "lucide-react";
-import { notFound } from "next/navigation";
 
 interface Props {
   committee: Committee;
@@ -58,7 +57,13 @@ export default function PageClient({ meeting: initialData, committee }: Props) {
       />
     );
   }
-  if (!meeting) return notFound();
+  if (!meeting)
+    return (
+      <EmptyContainer
+        title="No meeting"
+        description="There is no such meeting."
+      />
+    );
   const {
     meetingNo,
     happeningOn,
