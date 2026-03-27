@@ -32,7 +32,7 @@ import { Item, ItemContent, ItemTitle } from "@/components/ui/item";
 import { committees } from "@/lib/enums";
 import { Committee } from "@/lib/generated/prisma/enums";
 import { MeetingData } from "@/lib/types";
-import { getMeetingNumber } from "@/lib/utils";
+// import { getMeetingNumber } from "@/lib/utils";
 import {
   AlertTriangleIcon,
   DownloadIcon,
@@ -75,7 +75,7 @@ export default function PageClient({ meeting: initialData, committee }: Props) {
   const { title: committeeType } = committees[committee];
   const title = `${meetingTitle}`;
   const date = postponedOn ? postponedOn : happeningOn;
-  const meetingNumber = getMeetingNumber(meetingNo, date);
+  const meetingNumber = meetingNo; /* getMeetingNumber(meetingNo, date);*/
   return (
     <Container
       breadcrumbs={[
