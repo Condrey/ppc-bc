@@ -1,4 +1,5 @@
 import { getMeetingById } from "@/components/application/meetings/action";
+import { Committee } from "@/lib/generated/prisma/enums";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -44,7 +45,7 @@ interface Props {
 export default async function Page({ params }: Props) {
   const { meetingId: encodedMeetingId, committeeType } = await params;
   const meetingId = decodeURIComponent(encodedMeetingId);
-  // const committee = decodeURIComponent(committeeType) as Committee;
+  const committee = decodeURIComponent(committeeType) as Committee;
   const meeting = await getMeetingById(meetingId);
 
   if (!meeting) return notFound();
@@ -52,6 +53,7 @@ export default async function Page({ params }: Props) {
   return (
     <Suspense>
       {/* <PageClient meeting={meeting} committee={committee} /> */}
+      {committee}
     </Suspense>
   );
 }
