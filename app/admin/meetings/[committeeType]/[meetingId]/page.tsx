@@ -4,6 +4,7 @@ import { Committee } from "@/lib/generated/prisma/enums";
 import { formatDate } from "date-fns";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import PageClient from "./page-client";
 
 interface Props {
@@ -52,5 +53,9 @@ export default async function Page({ params }: Props) {
 
   if (!meeting) return notFound();
 
-  return <PageClient meeting={meeting} committee={committee} />;
+  return (
+    <Suspense>
+      <PageClient meeting={meeting} committee={committee} />
+    </Suspense>
+  );
 }
