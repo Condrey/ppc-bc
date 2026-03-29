@@ -9,6 +9,7 @@ import {
   getAllParentApplications,
   getAllParentApplicationsByApplicationType,
   getAllParentApplicationsByFeeAssessmentType,
+  getParentApplicationById,
 } from "./actions";
 
 export function useLandApplicationsQuery(initialData: LandApplicationData[]) {
@@ -32,6 +33,18 @@ export function useParentApplicationsQuery(
         : getAllParentApplications(),
     initialData,
     refetchOnWindowFocus: false,
+  });
+}
+
+export function useParentApplicationQuery(
+  initialData: ParentApplicationData,
+  applicationType: ApplicationType,
+) {
+  const id = initialData.id;
+  return useQuery({
+    queryKey: ["parent-application", applicationType, id],
+    queryFn: async () => getParentApplicationById(id, applicationType),
+    initialData,
   });
 }
 

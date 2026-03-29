@@ -14,12 +14,15 @@ import PpaFormItem from "./ppa-form-item";
 export default function ListOfPpaForm1s({
   initialData,
   applicationType,
+  navigateToParent,
 }: {
   initialData: ParentApplicationData[];
   applicationType?: ApplicationType;
+  navigateToParent?: string;
 }) {
   const query = useParentApplicationsQuery(initialData, applicationType);
   const { data: parentApplications, status } = query;
+  const columns = usePpaForm1Columns(navigateToParent);
 
   if (status === "error") {
     return (
@@ -38,8 +41,8 @@ export default function ListOfPpaForm1s({
   }
   return (
     <DataTable
-      data={parentApplications.map((a, index) => ({ ...a, id: index + a.id }))}
-      columns={usePpaForm1Columns}
+      data={parentApplications}
+      columns={columns}
       filterColumn={{
         id: "application_applicant_name",
         label: "applicant",
@@ -55,7 +58,7 @@ export default function ListOfPpaForm1s({
       cardRenderer={(item) => (
         <PpaFormItem
           item={item}
-          navigateTo={`/admin/registration/ppa-form/${item.id}`}
+          navigateTo={`${navigateToParent ? `${navigateToParent}${item.application.type}/` : "/admin/registration/ppa-form/"}${item.id}`}
         />
       )}
       className="w-full"

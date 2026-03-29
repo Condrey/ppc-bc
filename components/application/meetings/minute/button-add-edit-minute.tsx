@@ -1,41 +1,33 @@
 "use client";
 
-import { useSession } from "@/app/(auth)/session-provider";
 import { Button, ButtonProps } from "@/components/ui/button";
-import { myPrivileges } from "@/lib/enums";
-import { Meeting, Role } from "@/lib/generated/prisma/client";
-import { MinuteData } from "@/lib/types";
+import { MeetingData, MinuteData } from "@/lib/types";
 import { useState } from "react";
 import FormAddEditMinute from "./form-components/form-add-edit-minute";
 
 interface Props extends ButtonProps {
-  meeting: Meeting;
+  meeting: MeetingData;
   minute?: MinuteData;
 }
 export default function ButtonAddEditMinute({
-  minute,
   meeting,
+  minute,
   ...props
 }: Props) {
-  const { user } = useSession();
-  const isAuthorized =
-    user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
   const [open, setOpen] = useState(false);
-
   return (
     <>
-      {isAuthorized && (
-        <Button
-          title={minute ? "Update minute" : "Start minuting"}
-          {...props}
-          onClick={() => setOpen(true)}
-        />
-      )}
+      <Button
+        title={minute ? "Update minute " : "Start minuting"}
+        disabled={!meeting}
+        onClick={() => setOpen(true)}
+        {...props}
+      />
       <FormAddEditMinute
         open={open}
-        onOpenChange={setOpen}
-        minute={minute}
         meeting={meeting}
+        minute={minute}
+        onOpenChange={setOpen}
       />
     </>
   );

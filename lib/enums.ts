@@ -10,9 +10,13 @@ import {
   NatureOfInterestInLand,
   PaymentMethod,
   Role,
+  WorkflowStageStatus,
+  WorkflowStageType,
 } from "@/lib/generated/prisma/enums";
 import {
   BuildingIcon,
+  CheckIcon,
+  ClockIcon,
   FileExclamationPointIcon,
   FileScanIcon,
   FileTextIcon,
@@ -20,7 +24,9 @@ import {
   GavelIcon,
   LucideIcon,
   MapPinnedIcon,
+  SearchIcon,
   TelescopeIcon,
+  WrenchIcon,
 } from "lucide-react";
 
 export const allApplicationTypes = Object.values(ApplicationType);
@@ -419,5 +425,67 @@ export const memberships: Record<Membership, { title: string }> = {
   },
   PROFESSIONAL: {
     title: "Professional",
+  },
+};
+
+export const allWorkflowStageStatuses = Object.values(WorkflowStageStatus);
+export const workflowStageStatuses: Record<
+  WorkflowStageStatus,
+  {
+    title: string;
+    description: string;
+    icon: LucideIcon;
+  }
+> = {
+  PENDING: {
+    title: "Pending",
+    description: "The stage is pending",
+    icon: FileScanIcon,
+  },
+  IN_PROGRESS: {
+    title: "In Progress ",
+    description: "The stage is in progress",
+    icon: ClockIcon,
+  },
+  COMPLETED: {
+    title: "Completed",
+    description: "The stage is completed ",
+    icon: CheckIcon,
+  },
+};
+
+export const allWorkflowStageTypes = Object.values(WorkflowStageType);
+export const workflowStageTypes: Record<
+  WorkflowStageType,
+  {
+    title: string;
+    description: string;
+    icon: LucideIcon;
+  }
+> = {
+  SUBMISSION: {
+    title: "Submission",
+    description: "The stage is a submission of application",
+    icon: FileTextIcon,
+  },
+  TECHNICAL_REVIEW: {
+    title: "Technical Review",
+    description: "The stage is a technical review of application",
+    icon: WrenchIcon,
+  },
+  PPC_REVIEW: {
+    title: "PPC Review",
+    description: "The stage is a review by the Physical Planning Committee",
+    icon: SearchIcon,
+  },
+  BC_REVIEW: {
+    title: "BC Review",
+    description: "The stage is a review by the Building Control Committee",
+    icon: SearchIcon,
+  },
+  COUNCIL_APPROVAL: {
+    title: "Council Approval",
+    description: "The stage is approval by the Council",
+    icon: GavelIcon,
   },
 };

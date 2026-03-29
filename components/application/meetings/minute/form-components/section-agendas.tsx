@@ -56,7 +56,7 @@ export default function SectionAgendas({
               } = agenda;
               const number = index + 1;
               return (
-                <Item key={id} variant={"outline"}>
+                <Item key={`${id}-${index}`} variant={"outline"}>
                   <ItemHeader>
                     <div>
                       <ItemTitle>

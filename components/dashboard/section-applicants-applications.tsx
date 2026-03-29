@@ -60,8 +60,8 @@ export default function SectionApplicantsApplications({
   return (
     <>
       <div className=" flex flex-col md:grid md:grid-cols-2  gap-4">
-        {users.map(({ user, count }) => {
-          const isEven = count % 2 === 0;
+        {users.map(({ user, count }, index) => {
+          const isEven = index % 2 === 0;
           return (
             <Item
               key={user}

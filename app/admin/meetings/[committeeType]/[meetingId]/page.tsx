@@ -57,8 +57,6 @@ export default async function Page({ params }: Props) {
   return (
     <Suspense>
       <PageClient meeting={meeting} committee={committee} />
-
-      {committee}
     </Suspense>
   );
 }

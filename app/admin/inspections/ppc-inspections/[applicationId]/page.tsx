@@ -7,7 +7,7 @@ import { getApplicationNumber } from "@/lib/utils";
 import { PlusIcon } from "lucide-react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { PageClient } from "./page-client";
+import { InspectionPageClient } from "../../../../../components/application/inspections/ppc-inspections/inspection-page-client";
 
 interface Props {
   params: Promise<{ applicationId: string }>;
@@ -72,7 +72,10 @@ export default async function Page({ params }: Props) {
           <span className="hidden md:flex">new inspection</span>
         </ButtonAddInspection>
       </TypographyH2>
-      <PageClient application={application} applicationId={applicationId} />
+      <InspectionPageClient
+        application={application}
+        applicationId={applicationId}
+      />
     </Container>
   );
 }

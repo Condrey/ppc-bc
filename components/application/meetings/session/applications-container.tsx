@@ -27,7 +27,7 @@ import { ApplicationData } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import SectionHeader from "../../inspections/ppc-inspections/section-header";
-import SectionInspectionBody from "../../inspections/ppc-inspections/section-inpection-body";
+import SectionInspectionBody from "../../inspections/ppc-inspections/section-inspection-body";
 import ButtonDecideApplication from "./button-decide-application";
 
 interface Props {

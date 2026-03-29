@@ -108,7 +108,35 @@ export type FeeAssessmentData = Prisma.FeeAssessmentGetPayload<{
   include: typeof feeAssessmentDataInclude;
 }>;
 
+// WorkflowStage
+export const workflowStageDataInclude = {
+  application: true,
+  decidedBy: { select: userDataSelect },
+} satisfies Prisma.WorkflowStageInclude;
+export type WorkflowStageData = Prisma.WorkflowStageGetPayload<{
+  include: typeof workflowStageDataInclude;
+}>;
+
+// Minute
+export const minuteDataInclude = {
+  absentMembersWithApology: { select: userDataSelect },
+  agendas: true,
+  chairedBy: { select: userDataSelect },
+  writtenBy: { select: userDataSelect },
+  presentMembers: { select: userDataSelect },
+  meeting: true,
+} satisfies Prisma.MinuteInclude;
+export type MinuteData = Prisma.MinuteGetPayload<{
+  include: typeof minuteDataInclude;
+}>;
+
 // Application
+export const meetingAndMinuteDataInclude = {
+  minute: { include: minuteDataInclude },
+} satisfies Prisma.MeetingInclude;
+export type MeetingAndMinuteData = Prisma.MeetingGetPayload<{
+  include: typeof meetingAndMinuteDataInclude;
+}>;
 export const applicationDataInclude = {
   applicant: { include: applicantDataInclude },
   feeAssessments: { include: feeAssessmentDataInclude },
@@ -119,6 +147,11 @@ export const applicationDataInclude = {
   buildingApplication: {
     include: inspectionBuildingApplicationDataInclude,
   },
+  workflowStages: { include: workflowStageDataInclude },
+  meeting: { include: meetingAndMinuteDataInclude },
+  appeals: true,
+  resubmissions: true,
+  documents: true,
 } satisfies Prisma.ApplicationInclude;
 export type ApplicationData = Prisma.ApplicationGetPayload<{
   include: typeof applicationDataInclude;
@@ -155,19 +188,6 @@ export type BuildingApplicationData = Prisma.BuildingApplicationGetPayload<{
 export type ParentApplicationData =
   | BuildingApplicationData
   | LandApplicationData;
-
-// Minute
-export const minuteDataInclude = {
-  absentMembersWithApology: { select: userDataSelect },
-  agendas: true,
-  chairedBy: { select: userDataSelect },
-  writtenBy: { select: userDataSelect },
-  presentMembers: { select: userDataSelect },
-  meeting: true,
-} satisfies Prisma.MinuteInclude;
-export type MinuteData = Prisma.MinuteGetPayload<{
-  include: typeof minuteDataInclude;
-}>;
 
 // Meeting
 export const meetingDataInclude = {

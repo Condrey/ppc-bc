@@ -20,7 +20,10 @@ export default async function Page() {
       ITEMS_TO_DISPLAY={2}
     >
       <TypographyH1 text="All applications" className="uppercase" />
-      <ListOfPpaForm1s initialData={applications} />
+      <ListOfPpaForm1s
+        initialData={applications}
+        navigateToParent="/admin/applications/"
+      />
     </Container>
   );
 }

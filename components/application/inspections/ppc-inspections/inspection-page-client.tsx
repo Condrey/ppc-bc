@@ -5,7 +5,7 @@ import ButtonDownloadInspectionReport from "@/components/application/inspections
 import ButtonEditBuildingInspection from "@/components/application/inspections/ppc-inspections/parent-application/button-edit-building-inspection";
 import ButtonEditLandInspection from "@/components/application/inspections/ppc-inspections/parent-application/button-edit-land-inspection";
 import SectionHeader from "@/components/application/inspections/ppc-inspections/section-header";
-import SectionInspectionBody from "@/components/application/inspections/ppc-inspections/section-inpection-body";
+import SectionInspectionBody from "@/components/application/inspections/ppc-inspections/section-inspection-body";
 import { TypographyH4 } from "@/components/headings";
 import { EmptyContainer } from "@/components/query-container/empty-container";
 import ErrorContainer from "@/components/query-container/error-container";
@@ -24,8 +24,13 @@ import { DownloadIcon } from "lucide-react";
 interface Props {
   application: ApplicationData;
   applicationId: string;
+  showHeader?: boolean;
 }
-export function PageClient({ application: initialData, applicationId }: Props) {
+export function InspectionPageClient({
+  application: initialData,
+  applicationId,
+  showHeader = true,
+}: Props) {
   const query = useQuery({
     queryKey: ["inspection", "applicationId", applicationId],
     queryFn: () => getApplicationInspections(applicationId),
@@ -128,7 +133,7 @@ export function PageClient({ application: initialData, applicationId }: Props) {
                 </ButtonDownloadInspectionReport>
               </div>
             </div>
-            <SectionHeader application={application} />
+            {showHeader && <SectionHeader application={application} />}
             <SectionInspectionBody application={application} inspection={i} />
           </TabsContent>
         );

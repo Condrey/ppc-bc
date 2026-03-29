@@ -27,7 +27,9 @@ import CommandItemApplicant from "../application/applicant/command-item-applican
 import ButtonAddEditPpaForm1 from "./button-add-edit-ppa-form1";
 import ButtonDownloadPpaForm1 from "./button-download-ppa-form1";
 
-export const usePpaForm1Columns: ColumnDef<ParentApplicationData>[] = [
+export const usePpaForm1Columns = (
+  navigateToParent?: string,
+): ColumnDef<ParentApplicationData>[] => [
   {
     id: "index",
     header({ column }) {
@@ -193,7 +195,7 @@ export const usePpaForm1Columns: ColumnDef<ParentApplicationData>[] = [
       const { getNavigationLinkWithPathnameWithoutUpdate } =
         useCustomSearchParams();
       const url = getNavigationLinkWithPathnameWithoutUpdate(
-        `/admin/registration/ppa-form/${id}`,
+        `${navigateToParent ? `${navigateToParent}${application.type}/` : "/admin/registration/ppa-form/"}${id}`,
       );
       return (
         <div className="flex gap-2 items-center">
