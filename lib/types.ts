@@ -130,6 +130,41 @@ export type MinuteData = Prisma.MinuteGetPayload<{
   include: typeof minuteDataInclude;
 }>;
 
+// Appeal
+export const appealDataInclude = {
+  submittedBy: { select: { user: { select: userDataSelect } } },
+  decidedBy: { select: userDataSelect },
+} satisfies Prisma.AppealInclude;
+export type AppealData = Prisma.AppealGetPayload<{
+  include: typeof appealDataInclude;
+}>;
+
+// Resubmission
+export const resubmissionDataInclude = {
+  resubmittedBy: { select: { user: { select: userDataSelect } } },
+} satisfies Prisma.ResubmissionInclude;
+export type ResubmissionData = Prisma.ResubmissionGetPayload<{
+  include: typeof resubmissionDataInclude;
+}>;
+
+// Signature
+export const signatureDataInclude = {
+  signedBy: { select: userDataSelect },
+  document: true,
+} satisfies Prisma.SignatureInclude;
+export type SignatureData = Prisma.SignatureGetPayload<{
+  include: typeof signatureDataInclude;
+}>;
+
+// Document
+export const documentDataInclude = {
+  createdBy: { select: userDataSelect },
+  signatures: { include: signatureDataInclude },
+} satisfies Prisma.DocumentInclude;
+export type DocumentData = Prisma.DocumentGetPayload<{
+  include: typeof documentDataInclude;
+}>;
+
 // Application
 export const meetingAndMinuteDataInclude = {
   minute: { include: minuteDataInclude },
@@ -149,9 +184,9 @@ export const applicationDataInclude = {
   },
   workflowStages: { include: workflowStageDataInclude },
   meeting: { include: meetingAndMinuteDataInclude },
-  appeals: true,
-  resubmissions: true,
-  documents: true,
+  appeals: { include: appealDataInclude },
+  resubmissions: { include: resubmissionDataInclude },
+  documents: { include: documentDataInclude },
 } satisfies Prisma.ApplicationInclude;
 export type ApplicationData = Prisma.ApplicationGetPayload<{
   include: typeof applicationDataInclude;

@@ -14,7 +14,10 @@ import { InspectionPageClient } from "../inspections/ppc-inspections/inspection-
 import SectionHeader from "../inspections/ppc-inspections/section-header";
 import { ListOfApplicationFeesAssessments } from "./fees-assessment/list-of-application-fees-assessments";
 import { useParentApplicationQuery } from "./query";
+import SectionAppeals from "./section-appeals";
+import SectionDocuments from "./section-documents";
 import SectionMeetingAndMinutes from "./section-meeting-and-minutes";
+import SectionResubmissions from "./section-resubmissions";
 import SectionWorkflowStages from "./section-workflow-stages";
 
 interface Props {
@@ -102,17 +105,17 @@ export default function AllApplicationInfo({
     {
       id: "appeals",
       title: "Appeals",
-      children: <div>Appeals details go here</div>,
+      children: <SectionAppeals appeals={appeals} />,
     },
     {
       id: "resubmissions",
       title: "Resubmissions",
-      children: <div>Resubmissions details go here</div>,
+      children: <SectionResubmissions resubmissions={resubmissions} />,
     },
     {
       id: "documents",
       title: "Documents",
-      children: <div>Documents details go here</div>,
+      children: <SectionDocuments documents={documents} />,
     },
   ];
   return (
