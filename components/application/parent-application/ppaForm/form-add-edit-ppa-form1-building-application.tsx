@@ -19,7 +19,7 @@ import {
   ApplicationStatus,
   ApplicationType,
 } from "@/lib/generated/prisma/enums";
-import { BuildingApplicationData, GeoJSONType } from "@/lib/types";
+import { BuildingApplicationData } from "@/lib/types";
 import { formatCurrency, getApplicationFee } from "@/lib/utils";
 import {
   ApplicationSchema,
@@ -87,8 +87,7 @@ export default function FormAddEditPpaForm1BuildingApplication({
       },
       parcel: {
         ...buildingApplication?.parcel,
-        geometry:
-          (buildingApplication?.parcel?.geometry as GeoJSONType) || undefined,
+        geometry: buildingApplication?.parcel?.geometry || undefined,
       } as ParcelSchema,
       access: buildingApplication?.access || {
         existingPath: false,

@@ -17,7 +17,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { GeoJSONType, ParentApplicationData } from "@/lib/types";
+import { ParentApplicationData } from "@/lib/types";
 import {
   ParcelSchema,
   parentApplicationSchema,
@@ -45,8 +45,7 @@ export default function FormAddEditParentApplication({
       access: undefined,
       parcel: {
         ...parentApplication.parcel,
-        geometry:
-          (parentApplication.parcel?.geometry as GeoJSONType) || undefined,
+        geometry: parentApplication.parcel?.geometry || undefined,
       } as ParcelSchema,
     },
   });
@@ -132,9 +131,9 @@ export default function FormAddEditParentApplication({
                   </FormItem>
                 )}
               />
-              {/* <pre className="whitespace-pre-wrap">
+              <pre className="whitespace-pre-wrap">
                 {JSON.stringify(form.watch("parcel.geometry"), null, 2)}
-              </pre> */}
+              </pre>
               <FormField
                 control={form.control}
                 name="parcel.geometry"

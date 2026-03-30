@@ -5,19 +5,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { applicationStatuses, naturesOfInterestInLand } from "@/lib/enums";
 import {
   ApplicationStatus,
@@ -25,9 +18,9 @@ import {
 } from "@/lib/generated/prisma/enums";
 import { ApplicationData } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
 import SectionHeader from "../../inspections/ppc-inspections/section-header";
 import SectionInspectionBody from "../../inspections/ppc-inspections/section-inspection-body";
+import PlottingContainer from "../../plotting/plotting-container";
 import ButtonDecideApplication from "./button-decide-application";
 
 interface Props {
@@ -144,74 +137,7 @@ function ApplicationContainer({ application }: ApplicationContainerProps) {
               Parcel and plotting
             </AccordionTrigger>
             <AccordionContent className="px-3">
-              {parcel && (
-                <div className="flex gap-2 justify-between  items-center">
-                  {parcel.parcelNumber ? (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant={"link"}
-                          className="font-sans slashed-zero"
-                          onClick={() => {
-                            navigator.clipboard
-                              .writeText(parcel.parcelNumber!)
-                              .then(() => {
-                                toast.info(
-                                  `Parcel number ${parcel.parcelNumber} copied to clipboard`,
-                                );
-                              })
-                              .catch((err) => {
-                                console.error("Failed to copy:", err);
-                                toast.error(
-                                  `Could not copy parcel number ${parcel.parcelNumber}`,
-                                );
-                              });
-                          }}
-                        >
-                          Parcel number: {parcel.parcelNumber}
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        Click to copy parcel number
-                      </TooltipContent>
-                    </Tooltip>
-                  ) : (
-                    <Badge variant={"destructive"}>
-                      Parcel number: Not plotted
-                    </Badge>
-                  )}
-
-                  {parcel.geometry ? (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant={"link"}
-                          onClick={() => {
-                            navigator.clipboard
-                              .writeText(
-                                JSON.stringify(parcel.geometry, null, 2),
-                              )
-                              .then(() => {
-                                toast.info(`Geometry copied to clipboard`);
-                              })
-                              .catch((err) => {
-                                console.error("Failed to copy:", err);
-                                toast.error(`Could not copy geometry`);
-                              });
-                          }}
-                        >
-                          Copy Geometry
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Click to copy Geometry</TooltipContent>
-                    </Tooltip>
-                  ) : (
-                    <Badge variant={"destructive"}>
-                      No Geometry was addded
-                    </Badge>
-                  )}
-                </div>
-              )}
+              <PlottingContainer application={application} />
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="documents">

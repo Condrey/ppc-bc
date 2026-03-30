@@ -9,12 +9,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { InspectionData, InspectionLandApplicationData } from "@/lib/types";
 import {
-  GeoJSONType,
-  InspectionData,
-  InspectionLandApplicationData,
-} from "@/lib/types";
-import {
+  ParcelSchema,
   ParentApplicationSchema,
   parentApplicationSchema,
   SiteSchema,
@@ -66,11 +63,10 @@ export default function FormAddEditLandInspection({
       },
       parcel: {
         ...landApplication.parcel,
-        geometry:
-          (landApplication.parcel?.geometry as GeoJSONType) || undefined,
+        geometry: landApplication.parcel?.geometry || undefined,
         blockNumber: landApplication.parcel?.blockNumber || "",
         plotNumber: landApplication.parcel?.plotNumber || "",
-      },
+      } as ParcelSchema,
     },
   });
   const { mutate, isPending } = useEditLandInspectionMutation();

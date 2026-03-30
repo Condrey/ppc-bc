@@ -18,7 +18,7 @@ import {
   ApplicationStatus,
   ApplicationType,
 } from "@/lib/generated/prisma/enums";
-import { GeoJSONType, LandApplicationData } from "@/lib/types";
+import { LandApplicationData } from "@/lib/types";
 import { formatCurrency, getApplicationFee } from "@/lib/utils";
 import {
   AddressSchema,
@@ -91,8 +91,7 @@ export default function FormAddEditPpaForm1LandApplication({
       },
       parcel: {
         ...landApplication?.parcel,
-        geometry:
-          (landApplication?.parcel?.geometry as GeoJSONType) || undefined,
+        geometry: landApplication?.parcel?.geometry || undefined,
       } as ParcelSchema,
     },
   });

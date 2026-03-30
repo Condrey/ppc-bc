@@ -1,3 +1,5 @@
+import area from "@turf/area";
+import { centroid } from "@turf/centroid";
 import { clsx, type ClassValue } from "clsx";
 import {
   endOfDay,
@@ -5,6 +7,7 @@ import {
   intervalToDuration,
   startOfDay,
 } from "date-fns";
+import { LatLngExpression } from "leaflet";
 import { twMerge } from "tailwind-merge";
 import { applicationTypes, naturesOfInterestInLand } from "./enums";
 import { Address } from "./generated/prisma/client";
@@ -13,6 +16,8 @@ import {
   Committee,
   NatureOfInterestInLand,
 } from "./generated/prisma/enums";
+
+import { polygon } from "@turf/helpers";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -228,3 +233,40 @@ export const getLocation = (address: Address | null | undefined): string => {
   const { cell, parish, street, subCounty, village, district } = address;
   return `${street ? `${street}, ` : ""}${village ? `${village}, ` : ""}${cell ? `${cell}, ` : ""}${parish ? `${parish} parish, ` : ""}${subCounty ? `${subCounty} division.` : ""} ${district}`;
 };
+
+export function getPolygonCentroid(
+  geometry: { lat: number; lng: number }[],
+): LatLngExpression | null {
+  if (!geometry || geometry.length < 3) return null;
+  // Ensure closed polygon
+  const pts =
+    geometry[0].lat === geometry[geometry.length - 1].lat &&
+    geometry[0].lng === geometry[geometry.length - 1].lng
+      ? geometry
+      : [...geometry, geometry[0]];
+
+  const poly = polygon([pts.map((p) => [p.lng, p.lat])]);
+  const result = centroid(poly);
+  return {
+    lat: result.geometry.coordinates[1],
+    lng: result.geometry.coordinates[0],
+  };
+}
+
+export function getPolygonArea(points: { lat: number; lng: number }[]): {
+  sqm: number;
+  acres: number;
+} {
+  if (!points || points.length < 3) return { sqm: 0, acres: 0 };
+  // Ensure closed polygon
+  const pts =
+    points[0].lat === points[points.length - 1].lat &&
+    points[0].lng === points[points.length - 1].lng
+      ? points
+      : [...points, points[0]];
+
+  const poly = polygon([pts.map((p) => [p.lng, p.lat])]);
+  const result = area(poly);
+  // Convert to acres
+  return { sqm: result, acres: result * 0.000247105 };
+}

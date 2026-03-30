@@ -255,36 +255,35 @@ export const landUseSchema = z
 export type LandUseSchema = z.infer<typeof landUseSchema>;
 
 // Parcel
-const coordinatePair = z.tuple([
-  z.number().min(-180).max(180),
-  z.number().min(-90).max(90),
-]);
-const linearRing = z
-  .array(coordinatePair)
-  .min(4)
+const latLngSchema = z.object({
+  lat: z.number().min(-90).max(90),
+  lng: z.number().min(-180).max(180),
+});
+const polygonSchema = z
+  .array(latLngSchema)
+  .min(3)
   .refine(
     (coords) => {
       const first = coords[0];
       const last = coords[coords.length - 1];
-      return first[0] === last[0] && first[1] === last[1];
+      return first.lat === last.lat && first.lng === last.lng;
     },
     {
-      message: "Polygon must be closed (first and last coordinate must match)",
+      message: "Polygon must be closed (first and last point must match)",
     },
-  );
+  )
+  .transform((coords) => {
+    const first = coords[0];
+    const last = coords[coords.length - 1];
 
-const polygonSchema = z.object({
-  type: z.literal("Polygon"),
-  coordinates: z.array(linearRing),
-});
+    if (first.lat !== last.lat || first.lng !== last.lng) {
+      return [...coords, first];
+    }
 
-const multiPolygonSchema = z.object({
-  type: z.literal("MultiPolygon"),
-  coordinates: z.array(z.array(linearRing)),
-});
-
+    return coords;
+  });
+const multiPolygonSchema = z.array(polygonSchema);
 const geometrySchema = z.union([polygonSchema, multiPolygonSchema]);
-
 export const parcelSchema = z.object({
   id: z.string().optional(),
   blockNumber: z.string().trim().min(1, "Missing Block Number"),

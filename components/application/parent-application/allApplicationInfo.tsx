@@ -17,6 +17,7 @@ import { useParentApplicationQuery } from "./query";
 import SectionAppeals from "./section-appeals";
 import SectionDocuments from "./section-documents";
 import SectionMeetingAndMinutes from "./section-meeting-and-minutes";
+import SectionPlottingAndParcels from "./section-plottings-and-parcels";
 import SectionResubmissions from "./section-resubmissions";
 import SectionWorkflowStages from "./section-workflow-stages";
 
@@ -90,6 +91,11 @@ export default function AllApplicationInfo({
           showHeader={false}
         />
       ),
+    },
+    {
+      id: "plottingAndParcels",
+      title: "Plotting and Parcels",
+      children: <SectionPlottingAndParcels application={application} />,
     },
     {
       id: "Meeting and Minutes",
