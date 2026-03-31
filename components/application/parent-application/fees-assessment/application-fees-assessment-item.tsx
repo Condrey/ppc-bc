@@ -13,7 +13,7 @@ import { feesAssessmentTypes, roles } from "@/lib/enums";
 import { FeeAssessmentData } from "@/lib/types";
 import { cn, formatCurrency, getApplicationNumber } from "@/lib/utils";
 import { formatDate } from "date-fns";
-import { CheckIcon, CoinsIcon, Edit2Icon, PlusIcon } from "lucide-react";
+import { CheckIcon, CoinsIcon } from "lucide-react";
 import Link from "next/link";
 import { useTransition } from "react";
 import ButtonAddEditFeeAssessment from "./button-add-edit-fee-assessment";
@@ -151,10 +151,10 @@ const Content = ({
           size={"sm"}
           variant={"outline"}
         >
-          <Edit2Icon /> Edit fee
+          Edit fee
         </ButtonAddEditFeeAssessment>
         <ButtonAddEditPayment feeAssessmentId={id} size={"sm"}>
-          <PlusIcon /> Pay fee
+          Pay fee
         </ButtonAddEditPayment>
       </ItemFooter>
     </>
