@@ -1,6 +1,6 @@
 "use server";
 
-import webpush from "web-push";
+import webpush, { PushSubscription } from "web-push";
 
 webpush.setVapidDetails(
   "mailto:coundreyjames@gmail.com.com",
@@ -31,18 +31,11 @@ export async function sendNotification(message: string) {
 
   try {
     await webpush.sendNotification(
-      {
-        ...subscription,
-        keys: {
-          p256dh:
-            "BL7ELU24fJTAlH5Kyl8N6BDCac8u8li_U5PIwG963MOvdYs9s7LSzj8x_7v7RFdLZ9Eap50PiiyF5K0TDAis7t0",
-          auth: "juarI8x__VnHvsOgfeAPHg",
-        },
-      },
+      subscription,
       JSON.stringify({
         title: "Test Notification",
         body: message,
-        icon: "/icon.png",
+        icon: "/logo.png",
       }),
     );
     return { success: true };

@@ -9,6 +9,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import prisma from "@/lib/prisma";
 import { webName } from "@/lib/utils";
+import { notFound } from "next/navigation";
 import VerificationForm from "./verification-form";
 
 interface PageProps {
@@ -18,7 +19,9 @@ export default async function Page({ params }: PageProps) {
   const { userId } = await params;
   console.log(userId);
   const user = await prisma.user.findUnique({ where: { id: userId } });
-  if (!user) throw new Error("User not found");
+  // if (!user) throw new Error("User not found");
+  if (!user) return notFound();
+
   return (
     <div className="flex h-dvh w-full flex-col justify-center p-4">
       <Card className="mx-auto h-fit w-full max-w-md">

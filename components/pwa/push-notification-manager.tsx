@@ -50,8 +50,6 @@ export function PushNotificationManager() {
 
   async function sendTestNotification() {
     if (subscription) {
-      await sendNotification(message);
-      setMessage("");
     }
   }
 
@@ -64,6 +62,7 @@ export function PushNotificationManager() {
       <h3>Push Notifications</h3>
       {subscription ? (
         <>
+          <pre>{JSON.stringify({ subscription }, null, 2)}</pre>
           <p>You are subscribed to push notifications.</p>
           <Button onClick={unsubscribeFromPush}>Unsubscribe</Button>
           <Input
@@ -72,7 +71,14 @@ export function PushNotificationManager() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
-          <Button onClick={sendTestNotification}>Send Test</Button>
+          <Button
+            onClick={async () => {
+              await sendNotification(message);
+              setMessage("");
+            }}
+          >
+            Send Test
+          </Button>
         </>
       ) : (
         <>
