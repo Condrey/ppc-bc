@@ -7,7 +7,6 @@ import {
   intervalToDuration,
   startOfDay,
 } from "date-fns";
-import { LatLngExpression } from "leaflet";
 import { twMerge } from "tailwind-merge";
 import { applicationTypes, naturesOfInterestInLand } from "./enums";
 import { Address } from "./generated/prisma/client";
@@ -236,7 +235,7 @@ export const getLocation = (address: Address | null | undefined): string => {
 
 export function getPolygonCentroid(
   geometry: { lat: number; lng: number }[],
-): LatLngExpression | null {
+): { lat: number; lng: number } | null {
   if (!geometry || geometry.length < 3) return null;
   // Ensure closed polygon
   const pts =

@@ -1,6 +1,9 @@
 "use client";
+
 import { TypographyH3 } from "@/components/headings";
 import { LeafletMarker } from "@/components/leaflet-marker";
+import { EmptyContainer } from "@/components/query-container/empty-container";
+import ErrorContainer from "@/components/query-container/error-container";
 import { Button } from "@/components/ui/button";
 import {
   Item,
@@ -11,16 +14,15 @@ import {
 } from "@/components/ui/item";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Spinner } from "@/components/ui/spinner";
-import { TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { ApplicationData } from "@/lib/types";
 import {
-  cn,
-  formatNumber,
-  getLocation,
-  getPolygonArea,
-  getPolygonCentroid,
-} from "@/lib/utils";
-import { LatLngExpression, PathOptions } from "leaflet";
+  Tooltip as ShadCnTooTip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { ApplicationData } from "@/lib/types";
+import { cn, formatNumber, getLocation } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { LatLngExpression, LatLngLiteral, PathOptions } from "leaflet";
 import {
   ExpandIcon,
   LocateIcon,
@@ -41,6 +43,7 @@ import {
   useMap,
 } from "react-leaflet";
 import { toast } from "sonner";
+import { getAllOtherParcels } from "./actions";
 
 const DEFAULT_ZOOM = 25;
 export default function PlottingContainer({
@@ -51,6 +54,7 @@ export default function PlottingContainer({
   isExpanded?: boolean;
 }) {
   const [expandView, setExpandView] = useState(false);
+
   const {
     buildingApplication,
     landApplication,
@@ -60,24 +64,19 @@ export default function PlottingContainer({
   const { address, parcel } = parentApplication;
   const addressLocation = getLocation(address);
 
+  const thisParcelId = parcel?.id;
+  const geometry = parcel?.geometry as unknown as LatLngLiteral[];
+  const centroid = parcel?.centroid as unknown as LatLngLiteral;
+  const parcelNumber = parcel?.parcelNumber ?? "";
+
   const grayOptions: PathOptions = { color: "gray" };
   const redOptions: PathOptions = { color: "red" };
-  const polygon = [
-    { lat: 51.515, lng: -0.09 },
-    { lat: 51.52, lng: -0.1 },
-    { lat: 51.52, lng: -0.12 },
-  ];
-  const otherPolygon = [
-    { lat: 51.555, lng: -0.08 },
-    { lat: 51.55, lng: -0.4 },
-    { lat: 51.55, lng: -0.16 },
-  ];
-  const centroid: LatLngExpression =
-    parcel?.centroidLat && parcel?.centroidLng
-      ? { lat: parcel.centroidLat, lng: parcel.centroidLng }
-      : getPolygonCentroid(otherPolygon)!;
-  const parcelNumber = parcel?.parcelNumber ?? "";
-  // Base map tile:
+
+  const query = useQuery({
+    queryKey: ["all-other-parcels", thisParcelId],
+    queryFn: async () => getAllOtherParcels(thisParcelId!),
+  });
+  const { data: allOtherParcels, status: queryStatus } = query;
 
   return (
     <>
@@ -91,10 +90,24 @@ export default function PlottingContainer({
         {/* header */}
         <MapHeaderSection
           application={application}
-          polygon={otherPolygon}
           isExpanded={isExpanded}
           className={cn(isExpanded && "mx-4")}
         />
+
+        {/* Error container  */}
+        {queryStatus === "error" ? (
+          <ErrorContainer
+            errorMessage="Failed to get other parcels"
+            query={query}
+            className="min-h-0"
+          />
+        ) : queryStatus === "pending" ? (
+          <EmptyContainer
+            title=""
+            description="...loading parcels"
+            className="[&_svg]:hidden p-0 md:p-0"
+          />
+        ) : null}
         {/* The map  */}
 
         <MapContainer
@@ -143,36 +156,60 @@ export default function PlottingContainer({
                 subdomains={["mt0", "mt1", "mt2", "mt3"]}
               />
             </LayersControl.BaseLayer>
-
+            {/* Location marker  */}
             <LayersControl.Overlay name="Current position" checked>
               <LeafletMarker position={centroid} iconLabel={parcelNumber}>
                 <Popup>This is the centroid of the land parcel.</Popup>
               </LeafletMarker>
             </LayersControl.Overlay>
+
+            {/* Other sites  */}
+
             <LayersControl.Overlay name="Other sites" checked>
               <LayerGroup>
-                <Polygon pathOptions={grayOptions} positions={otherPolygon}>
-                  <Tooltip
-                    direction="bottom"
-                    offset={[0, 20]}
-                    opacity={1}
-                    sticky
-                  >
-                    Site area for Opio tom
-                  </Tooltip>
-                  {otherPolygon.map((point, index) => (
-                    <LeafletMarker
-                      key={index}
-                      position={point}
-                      icon={SlashIcon}
-                      iconLabel={index + 1}
-                      animate={false}
-                      className=" -rotate-45 *:no-underline text-destructive"
-                    />
-                  ))}
-                </Polygon>
+                {allOtherParcels &&
+                  allOtherParcels.map((item) => {
+                    const {
+                      user: { name: landOwner },
+                      contact,
+                      email,
+                    } = item.applicant;
+                    const _geometry =
+                      item.geometry as unknown as LatLngLiteral[];
+                    return (
+                      <Polygon
+                        key={item.id}
+                        pathOptions={grayOptions}
+                        positions={_geometry}
+                      >
+                        <Tooltip
+                          direction="bottom"
+                          offset={[0, 20]}
+                          opacity={1}
+                          sticky
+                          className="max-w-xs"
+                        >
+                          <p className="text-sm md:text-lg">{landOwner}</p>
+                          {email && <p>{email}</p>}
+                          <p className="font-bold">{contact}</p>
+                        </Tooltip>
+                        {_geometry.map((point, index) => (
+                          <LeafletMarker
+                            key={index}
+                            position={point}
+                            icon={SlashIcon}
+                            iconLabel={index + 1}
+                            animate={false}
+                            className=" -rotate-45 *:no-underline text-destructive"
+                          />
+                        ))}
+                      </Polygon>
+                    );
+                  })}
               </LayerGroup>
             </LayersControl.Overlay>
+
+            {/* current parcel  */}
             <LayersControl.Overlay name="This sites" checked>
               <LayerGroup>
                 {parcel && parcel.geometry && (
@@ -205,7 +242,7 @@ export default function PlottingContainer({
           side="bottom"
           className="z-1000 w-full overflow-y-hidden px-0 md:p-0  h-dvh "
         >
-          <div className="w-full space-y-6 mx-auto w-full">
+          <div className="w-full space-y-6 mx-auto ">
             <PlottingContainer application={application} isExpanded />
           </div>
         </SheetContent>
@@ -216,12 +253,10 @@ export default function PlottingContainer({
 
 export function MapHeaderSection({
   application,
-  polygon,
   isExpanded,
   className,
 }: {
   application: ApplicationData;
-  polygon: { lat: number; lng: number }[];
   isExpanded: boolean;
   className?: string;
 }) {
@@ -234,11 +269,10 @@ export function MapHeaderSection({
   const parentApplication = buildingApplication ?? landApplication!;
   const { address, parcel } = parentApplication;
   const addressLocation = getLocation(address);
-  const { sqm: areaInSqm, acres: areaInAcres } = getPolygonArea(polygon);
 
   return (
     <Item variant={isExpanded ? "muted" : "outline"} className={className}>
-      <ItemContent>
+      <ItemContent className={cn(isExpanded && "hidden md:flex")}>
         <ItemTitle>
           <UserIcon className="inline size-4" />
           {`${applicantName} and owned by`}{" "}
@@ -249,15 +283,16 @@ export function MapHeaderSection({
           <strong>precisely, {address.location}</strong>
         </ItemDescription>
         <ItemDescription>
-          <strong>Area:</strong> {formatNumber(areaInSqm)} meters<sup>2</sup> (
-          {formatNumber(areaInAcres)} acres)
+          <strong>Area:</strong>
+          {formatNumber(parcel?.areaSqMeters || 0)} meters<sup>2</sup> (
+          {formatNumber(parcel?.areaAcres || 0)} acres)
         </ItemDescription>
       </ItemContent>
       <ItemContent>
         {parcel && (
           <ItemMedia className="flex gap-2 justify-between  items-center">
             {parcel.parcelNumber ? (
-              <Tooltip>
+              <ShadCnTooTip>
                 <TooltipTrigger asChild>
                   <Button
                     variant={"link"}
@@ -282,11 +317,11 @@ export function MapHeaderSection({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>Click to copy parcel number</TooltipContent>
-              </Tooltip>
+              </ShadCnTooTip>
             ) : null}
 
             {parcel.geometry ? (
-              <Tooltip>
+              <ShadCnTooTip>
                 <TooltipTrigger asChild>
                   <Button
                     variant={"link"}
@@ -306,7 +341,7 @@ export function MapHeaderSection({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>Click to copy Geometry</TooltipContent>
-              </Tooltip>
+              </ShadCnTooTip>
             ) : null}
           </ItemMedia>
         )}

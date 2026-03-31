@@ -13,12 +13,16 @@ export function useUpsertParcelMutation() {
       const queryKey2: QueryKey = ["parcel", variables.parcel?.id];
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
-      queryClient.invalidateQueries({ queryKey });
-      queryClient.invalidateQueries({ queryKey: queryKey2 });
+      if (typeof data === "string") {
+        toast.warning(data);
+      } else {
+        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: queryKey2 });
 
-      toast.success("success", {
-        description: "Parcel added",
-      });
+        toast.success("success", {
+          description: variables.id ? "Parcel updated" : "Parcel added",
+        });
+      }
     },
     onError(error) {
       console.error(error);

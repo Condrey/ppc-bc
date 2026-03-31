@@ -435,10 +435,10 @@ model Parcel {
   plotNumber   String
   parcelNumber String?
 
-  geometry     Json? //GeoJSON (polygon, multipolygon)
-  centroidLat  Float?
-  centroidLng  Float?
+  geometry     Json? //{lat:number, lng:String}[] (polygon)
+  centroid     Json? //{lat:number, lng:String}
   areaSqMeters Float?
+  areaAcres    Float?
 
   landApplication LandApplication?
 

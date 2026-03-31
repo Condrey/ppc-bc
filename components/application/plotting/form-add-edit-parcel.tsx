@@ -1,4 +1,3 @@
-import { NumberInput } from "@/components/number-input/number-input";
 import {
   Form,
   FormControl,
@@ -16,7 +15,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Textarea } from "@/components/ui/textarea";
 import { ParentApplicationData } from "@/lib/types";
 import {
   ParcelSchema,
@@ -26,6 +24,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
+import GeometrySection from "./geometry-section";
 import { useUpsertParcelMutation } from "./mutations";
 
 interface Props {
@@ -46,6 +45,7 @@ export default function FormAddEditParentApplication({
       parcel: {
         ...parentApplication.parcel,
         geometry: parentApplication.parcel?.geometry || undefined,
+        centroid: parentApplication.parcel?.centroid || undefined,
       } as ParcelSchema,
     },
   });
@@ -70,7 +70,7 @@ export default function FormAddEditParentApplication({
           </SheetHeader>
           <Form {...form}>
             <div className="space-y-6 p-3 w-fit md:w-lg ">
-              {/* <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre> */}
+              <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre>
               <FormField
                 control={form.control}
                 name="parcel.plotNumber"
@@ -114,7 +114,7 @@ export default function FormAddEditParentApplication({
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="parcel.areaSqMeters"
                 render={({ field }) => (
@@ -130,28 +130,21 @@ export default function FormAddEditParentApplication({
                     <FormMessage />
                   </FormItem>
                 )}
-              />
-              <pre className="whitespace-pre-wrap">
-                {JSON.stringify(form.watch("parcel.geometry"), null, 2)}
-              </pre>
+              /> */}
+
               <FormField
                 control={form.control}
                 name="parcel.geometry"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Geometry</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        cols={4}
-                        placeholder="enter geometry"
-                        {...field}
-                        value={JSON.stringify(field.value, null, 2)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={() => {
+                  return (
+                    <FormItem>
+                      <FormMessage />
+                      <GeometrySection form={form} />
+                    </FormItem>
+                  );
+                }}
               />
+
               <FormFooter className="mt-6">
                 <LoadingButton
                   type="button"

@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import L from "leaflet";
 import { LucideIcon, MapPinIcon } from "lucide-react";

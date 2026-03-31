@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import z from "zod";
 import {
   ApplicationDecision,
@@ -255,23 +256,25 @@ export const landUseSchema = z
 export type LandUseSchema = z.infer<typeof landUseSchema>;
 
 // Parcel
-const latLngSchema = z.object({
+export const latLngSchema = z.object({
   lat: z.number().min(-90).max(90),
   lng: z.number().min(-180).max(180),
 });
 const polygonSchema = z
   .array(latLngSchema)
-  .min(3)
-  .refine(
-    (coords) => {
-      const first = coords[0];
-      const last = coords[coords.length - 1];
-      return first.lat === last.lat && first.lng === last.lng;
-    },
-    {
-      message: "Polygon must be closed (first and last point must match)",
-    },
-  )
+  .min(3, {
+    error: "Enter at least 3 coordinates(Longitudes & Latitudes) for the site.",
+  })
+  // .refine(
+  //   (coords) => {
+  //     const first = coords[0];
+  //     const last = coords[coords.length - 1];
+  //     return first.lat === last.lat && first.lng === last.lng;
+  //   },
+  //   {
+  //     message: "Polygon must be closed (first and last point must match)",
+  //   },
+  // )
   .transform((coords) => {
     const first = coords[0];
     const last = coords[coords.length - 1];
@@ -282,16 +285,26 @@ const polygonSchema = z
 
     return coords;
   });
-const multiPolygonSchema = z.array(polygonSchema);
-const geometrySchema = z.union([polygonSchema, multiPolygonSchema]);
+const geometrySchema = polygonSchema;
 export const parcelSchema = z.object({
   id: z.string().optional(),
   blockNumber: z.string().trim().min(1, "Missing Block Number"),
   plotNumber: z.string().trim().min(1, "Missing Plot Number"),
   parcelNumber: z.string().optional().nullable(),
   areaSqMeters: z.number().positive().optional().nullable(),
+  centroid: z
+    .preprocess((value: any) => {
+      if (typeof value === "string") {
+        try {
+          return JSON.parse(value);
+        } catch {
+          return undefined;
+        }
+      }
+      return value;
+    }, latLngSchema)
+    .optional(),
   geometry: z
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .preprocess((val: any) => {
       if (typeof val === "string") {
         try {

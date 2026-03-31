@@ -18,6 +18,7 @@ interface Props {
   className?: string;
 }
 
+// To remove padding, default has p-6 and md:p-12
 export function EmptyContainer({
   title,
   description,

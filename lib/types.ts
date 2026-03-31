@@ -196,7 +196,6 @@ export type ApplicationData = Prisma.ApplicationGetPayload<{
 export const landApplicationDataInclude = {
   address: true,
   application: { include: applicationDataInclude },
-
   landUse: true,
   parcel: true,
   ppaForm1: { include: { utility: true, landApplication: true } },
