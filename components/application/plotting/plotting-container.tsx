@@ -74,7 +74,7 @@ export default function PlottingContainer({
 
   const query = useQuery({
     queryKey: ["all-other-parcels", thisParcelId],
-    queryFn: async () => getAllOtherParcels(thisParcelId!),
+    queryFn: getAllOtherParcels.bind(undefined, thisParcelId!),
   });
   const { data: allOtherParcels, status: queryStatus } = query;
 
