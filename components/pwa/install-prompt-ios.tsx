@@ -13,16 +13,19 @@ export function InstallPromptIOS() {
     setIsIOS(
       /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream,
     );
+
     setIsStandalone(window.matchMedia("(display-mode: standalone)").matches);
   }, []);
+
   if (isStandalone) {
-    return null; // Don't show install Button if already installed
+    return null; // Don't show install button if already installed
   }
   return (
     <div>
+      <pre>{JSON.stringify({ isIOS, isStandalone }, null, 2)}</pre>
       <h3>Install App</h3>
       <Button>Add to Home Screen</Button>
-      {isIOS && (
+      {!isIOS && (
         <p>
           To install this app on your iOS device, tap the share Button
           <span role="img" aria-label="share icon">

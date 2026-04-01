@@ -17,6 +17,7 @@ export function PushNotificationManager() {
     const registration = await navigator.serviceWorker.register("/sw.js", {
       scope: "/",
       updateViaCache: "none",
+      type: "classic",
     });
     const sub = await registration.pushManager.getSubscription();
     setSubscription(sub);
@@ -48,11 +49,6 @@ export function PushNotificationManager() {
     await unsubscribeUser();
   }
 
-  async function sendTestNotification() {
-    if (subscription) {
-    }
-  }
-
   if (!isSupported) {
     return <p>Push notifications are not supported in this browser.</p>;
   }
@@ -62,7 +58,6 @@ export function PushNotificationManager() {
       <h3>Push Notifications</h3>
       {subscription ? (
         <>
-          <pre>{JSON.stringify({ subscription }, null, 2)}</pre>
           <p>You are subscribed to push notifications.</p>
           <Button onClick={unsubscribeFromPush}>Unsubscribe</Button>
           <Input

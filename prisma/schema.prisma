@@ -25,6 +25,8 @@ model User {
   isWelcomed    Boolean?   @default(false)
   emailVerified Boolean    @default(false)
 
+  subscription Json?
+
   emailVerificationTokens EmailVerificationToken[]
   sessions                Session[]
 

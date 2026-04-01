@@ -27,6 +27,7 @@ export const organization = "Lira City Council";
 export const siteConfig = {
   name: "Physical Planning and Building Control",
   url: process.env.NEXT_PUBLIC_BASE_URL,
+  short_name: webName,
   logo: "/logo.png",
   defaultCoverImage: "/web-app-manifest-512x512.png",
   description: `Physical Planning and Building Control Management tool for Lira City Council. To manage Land and BUilding Applications, generate reports and audit professional, technical and council meetings.`,
