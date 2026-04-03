@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useIsMobile } from "@/hooks/use-mobile";
 import { allFeesAssessmentTypes, feesAssessmentTypes } from "@/lib/enums";
 import { FeeAssessmentType } from "@/lib/generated/prisma/enums";
 import { DashboardItems } from "@/lib/types";
@@ -57,6 +58,7 @@ export default function SectionFeeChart({
 }: {
   dashboardItem: DashboardItems;
 }) {
+  const isMobile = useIsMobile();
   const colors = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#00C49F"];
   const chartConfig: ChartConfig = Object.fromEntries(
     allFeesAssessmentTypes.map((type, index) => [
@@ -162,11 +164,13 @@ export default function SectionFeeChart({
                 }
               }}
             />
-            <YAxis
-              tickLine={true}
-              axisLine={true}
-              tickFormatter={(value: number) => formatCurrency(value, "Ugx")}
-            />
+            {!isMobile && (
+              <YAxis
+                tickLine={true}
+                axisLine={true}
+                tickFormatter={(value: number) => formatCurrency(value, "Ugx")}
+              />
+            )}
             <ChartTooltip
               content={(props) => {
                 const dateValue = props.payload[0]?.payload?.["date"] || 0;
