@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { LucideIcon, MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "./ui/button";
@@ -10,11 +11,11 @@ const toggleThemes: { name: string; theme: string; icon: LucideIcon }[] = [
   { name: "System", theme: "system", icon: MonitorIcon },
 ];
 
-export function ThemeToggler() {
+export function ThemeToggler({ className }: { className?: string }) {
   const { setTheme, theme: currentTheme, resolvedTheme } = useTheme();
 
   return (
-    <div>
+    <div className={cn("flex ", className)}>
       {toggleThemes.map(({ name, theme, icon }) => {
         const Icon = icon;
         return (

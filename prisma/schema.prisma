@@ -337,11 +337,15 @@ model Signature {
  */
 
 model WorkflowStage {
-  id            String      @id @default(uuid())
+  id String @id @default(uuid())
+
   applicationId String
   application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
-  stage    WorkflowStageType
+  stage WorkflowStageType
+  step  Int // 👈 order in workflow (1,2,3...)
+  group String? // 👈 parallel stages (e.g. "TECH_REVIEW")
+
   status   WorkflowStageStatus
   decision ApplicationDecision?
   remarks  String?
@@ -351,6 +355,10 @@ model WorkflowStage {
 
   startedAt DateTime  @default(now())
   decidedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([applicationId, step])
 }
 
 /**

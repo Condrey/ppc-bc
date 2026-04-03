@@ -1,8 +1,10 @@
 "use server";
+import { getUserAgent } from "@/app/(auth)/lib/helper";
 import { FeeAssessmentType } from "@/lib/generated/prisma/enums";
 import prisma from "@/lib/prisma";
 import { DashboardItems } from "@/lib/types";
 import { getFiscalYearRange } from "@/lib/utils";
+import { after } from "next/server";
 import { cache } from "react";
 
 async function dashboardInfo() {
@@ -83,6 +85,9 @@ async function dashboardInfo() {
     type: FeeAssessmentType;
     amount: number;
   }[];
+  const agent = await getUserAgent();
+  console.log({ agent });
+  after(() => {});
   return {
     admins,
     applicants,

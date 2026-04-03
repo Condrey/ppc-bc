@@ -8,6 +8,7 @@ export default async function Page() {
     <Container breadcrumbs={[{ title: "Dashboard" }]} ITEMS_TO_DISPLAY={1}>
       {/* <PushNotificationManager />
       <InstallPromptIOS /> */}
+
       <DashboardComponents initialData={dashboardItem} />
     </Container>
   );

@@ -65,7 +65,6 @@ export default function PlottingContainer({
   const addressLocation = getLocation(address);
 
   const thisParcelId = parcel?.id;
-  const geometry = parcel?.geometry as unknown as LatLngLiteral[];
   const centroid = parcel?.centroid as unknown as LatLngLiteral;
   const parcelNumber = parcel?.parcelNumber ?? "";
 

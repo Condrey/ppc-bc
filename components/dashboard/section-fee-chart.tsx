@@ -184,21 +184,19 @@ export default function SectionFeeChart({
               content={<ChartLegendContent />}
             />
             {allFeesAssessmentTypes.map((type) => (
-              <>
-                <Bar
-                  key={type}
-                  dataKey={type}
-                  fill={chartConfig[type]?.color}
-                  name={chartConfig[type].label! as string}
-                  radius={4}
-                />
-              </>
+              <Bar
+                key={type}
+                dataKey={type}
+                fill={chartConfig[type]?.color}
+                name={chartConfig[type].label! as string}
+                radius={4}
+              />
             ))}
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="space-x-2 pt-4 text-sm inline *:inline">
-        <div>{`FY${formatDate(start, "YYY")}/${formatDate(end, "YYY")}`}</div>
+        <div>{`FY${formatDate(start, "yyy")}/${formatDate(end, "yyy")}`}</div>
         <div className="text-sm text-muted-foreground  w-full">
           (Showing results from {formatDate(start, "PPPP")} to{" "}
           {formatDate(end, "PPPP")})

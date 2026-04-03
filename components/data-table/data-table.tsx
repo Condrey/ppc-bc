@@ -84,7 +84,7 @@ export function DataTable<TData, TValue>({
   return (
     <>
       {/* mobile view  */}
-      <div className={cn("space-y-6    size-full md:hidden ", className)}>
+      <div className={cn("space-y-6    size-full lg:hidden ", className)}>
         <div className="w-full flex justify-between gap-2">
           {!!filterColumn && (
             <div className={cn("relative flex w-full max-w-md")}>
@@ -119,7 +119,7 @@ export function DataTable<TData, TValue>({
             }}
           >
             {table.getRowModel().rows.length ? (
-              <div className="grid gap-3 md:hidden sm:grid-cols-2">
+              <div className="grid gap-3 lg:hidden sm:grid-cols-2">
                 {table
                   .getRowModel()
                   .rows.slice(0, count)
@@ -148,9 +148,25 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
       {/* Desktop view  */}
+      {/***
+    * Set this style in sidebar component for its children
+    *      style={
+            {
+              "--sidebar-width": SIDEBAR_WIDTH,
+              "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
+              "--actual-sidebar-width":
+                !contextValue.isMobile && !contextValue.open
+                  ? SIDEBAR_WIDTH_ICON
+                  : !contextValue.isMobile && contextValue.open
+                    ? SIDEBAR_WIDTH
+                    : "",
+              ...style,
+            } as React.CSSProperties
+    */}
       <div
         className={cn(
-          "w-fit hidden md:block  max-w-full rounded-md",
+          "w-fit hidden   lg:block max-w-dvw  rounded-md",
+          "max-w-[calc(100vw-var(--actual-sidebar-width)-(--spacing(4))-8px)]",
           className,
         )}
       >
@@ -181,7 +197,7 @@ export function DataTable<TData, TValue>({
             {children}
           </div>
         </div>
-        <div className="pb-4 md:pb-8">
+        <div className="pb-4 lg:pb-8">
           <Table className="border">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (

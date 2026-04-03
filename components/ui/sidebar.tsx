@@ -28,9 +28,9 @@ import { cn } from "@/lib/utils";
 
 export const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
-const SIDEBAR_WIDTH = "16rem";
+export const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
-const SIDEBAR_WIDTH_ICON = "3rem";
+export const SIDEBAR_WIDTH_ICON = "3rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
 type SidebarContextProps = {
@@ -76,17 +76,19 @@ function SidebarProvider({
   const open = openProp ?? _open;
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
-      const openState = typeof value === "function" ? value(open) : value;
+      const current = openProp ?? _open;
+
+      const next = typeof value === "function" ? value(current) : value;
+
       if (setOpenProp) {
-        setOpenProp(openState);
+        setOpenProp(next);
       } else {
-        _setOpen(openState);
+        _setOpen(next);
       }
 
-      // This sets the cookie to keep the sidebar state.
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+      document.cookie = `${SIDEBAR_COOKIE_NAME}=${next}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}; SameSite=Lax`;
     },
-    [setOpenProp, open],
+    [setOpenProp, openProp, _open],
   );
 
   // Helper to toggle the sidebar.
@@ -136,6 +138,12 @@ function SidebarProvider({
             {
               "--sidebar-width": SIDEBAR_WIDTH,
               "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
+              "--actual-sidebar-width":
+                !contextValue.isMobile && !contextValue.open
+                  ? SIDEBAR_WIDTH_ICON
+                  : !contextValue.isMobile && contextValue.open
+                    ? SIDEBAR_WIDTH
+                    : "",
               ...style,
             } as React.CSSProperties
           }

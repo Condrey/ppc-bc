@@ -2,7 +2,7 @@
 
 import { ThemeToggler } from "@/components/theme-toggler";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn, organization, siteConfig } from "@/lib/utils";
+import { cn, organization, siteConfig, webName } from "@/lib/utils";
 
 interface FooterProps {
   className?: string;
@@ -20,12 +20,12 @@ export default function Footer({ className }: FooterProps) {
       )}
     >
       <div className="w-full flex justify-between items-center max-w-9xl mx-auto">
-        <p className='text-center text-sm md:after:content-["_,_The_Republic_Of_Uganda"]'>
+        <p className='text-center text-sm xl:after:content-["_,_The_Republic_Of_Uganda"] line-clamp-1'>
           {`Copyright 2025${currentYear <= 2025 ? "" : `- ${currentYear}`},
-            ${isMobile ? organization : siteConfig.name}`}{" "}
+            ${isMobile ? webName : siteConfig.name}`}{" "}
           {isMobile ? "" : organization}
         </p>
-        <ThemeToggler />
+        <ThemeToggler className="flex-none" />
       </div>
     </div>
   );

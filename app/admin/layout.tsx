@@ -15,22 +15,25 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const { session, user } = await validateRequest();
-  if (!!user && !user.isVerified) {
+  if (!user) {
+    redirect("/login");
+  }
+  if (user && !user.isVerified) {
     console.log(
       "redirecting to user verification because they are not yet verified",
       { user },
     );
     redirect(`/user-verification/${user.id}`);
-  } else if (!user) {
-    redirect("/login");
   }
   const cookieStore = await cookies();
-  const open = cookieStore.get("sidebar_state")?.value ?? false;
+  const sidebarState = cookieStore.get("sidebar_state")?.value;
+
+  const defaultOpen = sidebarState === "true";
   return (
     <SessionProvider value={{ session, user }}>
       <div className="[--header-height:calc(--spacing(14))]">
         {/* <pre>{JSON.stringify({ cookieStore, open }, null, 2)}</pre> */}
-        <SidebarProvider className="flex flex-col ">
+        <SidebarProvider defaultOpen={defaultOpen} className="flex flex-col ">
           <header className="sticky top-0 z-50 h-(--header-height) flex items-center w-full  bg-accent text-accent-foreground border-b shadow-xl  dark:border-b">
             <TopAppBar className="w-full max-w-9xl  py-2 mx-auto  px-3  " />
           </header>

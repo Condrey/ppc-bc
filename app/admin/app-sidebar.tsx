@@ -87,7 +87,7 @@ function ParentMenuItem({
   const { setOpenMobile } = useSidebar();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
-  const { open: isOpen } = useSidebar();
+  const { open: isOpen, isMobile, setOpen } = useSidebar();
 
   const ItemIcon = item.icon!;
   const isActive = item.children.some((i) => pathname.startsWith(i.href));
@@ -129,6 +129,11 @@ function ParentMenuItem({
                 startTransition(() => {
                   if (noDropDown) {
                     setOpenMobile(false);
+                  } else {
+                    // to un-collapse sidebar upon clicking a button
+                    if (!isMobile && !isOpen) {
+                      setOpen(true);
+                    }
                   }
                 })
               }
