@@ -101,7 +101,9 @@ export default function SectionFeeChart({
             <XAxis
               dataKey={"date"}
               tickMargin={2}
-              tickFormatter={(value: Date) => formatDate(value, "MMM")}
+              tickFormatter={(value: Date) =>
+                formatDate(value, isMobile ? "MMMMM" : "MMM")
+              }
               xAxisId={"month"}
             />
             {!isMobile && (
