@@ -104,66 +104,68 @@ export default function SectionFeeChart({
               tickFormatter={(value: Date) => formatDate(value, "MMM")}
               xAxisId={"month"}
             />
-            <XAxis
-              dataKey={"date"}
-              xAxisId="quarter"
-              axisLine={false}
-              tickLine={false}
-              interval={0}
-              height={1}
-              scale={"band"}
-              tick={(tickProps) => {
-                const {
-                  x: xProp,
-                  y: yProp,
-                  payload,
-                  width: widthProp,
-                  visibleTicksCount,
-                } = tickProps;
-                const x = Number(xProp);
-                const y = Number(yProp);
-                const width = Number(widthProp);
-                const { value, offset = 0 } = payload;
-                const date = new Date(value);
-                const month = date.getMonth();
-                let fiscalQuarter = "0";
-                if (month >= 6 && month <= 8)
-                  fiscalQuarter = "1st"; // Jul-Sep
-                else if (month >= 9 && month <= 11)
-                  fiscalQuarter = "2nd"; // Oct-Dec
-                else if (month >= 0 && month <= 2)
-                  fiscalQuarter = "3rd"; // Jan-Mar
-                else if (month >= 3 && month <= 5) fiscalQuarter = "4th"; // Apr-Jun
-                const isLast = month === 5; // June, end of fiscal year
+            {!isMobile && (
+              <XAxis
+                dataKey={"date"}
+                xAxisId="quarter"
+                axisLine={false}
+                tickLine={false}
+                interval={0}
+                height={1}
+                scale={"band"}
+                tick={(tickProps) => {
+                  const {
+                    x: xProp,
+                    y: yProp,
+                    payload,
+                    width: widthProp,
+                    visibleTicksCount,
+                  } = tickProps;
+                  const x = Number(xProp);
+                  const y = Number(yProp);
+                  const width = Number(widthProp);
+                  const { value, offset = 0 } = payload;
+                  const date = new Date(value);
+                  const month = date.getMonth();
+                  let fiscalQuarter = "0";
+                  if (month >= 6 && month <= 8)
+                    fiscalQuarter = "1st"; // Jul-Sep
+                  else if (month >= 9 && month <= 11)
+                    fiscalQuarter = "2nd"; // Oct-Dec
+                  else if (month >= 0 && month <= 2)
+                    fiscalQuarter = "3rd"; // Jan-Mar
+                  else if (month >= 3 && month <= 5) fiscalQuarter = "4th"; // Apr-Jun
+                  const isLast = month === 5; // June, end of fiscal year
 
-                // Place fiscal quarter label at the middle of the fiscal quarter
-                if ([6, 9, 0, 3].includes(month)) {
-                  const pathX =
-                    Math.floor(
-                      isLast
-                        ? x - offset + width / visibleTicksCount
-                        : x - offset,
-                    ) + 0.5;
-                  // first month of each fiscal quarter
-                  return (
-                    <>
-                      <text
-                        x={x + width / visibleTicksCount / 2 - offset}
-                        y={y - 4}
-                        textAnchor="start"
-                        fill="var(--muted-foreground)"
-                      >
-                        {`${fiscalQuarter} Quarter`}
-                      </text>
-                      <path
-                        d={`M${pathX},${y - 4}v${-35}`}
-                        stroke="var(--warning)"
-                      />
-                    </>
-                  );
-                }
-              }}
-            />
+                  // Place fiscal quarter label at the middle of the fiscal quarter
+                  if ([6, 9, 0, 3].includes(month)) {
+                    const pathX =
+                      Math.floor(
+                        isLast
+                          ? x - offset + width / visibleTicksCount
+                          : x - offset,
+                      ) + 0.5;
+                    // first month of each fiscal quarter
+                    return (
+                      <>
+                        <text
+                          x={x + width / visibleTicksCount / 2 - offset}
+                          y={y - 4}
+                          textAnchor="start"
+                          fill="var(--muted-foreground)"
+                        >
+                          {`${fiscalQuarter} Quarter`}
+                        </text>
+                        <path
+                          d={`M${pathX},${y - 4}v${-35}`}
+                          stroke="var(--warning)"
+                        />
+                      </>
+                    );
+                  }
+                }}
+              />
+            )}
             {!isMobile && (
               <YAxis
                 tickLine={true}
