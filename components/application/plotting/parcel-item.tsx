@@ -131,7 +131,9 @@ const Content = ({
         ) : (
           <>
             {parcel.parcelNumber ? (
-              <Badge variant={"success"}>Parcel ${parcel.parcelNumber}</Badge>
+              <Badge
+                variant={"success"}
+              >{`Parcel ${parcel.parcelNumber}`}</Badge>
             ) : (
               <Badge variant={"destructive"} className="opacity-50">
                 <XIcon className="inline size-4" /> Parcel Number

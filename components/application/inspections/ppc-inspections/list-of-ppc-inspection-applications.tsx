@@ -2,13 +2,14 @@
 
 import { TypographyH4 } from "@/components/headings";
 import { ParentApplicationData } from "@/lib/types";
+import { PlusIcon } from "lucide-react";
 import { DataTable } from "../../../data-table/data-table";
 import { EmptyContainer } from "../../../query-container/empty-container";
 import ErrorContainer from "../../../query-container/error-container";
 import ButtonAddEditPpaForm1 from "../../parent-application/ppaForm/button-add-edit-ppa-form1";
 import { useParentApplicationsQuery } from "../../parent-application/query";
 import { usePpcInspectionsColumns } from "./columns";
-import PpcInspectionItem from "./ppc-insection-item";
+import PpcInspectionItem from "./ppc-inspection-item";
 
 export default function ListOfPpcInspectionApplications({
   initialData,
@@ -49,6 +50,14 @@ export default function ListOfPpcInspectionApplications({
           navigateTo={`/admin/inspections/ppc-inspections/${item.applicationId}`}
         />
       )}
+      fab={
+        <ButtonAddEditPpaForm1
+          className="rounded-full shadow-2xs"
+          size={"icon-xl"}
+        >
+          <PlusIcon className="inline" />
+        </ButtonAddEditPpaForm1>
+      }
     ></DataTable>
   );
 }
