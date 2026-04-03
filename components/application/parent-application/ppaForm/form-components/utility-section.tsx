@@ -81,7 +81,7 @@ export default function UtilitySection({ form }: Props) {
             <FormItem>
               <FormLabel required>Refuse disposal Method</FormLabel>
               <FormControl>
-                <Input placeholder="How is refused disposed?" {...field} />
+                <Input placeholder="How is refuse disposed?" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

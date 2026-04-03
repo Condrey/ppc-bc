@@ -35,7 +35,9 @@ export default function ListOfPpaForm1s({
         title="Empty data"
         description="There are currently no PPA1 forms in the database. Please add"
       >
-        <ButtonAddEditPpaForm1>Add new PPA Form1</ButtonAddEditPpaForm1>
+        <ButtonAddEditPpaForm1 applicationType={applicationType}>
+          Add new PPA Form1
+        </ButtonAddEditPpaForm1>
       </EmptyContainer>
     );
   }
@@ -49,6 +51,7 @@ export default function ListOfPpaForm1s({
       }}
       fab={
         <ButtonAddEditPpaForm1
+          applicationType={applicationType}
           className="rounded-full shadow-2xs"
           size={"icon-xl"}
         >
@@ -58,12 +61,16 @@ export default function ListOfPpaForm1s({
       cardRenderer={(item) => (
         <PpaFormItem
           item={item}
-          navigateTo={`${navigateToParent ? `${navigateToParent}${item.application.type}/` : "/admin/registration/ppa-form/"}${item.id}`}
+          navigateTo={`${navigateToParent ? `${navigateToParent}${item.application.type}/${item.id}` : `/admin/registration/ppa-form/${item.applicationId}`}`}
         />
       )}
       className="w-full"
     >
-      <ButtonAddEditPpaForm1 size={"sm"} variant={"secondary"}>
+      <ButtonAddEditPpaForm1
+        size={"sm"}
+        applicationType={applicationType}
+        variant={"secondary"}
+      >
         <PlusIcon /> New
       </ButtonAddEditPpaForm1>
     </DataTable>

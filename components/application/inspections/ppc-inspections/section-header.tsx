@@ -24,6 +24,7 @@ import {
 } from "@/lib/utils";
 import { formatDate } from "date-fns";
 import { CheckIcon, HistoryIcon, MapPinIcon } from "lucide-react";
+import { Fragment } from "react/jsx-runtime";
 
 interface Props {
   application: ApplicationData;
@@ -68,45 +69,47 @@ export default function SectionHeader({ application }: Props) {
         avatarSize="60px"
         title="APPLICANT"
       />
-      {feeAssessments.map(
-        ({ id, amountAssessed, currency, assessmentType, payments }) => {
-          const { title } = feesAssessmentTypes[assessmentType];
-          const amountPaid = payments.reduce(
-            (amount, total) => amount + total.amountPaid,
-            0,
-          );
-          const balance = amountAssessed - amountPaid;
-          const hasBalance = balance > 0;
-          return (
-            <Item key={id} variant={"muted"}>
-              <ItemContent>
-                <ItemTitle className="font-bold">{title}</ItemTitle>
-                <ItemTitle className="font-mono oldstyle-nums slashed-zero">
-                  {formatCurrency(amountAssessed, currency, true)}
-                </ItemTitle>
-                <ItemDescription className="font-mono oldstyle-nums slashed-zero">
-                  Paid: {formatCurrency(amountPaid, currency, true)}
-                </ItemDescription>
-                <ItemDescription
-                  className={cn(
-                    hasBalance &&
-                      " font-mono oldstyle-nums slashed-zero text-destructive",
-                  )}
-                >
-                  {hasBalance ? (
-                    `Bal: ${formatCurrency(balance, currency, true)}`
-                  ) : (
-                    <span className="text-success font-semibold">
-                      <CheckIcon className="inline" />
-                      Fully paid
-                    </span>
-                  )}
-                </ItemDescription>
-              </ItemContent>
-            </Item>
-          );
-        },
-      )}
+      <Fragment>
+        {feeAssessments.map(
+          ({ id, amountAssessed, currency, assessmentType, payments }) => {
+            const { title } = feesAssessmentTypes[assessmentType];
+            const amountPaid = payments.reduce(
+              (amount, total) => amount + total.amountPaid,
+              0,
+            );
+            const balance = amountAssessed - amountPaid;
+            const hasBalance = balance > 0;
+            return (
+              <Item key={id} variant={"muted"} className="hidden md:flex">
+                <ItemContent>
+                  <ItemTitle className="font-bold">{title}</ItemTitle>
+                  <ItemTitle className="font-mono oldstyle-nums slashed-zero">
+                    {formatCurrency(amountAssessed, currency, true)}
+                  </ItemTitle>
+                  <ItemDescription className="font-mono oldstyle-nums slashed-zero">
+                    Paid: {formatCurrency(amountPaid, currency, true)}
+                  </ItemDescription>
+                  <ItemDescription
+                    className={cn(
+                      hasBalance &&
+                        " font-mono oldstyle-nums slashed-zero text-destructive",
+                    )}
+                  >
+                    {hasBalance ? (
+                      `Bal: ${formatCurrency(balance, currency, true)}`
+                    ) : (
+                      <span className="text-success font-semibold">
+                        <CheckIcon className="inline" />
+                        Fully paid
+                      </span>
+                    )}
+                  </ItemDescription>
+                </ItemContent>
+              </Item>
+            );
+          },
+        )}
+      </Fragment>
       <AddressDetails
         address={
           type === ApplicationType.LAND

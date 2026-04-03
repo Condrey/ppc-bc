@@ -50,13 +50,17 @@ export default async function Page({ params }: Props) {
         text={`${title}s`}
         className="flex items-center flex-wrap justify-between"
       >
-        <ButtonAddEditPpaForm1>
+        <ButtonAddEditPpaForm1
+          applicationType={applicationType}
+          className="hidden md:block"
+        >
           <PlusIcon className="inline" /> New application
         </ButtonAddEditPpaForm1>
       </TypographyH2>
       <ListOfPpaForm1s
         initialData={applications}
         applicationType={applicationType}
+        navigateToParent="/admin/applications/"
       />
     </Container>
   );

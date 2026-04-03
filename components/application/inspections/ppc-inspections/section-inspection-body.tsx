@@ -62,22 +62,19 @@ export default function SectionInspectionBody({
   const { carriedOn, decision, visitReport, inspectors } = inspection;
   const { title: decisionMade } = applicationDecisions[decision];
   const fieldClassName =
-    "flex-1 text-muted-foreground min-h-9 h-auto bg-muted md:text-xl font-semibold font-sans md:outline inline h-9 w-auto min-w-sm rounded-md p-1";
+    "flex-1 text-muted-foreground min-h-9 h-auto bg-success/10 md:text-xl font-semibold font-sans md:outline md:outline-success inline h-9 w-auto min-w-sm rounded-md p-1";
   const checkboxClassName = " md:size-8 border-foreground md:*:[&_svg]:size-8";
 
   return (
     <div
-      className={cn(
-        "max-w-4xl mx-auto space-y-8",
-        manyInspections && "max-w-none",
-      )}
+      className={cn("max-w-4xl  space-y-8", manyInspections && "max-w-none")}
     >
       <div className="space-y-2.5 max-w-3xl">
         <ButtonDownloadInspectionReport
           application={application}
           inspection={inspection}
           size={"sm"}
-          className=""
+          className="hidden md:block"
           variant={"secondary"}
         >
           <DownloadIcon className="inline mr-2 " /> inspection report

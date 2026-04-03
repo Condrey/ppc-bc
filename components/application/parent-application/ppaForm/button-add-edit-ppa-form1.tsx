@@ -24,9 +24,11 @@ import FormAddEditPpaForm1BuildingApplication from "./form-add-edit-ppa-form1-bu
 import FormAddEditPpaForm1LandApplication from "./form-add-edit-ppa-form1-land-application";
 
 interface Props extends ButtonProps {
+  applicationType?: ApplicationType;
   parentApplication?: ParentApplicationData;
 }
 export default function ButtonAddEditPpaForm1({
+  applicationType,
   parentApplication,
   className,
   ...props
@@ -41,18 +43,21 @@ export default function ButtonAddEditPpaForm1({
     <>
       {isAuthorized && (
         <>
-          {!!parentApplication &&
-          parentApplication.application.type === ApplicationType.LAND ? (
+          {(!!parentApplication &&
+            parentApplication.application.type === ApplicationType.LAND) ||
+          applicationType === "LAND" ? (
             <Button
-              title={"Update ppa Form1 for land application"}
+              title={`${parentApplication ? "Update" : "Add"} ppa Form1 for land application`}
               className={cn("[&_svg]:inline", className)}
               {...props}
               onClick={() => setOpenLandApplication(true)}
             />
-          ) : !!parentApplication &&
-            parentApplication.application.type === ApplicationType.BUILDING ? (
+          ) : (!!parentApplication &&
+              parentApplication.application.type ===
+                ApplicationType.BUILDING) ||
+            applicationType === "BUILDING" ? (
             <Button
-              title={"Update ppa Form1 for building application"}
+              title={`${parentApplication ? "Update" : "Add"} ppa Form1 for building application`}
               className={cn("[&_svg]:inline", className)}
               {...props}
               onClick={() => setOpenBuildingApplication(true)}
@@ -60,7 +65,11 @@ export default function ButtonAddEditPpaForm1({
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button title={"Choose application"} {...props} />
+                <Button
+                  title={"Choose application"}
+                  className={className}
+                  {...props}
+                />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuGroup>

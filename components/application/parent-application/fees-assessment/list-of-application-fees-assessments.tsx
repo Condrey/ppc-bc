@@ -69,10 +69,20 @@ export function ListOfApplicationFeesAssessments({ parentApplication }: Props) {
         cardRenderer={(item) => (
           <ApplicationFeesAssessmentItem item={item} navigateTo="" />
         )}
+        fab={
+          <DropDownMenuFeesAssessment
+            isADropDown={false}
+            parentApplication={parentApplication}
+            className="rounded-full shadow-2xs"
+            size={"icon-xl"}
+          >
+            <PlusIcon className="inline" />
+          </DropDownMenuFeesAssessment>
+        }
         className="w-full"
       >
         <DropDownMenuFeesAssessment
-          isADropDown={false}
+          // isADropDown={false}
           parentApplication={parentApplication}
           size={"sm"}
           variant={"secondary"}

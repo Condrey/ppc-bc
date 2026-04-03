@@ -9,15 +9,15 @@ interface TopAppBarProps {
 
 export default function TopAppBar({ className }: TopAppBarProps) {
   return (
-    <header className={cn("", className)}>
+    <header className={cn("flex items-center", className)}>
       <SidebarTrigger
         className="md:hidden"
         size={"xl"}
         variant={"destructive"}
       />
-      <p className="uppercase ms-2 text-xl md:text-2xl w-full  items-center inline ">
+      <p className="uppercase ms-2 text-xl md:text-2xl w-full *:line-clamp-1  items-center inline ">
         <span className="md:hidden">{webName}</span>
-        <span className="hidden md:block">{siteConfig.name}</span>
+        <span className="hidden md:inline">{siteConfig.name}</span>
       </p>
     </header>
   );

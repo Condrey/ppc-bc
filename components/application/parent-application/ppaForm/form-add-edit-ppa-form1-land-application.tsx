@@ -130,8 +130,7 @@ export default function FormAddEditPpaForm1LandApplication({
             </span>
           </SheetTitle>
           <SheetDescription>
-            Application for Development Permission (THE PHYSICAL PLANNING ACT,
-            2010)
+            Land certificate application (THE PHYSICAL PLANNING ACT, 2010)
           </SheetDescription>
         </SheetHeader>
         <div className="max-w-7xl space-y-6 mx-auto w-full  ">
@@ -191,7 +190,7 @@ export default function FormAddEditPpaForm1LandApplication({
                     </Item>
                   )}
                 </div>
-                <FormFooter className="my-6">
+                <FormFooter className="my-6 px-3">
                   <SheetClose className="">close</SheetClose>
                   <LoadingButton type="submit" loading={isPending} size={"lg"}>
                     {landApplication ? "Update PPA 1 Form " : "Create the form"}

@@ -197,7 +197,7 @@ export default function FormAddEditPpaForm1BuildingApplication({
                     </Item>
                   )}
                 </div>
-                <FormFooter className="my-6">
+                <FormFooter className="my-6 px-3">
                   <SheetClose className="">close</SheetClose>
                   <LoadingButton type="submit" loading={isPending} size={"lg"}>
                     {buildingApplication

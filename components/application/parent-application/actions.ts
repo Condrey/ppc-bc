@@ -6,6 +6,8 @@ import {
 } from "@/lib/generated/prisma/enums";
 import prisma from "@/lib/prisma";
 import {
+  ApplicationData,
+  applicationDataInclude,
   buildingApplicationDataInclude,
   landApplicationDataInclude,
   ParentApplicationData,
@@ -34,6 +36,14 @@ async function buildingApplicationById(id: string) {
   });
 }
 export const getBuildingApplicationById = cache(buildingApplicationById);
+
+async function ApplicationById(id: string): Promise<ApplicationData | null> {
+  return await prisma.application.findFirst({
+    where: { id },
+    include: applicationDataInclude,
+  });
+}
+export const getApplicationById = cache(ApplicationById);
 
 async function parentApplicationById(
   id: string,

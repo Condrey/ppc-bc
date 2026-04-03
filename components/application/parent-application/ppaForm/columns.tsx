@@ -190,12 +190,12 @@ export const usePpaForm1Columns = (
       return <DataTableColumnHeader column={column} title="Actions" />;
     },
     cell({ row }) {
-      const { id, application } = row.original;
+      const { id, application, applicationId } = row.original;
       const [isPending, startTransition] = useTransition();
       const { getNavigationLinkWithPathnameWithoutUpdate } =
         useCustomSearchParams();
       const url = getNavigationLinkWithPathnameWithoutUpdate(
-        `${navigateToParent ? `${navigateToParent}${application.type}/` : "/admin/registration/ppa-form/"}${id}`,
+        `${navigateToParent ? `${navigateToParent}${application.type}/${id}` : `/admin/registration/ppa-form/${applicationId}`}`,
       );
       return (
         <div className="flex gap-2 items-center">

@@ -94,7 +94,7 @@ export function InspectionPageClient({
             {/* header  */}
             <div className="flex flex-wrap gap-3 items-center justify-between">
               <TypographyH4
-                text={`[Decision ${decisionMade}]`}
+                text={`[Inspection ${decisionMade}]`}
                 className={cn(
                   "font-black capitalize animate-pulse",
                   decision === ApplicationDecision.DEFERRED ||
