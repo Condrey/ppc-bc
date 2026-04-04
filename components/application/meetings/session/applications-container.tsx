@@ -11,16 +11,22 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { applicationStatuses, naturesOfInterestInLand } from "@/lib/enums";
 import {
   ApplicationStatus,
   ApplicationType,
 } from "@/lib/generated/prisma/enums";
 import { ApplicationData } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { cn, formatNumber } from "@/lib/utils";
+import { InspectionPageClient } from "../../inspections/ppc-inspections/inspection-page-client";
 import SectionHeader from "../../inspections/ppc-inspections/section-header";
-import SectionInspectionBody from "../../inspections/ppc-inspections/section-inspection-body";
-import PlottingContainer from "../../plotting/plotting-container";
+import { ListOfApplicationFeesAssessments } from "../../parent-application/fees-assessment/list-of-application-fees-assessments";
+import SectionAppeals from "../../parent-application/section-appeals";
+import SectionDocuments from "../../parent-application/section-documents";
+import SectionPlottingAndParcels from "../../parent-application/section-plotting-and-parcels";
+import SectionResubmissions from "../../parent-application/section-resubmissions";
+import SectionWorkflowStages from "../../parent-application/section-workflow-stages";
 import ButtonDecideApplication from "./button-decide-application";
 
 interface Props {
@@ -45,22 +51,75 @@ interface ApplicationContainerProps {
   application: ApplicationData;
 }
 function ApplicationContainer({ application }: ApplicationContainerProps) {
+  const isMobile = useIsMobile();
   const {
     owners,
     type,
     landApplication,
     buildingApplication,
-    inspections,
     status: decision,
+    workflowStages,
+    appeals,
+    resubmissions,
+    documents,
   } = application;
   const isLandApplication = type === ApplicationType.LAND;
   const parentApplication = isLandApplication
     ? landApplication
     : buildingApplication;
-  const { natureOfInterest, parcel } = parentApplication!;
+  const { natureOfInterest } = parentApplication!;
   const { title: decisionMade } = applicationStatuses[decision];
   const { title } = naturesOfInterestInLand[natureOfInterest];
-  const inspection = inspections[inspections.length - 1];
+
+  const items: {
+    id: string;
+    title: string;
+    subtitle?: string;
+    children: React.ReactNode;
+  }[] = [
+    {
+      id: "plottingAndParcels",
+      title: "Parcel and plotting",
+      children: <SectionPlottingAndParcels application={application} />,
+    },
+    {
+      id: "inspections",
+      title: "Inspection report",
+      children: (
+        <InspectionPageClient
+          application={application}
+          applicationId={application.id}
+          showHeader={false}
+        />
+      ),
+    },
+    {
+      id: "feesAssessment",
+      title: "Fees Assessment",
+      children: <ListOfApplicationFeesAssessments application={application} />,
+    },
+    {
+      id: "workFlowStages",
+      title: "Workflow Stages",
+      children: <SectionWorkflowStages workflowStages={workflowStages} />,
+    },
+    {
+      id: "appeals",
+      title: `Appeals (${formatNumber(appeals.length)})`,
+      children: <SectionAppeals appeals={appeals} />,
+    },
+    {
+      id: "resubmissions",
+      title: `Resubmissions (${formatNumber(resubmissions.length)})`,
+      children: <SectionResubmissions resubmissions={resubmissions} />,
+    },
+    {
+      id: "documents",
+      title: `Documents (${formatNumber(documents.length)})`,
+      children: <SectionDocuments documents={documents} />,
+    },
+  ];
+
   return (
     <div className="space-y-6">
       {/* <pre>{JSON.stringify(application, null, 2)}</pre> */}
@@ -70,10 +129,15 @@ function ApplicationContainer({ application }: ApplicationContainerProps) {
             ? `Application for ${title} certificate`
             : `Building permission on a ${title} land`
         }
-        className="capitalize px-3 text-center"
-      />
+        className="capitalize px-3  md:text-center *:inline"
+      >
+        <span className='before:content-["Owned_by_"] md:hidden inline before:text-muted-foreground px-3'>
+          {owners}
+        </span>
+      </TypographyH4>
+
       <TypographyH4
-        text={`[Committee ${decisionMade}]`}
+        text={isMobile ? "" : `[Application ${decisionMade}]`}
         className={cn(
           "font-black capitalize  flex-col md:flex-row px-3 flex md:items-center justify-between flex-wrap",
           decision === ApplicationStatus.DEFERRED ||
@@ -115,39 +179,20 @@ function ApplicationContainer({ application }: ApplicationContainerProps) {
       </TypographyH4>
       <TypographyH3
         text={owners}
-        className='before:content-["Owned_by_"] before:text-muted-foreground px-3'
+        className='before:content-["Owned_by_"] hidden md:block before:text-muted-foreground px-3'
       />
       <SectionHeader application={application} />
 
       <div>
-        <Accordion type="multiple" className="border rounded-md">
-          <AccordionItem value="inspections">
-            <AccordionTrigger className="bg-muted  p-3">
-              Inspection report
-            </AccordionTrigger>
-            <AccordionContent className="px-3">
-              <SectionInspectionBody
-                application={application}
-                inspection={inspection}
-              />
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="plotting">
-            <AccordionTrigger className="bg-muted  p-3">
-              Parcel and plotting
-            </AccordionTrigger>
-            <AccordionContent className="px-3">
-              <PlottingContainer application={application} />
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="documents">
-            <AccordionTrigger className="bg-muted  p-3">
-              Guiding documents
-            </AccordionTrigger>
-            <AccordionContent className="px-3">
-              TODO: display documents
-            </AccordionContent>
-          </AccordionItem>
+        <Accordion type="single" collapsible className="border rounded-md">
+          {items.map(({ id, title, children }) => (
+            <AccordionItem key={id} value={id}>
+              <AccordionTrigger className="px-3 bg-muted">
+                {title}
+              </AccordionTrigger>
+              <AccordionContent className="px-3 ">{children}</AccordionContent>
+            </AccordionItem>
+          ))}
         </Accordion>
       </div>
     </div>

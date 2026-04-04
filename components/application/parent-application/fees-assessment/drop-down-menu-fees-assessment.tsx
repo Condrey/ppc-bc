@@ -17,7 +17,7 @@ import {
   ApplicationType,
   FeeAssessmentType,
 } from "@/lib/generated/prisma/enums";
-import { ParentApplicationData } from "@/lib/types";
+import { ApplicationData } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { MoveUpRightIcon } from "lucide-react";
 import Link from "next/link";
@@ -25,18 +25,17 @@ import { useTransition } from "react";
 import ButtonAddEditFeeAssessment from "./button-add-edit-fee-assessment";
 
 interface Props extends ButtonProps {
-  parentApplication: ParentApplicationData;
+  application: ApplicationData;
   isADropDown?: boolean;
 }
 
 export default function DropDownMenuFeesAssessment({
-  parentApplication,
+  application,
   isADropDown = true,
   children,
   ...props
 }: Props) {
-  const { id, application } = parentApplication;
-  const { type: applicationType } = application;
+  const { id, type: applicationType } = application;
   const { getNavigationLinkWithPathnameWithoutUpdate } =
     useCustomSearchParams();
   const url = getNavigationLinkWithPathnameWithoutUpdate(

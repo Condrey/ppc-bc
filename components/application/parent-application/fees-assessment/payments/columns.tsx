@@ -293,9 +293,10 @@ export const usePaymentAssessmentsColumns: ColumnDef<ParentApplicationData>[] =
         return <DataTableColumnHeader column={column} title="Actions" />;
       },
       cell({ row }) {
+        const { application } = row.original;
         return (
           <DropDownMenuFeesAssessment
-            parentApplication={row.original}
+            application={application}
             size={"icon"}
             variant={"ghost"}
           >

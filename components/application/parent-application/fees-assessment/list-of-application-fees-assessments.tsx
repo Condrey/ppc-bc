@@ -3,7 +3,7 @@
 import { DataTable } from "@/components/data-table/data-table";
 import { EmptyContainer } from "@/components/query-container/empty-container";
 import ErrorContainer from "@/components/query-container/error-container";
-import { ParentApplicationData } from "@/lib/types";
+import { ApplicationData } from "@/lib/types";
 import { getApplicationNumber } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
@@ -14,10 +14,9 @@ import { useApplicationFeeAssessmentsColumns } from "./columns";
 import DropDownMenuFeesAssessment from "./drop-down-menu-fees-assessment";
 
 interface Props {
-  parentApplication: ParentApplicationData;
+  application: ApplicationData;
 }
-export function ListOfApplicationFeesAssessments({ parentApplication }: Props) {
-  const { application } = parentApplication;
+export function ListOfApplicationFeesAssessments({ application }: Props) {
   const {
     applicationNo,
     type,
@@ -25,6 +24,7 @@ export function ListOfApplicationFeesAssessments({ parentApplication }: Props) {
     id: applicationId,
     feeAssessments: initialData,
   } = application;
+
   const applicationNumber = getApplicationNumber(applicationNo, year, type);
 
   const query = useQuery({
@@ -50,7 +50,7 @@ export function ListOfApplicationFeesAssessments({ parentApplication }: Props) {
       >
         <DropDownMenuFeesAssessment
           isADropDown={false}
-          parentApplication={parentApplication}
+          application={application}
         >
           Issue a fee
         </DropDownMenuFeesAssessment>
@@ -72,7 +72,7 @@ export function ListOfApplicationFeesAssessments({ parentApplication }: Props) {
         fab={
           <DropDownMenuFeesAssessment
             isADropDown={false}
-            parentApplication={parentApplication}
+            application={application}
             className="rounded-full shadow-2xs"
             size={"icon-xl"}
           >
@@ -83,7 +83,7 @@ export function ListOfApplicationFeesAssessments({ parentApplication }: Props) {
       >
         <DropDownMenuFeesAssessment
           // isADropDown={false}
-          parentApplication={parentApplication}
+          application={application}
           size={"sm"}
           variant={"secondary"}
         >

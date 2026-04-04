@@ -46,7 +46,7 @@ export default async function Page({ params }: Props) {
       >
         <ButtonAddEditMeeting
           committee={committeeType}
-          className="ms-auto max-w-fit w-full "
+          className="ms-auto max-w-fit hidden md:block"
           variant={"secondary"}
         >
           <PlusIcon className="inline" /> new meeting

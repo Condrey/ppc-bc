@@ -50,7 +50,7 @@ export default function PageClient({
       >
         <DropDownMenuFeesAssessment
           isADropDown={false}
-          parentApplication={data}
+          application={data.application}
           className="ms-auto max-w-fit hidden md:block "
         >
           <PlusIcon /> Fee Assessment
@@ -62,7 +62,7 @@ export default function PageClient({
           query={query}
         />
       ) : (
-        <ListOfApplicationFeesAssessments parentApplication={data} />
+        <ListOfApplicationFeesAssessments application={data.application} />
       )}
     </Container>
   );

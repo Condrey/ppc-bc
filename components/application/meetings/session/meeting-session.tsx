@@ -11,8 +11,8 @@ interface Props {
   open: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
 }
-export default function MeetingSession({ meeting, open, onOpenChange }: Props) {
-  const { minute, title: meetingTitle, applications } = meeting;
+export default function MeetingSession({ meeting }: Props) {
+  const { applications } = meeting;
   const approvedApplications = applications.filter(
     (app) => app.status === ApplicationStatus.APPROVED,
   );

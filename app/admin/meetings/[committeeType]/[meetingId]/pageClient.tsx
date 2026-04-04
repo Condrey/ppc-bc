@@ -111,16 +111,14 @@ export default function PageClient({ meeting: initialData, committee }: Props) {
       ) : (
         <Card className="pb-0 gap-0">
           <CardHeader className="">
-            <div className="flex flex-row gap-3 justify-between items-center">
+            <div className="flex flex-row gap-3 justify-between items-start">
               <div className="space-y-1.5">
                 <CardTitle>Minutes of the meeting</CardTitle>
                 <CardDescription>
                   You can view the minute details in the minutes section below.
                 </CardDescription>
               </div>
-              <ButtonDownloadMinute meeting={meeting} variant={"ghost"}>
-                <DownloadIcon className="inline mr-2" /> Download minute
-              </ButtonDownloadMinute>
+
               <DropdownMenu modal={true}>
                 <DropdownMenuTrigger asChild>
                   <Button variant={"ghost"} size={"icon-lg"} className="">

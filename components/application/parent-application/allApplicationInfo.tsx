@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import { applicationTypes } from "@/lib/enums";
 import { ParentApplicationData } from "@/lib/types";
+import { formatNumber } from "@/lib/utils";
 import { InspectionPageClient } from "../inspections/ppc-inspections/inspection-page-client";
 import SectionHeader from "../inspections/ppc-inspections/section-header";
 import { ListOfApplicationFeesAssessments } from "./fees-assessment/list-of-application-fees-assessments";
@@ -17,7 +18,7 @@ import { useParentApplicationQuery } from "./query";
 import SectionAppeals from "./section-appeals";
 import SectionDocuments from "./section-documents";
 import SectionMeetingAndMinutes from "./section-meeting-and-minutes";
-import SectionPlottingAndParcels from "./section-plottings-and-parcels";
+import SectionPlottingAndParcels from "./section-plotting-and-parcels";
 import SectionResubmissions from "./section-resubmissions";
 import SectionWorkflowStages from "./section-workflow-stages";
 
@@ -75,11 +76,7 @@ export default function AllApplicationInfo({
     {
       id: "feesAssessment",
       title: "Fees Assessment",
-      children: (
-        <ListOfApplicationFeesAssessments
-          parentApplication={parentApplication}
-        />
-      ),
+      children: <ListOfApplicationFeesAssessments application={application} />,
     },
     {
       id: "inspections",
@@ -110,17 +107,17 @@ export default function AllApplicationInfo({
     },
     {
       id: "appeals",
-      title: "Appeals",
+      title: `Appeals (${formatNumber(appeals.length)})`,
       children: <SectionAppeals appeals={appeals} />,
     },
     {
       id: "resubmissions",
-      title: "Resubmissions",
+      title: `Resubmissions (${formatNumber(resubmissions.length)})`,
       children: <SectionResubmissions resubmissions={resubmissions} />,
     },
     {
       id: "documents",
-      title: "Documents",
+      title: `Documents (${formatNumber(documents.length)})`,
       children: <SectionDocuments documents={documents} />,
     },
   ];

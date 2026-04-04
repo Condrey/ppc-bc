@@ -10,6 +10,7 @@ import ErrorContainer from "@/components/query-container/error-container";
 import { Committee } from "@/lib/generated/prisma/enums";
 import { MeetingData } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
+import { PlusIcon } from "lucide-react";
 
 interface Props {
   meetings: MeetingData[];
@@ -52,6 +53,15 @@ export function PageClient({ meetings: initialData, committeeType }: Props) {
           navigateTo={`/admin/meetings/${item.committee}/${item.id}`}
         />
       )}
+      fab={
+        <ButtonAddEditMeeting
+          committee={committeeType}
+          className="rounded-full shadow-2xs"
+          size={"icon-xl"}
+        >
+          <PlusIcon className="inline" />
+        </ButtonAddEditMeeting>
+      }
     ></DataTable>
   );
 }

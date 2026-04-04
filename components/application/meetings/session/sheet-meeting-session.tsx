@@ -65,7 +65,8 @@ export default function SheetMeetingSession({
                       variant={"outline"}
                     >
                       <div className="flex gap-2 items-center">
-                        <CurrentIcon className="hidden md:flex" /> {currentType}
+                        <CurrentIcon className="hidden md:flex" />{" "}
+                        {`${currentType}s`}
                       </div>
                       <ChevronsUpDownIcon />
                     </Button>
@@ -79,7 +80,7 @@ export default function SheetMeetingSession({
                         return (
                           <DropdownMenuItem key={appType} asChild>
                             <TabsTrigger value={appType}>
-                              <Icon /> {title}
+                              <Icon /> {`${title}s`}
                             </TabsTrigger>
                           </DropdownMenuItem>
                         );
@@ -88,8 +89,10 @@ export default function SheetMeetingSession({
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TabsList>
-              <SlashIcon className="-rotate-45 text-muted-foreground" />
-              <SheetTitle className="line-clamp-1">{title}</SheetTitle>
+              <SlashIcon className="-rotate-45 text-muted-foreground md:block hidden" />
+              <SheetTitle className="line-clamp-1 md:block hidden">
+                {title}
+              </SheetTitle>
             </SheetHeader>
             {allApplicationTypes.map((appType) => {
               const _meeting = {
