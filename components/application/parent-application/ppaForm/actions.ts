@@ -35,7 +35,7 @@ export async function upsertPpaForm1ForLandApplication(
   const { user } = await validateRequest();
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.REGISTRAR);
-  if (!isAuthorized) throw Error("Unauthorized");
+  if (!isAuthorized) return "Unauthorized";
 
   if (!id) {
     await prisma.$transaction(
@@ -196,7 +196,7 @@ export async function upsertPpaForm1ForBuildingApplication(
   const { user } = await validateRequest();
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.REGISTRAR);
-  if (!isAuthorized) throw Error("Unauthorized");
+  if (!isAuthorized) return "Unauthorized";
 
   if (!id) {
     await prisma.$transaction(

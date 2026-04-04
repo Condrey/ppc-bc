@@ -101,13 +101,17 @@ export function useEndMeetingMutation() {
       const queryKey2: QueryKey = ["meeting", variables.meetingId];
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
+      if (typeof data === "string") {
+        toast.warning(data);
+        return;
+      } else {
+        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: queryKey2 });
 
-      queryClient.invalidateQueries({ queryKey });
-      queryClient.invalidateQueries({ queryKey: queryKey2 });
-
-      toast.success("success", {
-        description: "Meeting ended",
-      });
+        toast.success("success", {
+          description: "Meeting ended",
+        });
+      }
     },
     onError(error) {
       console.error(error);
@@ -125,13 +129,17 @@ export function useDecideApplicationMutation() {
       const queryKey2: QueryKey = ["meeting", variables.application.meetingId];
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
+      if (typeof data === "string") {
+        toast.warning(data);
+        return;
+      } else {
+        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: queryKey2 });
 
-      queryClient.invalidateQueries({ queryKey });
-      queryClient.invalidateQueries({ queryKey: queryKey2 });
-
-      toast.success("success", {
-        description: `Application has been ${title}`,
-      });
+        toast.success("success", {
+          description: `Application has been ${title}`,
+        });
+      }
     },
     onError(error, variables) {
       const { title } = applicationStatuses[variables.decision];

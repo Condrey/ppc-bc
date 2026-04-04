@@ -25,7 +25,7 @@ export async function upsertFeeAssessment(input: FeeAssessmentSchema) {
   const { user } = await validateRequest();
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.SURVEYOR);
-  if (!isAuthorized) throw Error("Unauthorized");
+  if (!isAuthorized) return "Unauthorized";
   return await prisma.feeAssessment.upsert({
     where: { id },
     create: {

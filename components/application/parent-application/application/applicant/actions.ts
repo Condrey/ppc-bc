@@ -25,7 +25,6 @@ export async function upsertApplicant(input: ApplicantSchema) {
   });
   const username = slugify(name);
 
-  // apply auth
   return await prisma.applicant.upsert({
     where: { id },
     create: {

@@ -137,7 +137,7 @@ export async function endMeeting({
   const { user } = await validateRequest();
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
-  if (!isAuthorized) throw Error("Unauthorized");
+  if (!isAuthorized) return "Unauthorized";
 
   await prisma.meeting.update({
     where: { id: meetingId },
@@ -158,7 +158,7 @@ export async function decideApplication({
   const { user } = await validateRequest();
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
-  if (!isAuthorized) throw Error("Unauthorized");
+  if (!isAuthorized) return "Unauthorized";
   const { id } = application;
   await prisma.application.update({
     where: { id },

@@ -34,8 +34,8 @@ export default async function Layout({
       <div className="[--header-height:calc(--spacing(14))]">
         {/* <pre>{JSON.stringify({ cookieStore, open }, null, 2)}</pre> */}
         <SidebarProvider defaultOpen={defaultOpen} className="flex flex-col ">
-          <header className="sticky top-0 z-50 h-(--header-height) flex items-center w-full  bg-accent text-accent-foreground border-b shadow-xl  dark:border-b">
-            <TopAppBar className="w-full max-w-9xl  py-2 mx-auto  px-3  " />
+          <header className="sticky top-0 z-50 h-(--header-height)  flex items-center w-full  bg-accent text-accent-foreground border-b shadow-xl  dark:border-b">
+            <TopAppBar className="w-full max-w-9/12   py-2 mx-auto  px-3  " />
           </header>
           <div className="flex   flex-1 size-full ">
             <AppSidebar />

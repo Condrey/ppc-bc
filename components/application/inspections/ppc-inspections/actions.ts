@@ -39,7 +39,7 @@ export async function addInspection({
   const { user } = await validateRequest();
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.SURVEYOR);
-  if (!isAuthorized) throw Error("Unauthorized");
+  if (!isAuthorized) return "Unauthorized";
 
   await prisma.application.update({
     where: { id: applicationId },
@@ -89,7 +89,7 @@ export async function editLandInspection({
   const { user } = await validateRequest();
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.SURVEYOR);
-  if (!isAuthorized) throw Error("Unauthorized");
+  if (!isAuthorized) return "Unauthorized";
 
   await Promise.all([
     await prisma.landApplication.update({
@@ -192,7 +192,7 @@ export async function editBuildingInspection({
   const { user } = await validateRequest();
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.SURVEYOR);
-  if (!isAuthorized) throw Error("Unauthorized");
+  if (!isAuthorized) return "Unauthorized";
 
   await Promise.all([
     await prisma.buildingApplication.update({

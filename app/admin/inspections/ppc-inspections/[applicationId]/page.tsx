@@ -69,7 +69,7 @@ export default async function Page({ params }: Props) {
           variant={"secondary"}
         >
           <PlusIcon className="inline" />{" "}
-          <span className="hidden md:flex">new inspection</span>
+          <span className="hidden md:inline">new inspection</span>
         </ButtonAddInspection>
       </TypographyH2>
       <InspectionPageClient

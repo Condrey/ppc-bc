@@ -17,15 +17,19 @@ export function useUpsertFeeAssessmentMutation() {
       ];
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
+      if (typeof data === "string") {
+        toast.warning(data);
+        return;
+      } else {
+        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: queryKey2 });
 
-      queryClient.invalidateQueries({ queryKey });
-      queryClient.invalidateQueries({ queryKey: queryKey2 });
-
-      toast.success("success", {
-        description: !variables.id
-          ? "Fee Assessment added"
-          : "Fee Assessment updated",
-      });
+        toast.success("success", {
+          description: !variables.id
+            ? "Fee Assessment added"
+            : "Fee Assessment updated",
+        });
+      }
     },
     onError(error) {
       console.error(error);

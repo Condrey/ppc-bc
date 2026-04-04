@@ -14,20 +14,24 @@ export function useUpsertApplicantMutation() {
       const queryKey2: QueryKey = ["applicant", variables.id];
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
+      if (typeof data === "string") {
+        toast.warning(data);
+        return;
+      } else {
+        queryClient.setQueryData<ApplicantData[]>(queryKey, (oldData) => {
+          if (!oldData) return;
+          if (!variables.id) {
+            return [data, ...oldData];
+          } else {
+            return oldData.map((d) => (d.id === data.id ? data : d));
+          }
+        });
+        queryClient.invalidateQueries({ queryKey: queryKey2 });
 
-      queryClient.setQueryData<ApplicantData[]>(queryKey, (oldData) => {
-        if (!oldData) return;
-        if (!variables.id) {
-          return [data, ...oldData];
-        } else {
-          return oldData.map((d) => (d.id === data.id ? data : d));
-        }
-      });
-      queryClient.invalidateQueries({ queryKey: queryKey2 });
-
-      toast.success("success", {
-        description: !variables.id ? "Applicant added" : "Applicant updated",
-      });
+        toast.success("success", {
+          description: !variables.id ? "Applicant added" : "Applicant updated",
+        });
+      }
     },
     onError(error) {
       console.error(error);

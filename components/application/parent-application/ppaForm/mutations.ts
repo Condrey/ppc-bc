@@ -15,13 +15,18 @@ export function useUpsertPpaForm1LandApplicationMutation() {
       const queryKey2: QueryKey = ["land-application", variables.id];
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
-      queryClient.invalidateQueries({ queryKey });
-      queryClient.invalidateQueries({ queryKey: queryKey2 });
-      toast.success("success", {
-        description: !variables.id
-          ? "PPA Form1 for land application added successfully"
-          : "PPA Form1 for land application updated",
-      });
+      if (typeof data === "string") {
+        toast.warning(data);
+        return;
+      } else {
+        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: queryKey2 });
+        toast.success("success", {
+          description: !variables.id
+            ? "PPA Form1 for land application added successfully"
+            : "PPA Form1 for land application updated",
+        });
+      }
     },
     onError(error) {
       console.error(error);
@@ -39,13 +44,18 @@ export function useUpsertPpaForm1BuildingApplicationMutation() {
       const queryKey2: QueryKey = ["building-application", variables.id];
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
-      queryClient.invalidateQueries({ queryKey });
-      queryClient.invalidateQueries({ queryKey: queryKey2 });
-      toast.success("success", {
-        description: !variables.id
-          ? "PPA Form1 for building application added successfully"
-          : "PPA Form1 for building application updated",
-      });
+      if (typeof data === "string") {
+        toast.warning(data);
+        return;
+      } else {
+        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: queryKey2 });
+        toast.success("success", {
+          description: !variables.id
+            ? "PPA Form1 for building application added successfully"
+            : "PPA Form1 for building application updated",
+        });
+      }
     },
     onError(error) {
       console.error(error);

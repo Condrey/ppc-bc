@@ -23,13 +23,18 @@ export function useAddInspectionMutation() {
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
       await queryClient.cancelQueries({ queryKey: queryKey3 });
-      queryClient.invalidateQueries({ queryKey });
-      queryClient.invalidateQueries({ queryKey: queryKey2 });
-      queryClient.invalidateQueries({ queryKey: queryKey3 });
+      if (typeof data === "string") {
+        toast.warning(data);
+        return;
+      } else {
+        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: queryKey2 });
+        queryClient.invalidateQueries({ queryKey: queryKey3 });
 
-      toast.success("success", {
-        description: "Inspection added",
-      });
+        toast.success("success", {
+          description: "Inspection added",
+        });
+      }
     },
     onError(error) {
       console.error(error);
@@ -52,13 +57,18 @@ export function useEditLandInspectionMutation() {
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
       await queryClient.cancelQueries({ queryKey: queryKey3 });
-      queryClient.invalidateQueries({ queryKey });
-      queryClient.invalidateQueries({ queryKey: queryKey2 });
-      queryClient.invalidateQueries({ queryKey: queryKey3 });
+      if (typeof data === "string") {
+        toast.warning(data);
+        return;
+      } else {
+        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: queryKey2 });
+        queryClient.invalidateQueries({ queryKey: queryKey3 });
 
-      toast.success("success", {
-        description: "Inspection completed",
-      });
+        toast.success("success", {
+          description: "Inspection completed",
+        });
+      }
     },
     onError(error) {
       console.error(error);
@@ -81,13 +91,18 @@ export function useEditBuildingInspectionMutation() {
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
       await queryClient.cancelQueries({ queryKey: queryKey3 });
-      queryClient.invalidateQueries({ queryKey });
-      queryClient.invalidateQueries({ queryKey: queryKey2 });
-      queryClient.invalidateQueries({ queryKey: queryKey3 });
+      if (typeof data === "string") {
+        toast.warning(data);
+        return;
+      } else {
+        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: queryKey2 });
+        queryClient.invalidateQueries({ queryKey: queryKey3 });
 
-      toast.success("success", {
-        description: "Inspection completed",
-      });
+        toast.success("success", {
+          description: "Inspection completed",
+        });
+      }
     },
     onError(error) {
       console.error(error);

@@ -11,11 +11,10 @@ export async function upsertPayment(input: PaymentSchema) {
   const { id, amountPaid, feeAssessmentId, paymentMethod, referenceNumber } =
     paymentSchema.parse(input);
 
-  // apply auth
   const { user } = await validateRequest();
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.APPLICANT);
-  if (!isAuthorized) throw Error("Unauthorized");
+  if (!isAuthorized) return "Unauthorized";
   return await prisma.payment.upsert({
     where: { id },
     create: {

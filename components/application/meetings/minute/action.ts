@@ -20,7 +20,7 @@ export async function upsertMinute(input: MinuteSchema) {
   const { user } = await validateRequest();
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
-  if (!isAuthorized) throw Error("Unauthorized");
+  if (!isAuthorized) return "Unauthorized";
   // prisma.agenda.create({
   //   data: {
   //     minuteId,
