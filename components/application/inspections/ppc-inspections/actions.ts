@@ -41,19 +41,30 @@ export async function addInspection({
     !!user && myPrivileges[user.role].includes(Role.SURVEYOR);
   if (!isAuthorized) return "Unauthorized";
 
-  await prisma.application.update({
-    where: { id: applicationId },
-    data: {
-      status: ApplicationStatus.UNDER_REVIEW,
-      inspections: {
-        create: {
-          decision: ApplicationDecision.PENDING,
-          visitReport: "",
-          inspectors: { connect: { id: user.id } },
+  await Promise.all([
+    prisma.application.update({
+      where: { id: applicationId },
+      data: {
+        status: ApplicationStatus.UNDER_REVIEW,
+        inspections: {
+          create: {
+            decision: ApplicationDecision.PENDING,
+            visitReport: "",
+            inspectors: { connect: { id: user.id } },
+          },
         },
       },
-    },
-  });
+    }),
+    prisma.workflowStage.update({
+      where: { applicationId_step: { applicationId, step: 3 } },
+      data: {
+        status: "IN_PROGRESS",
+        startedAt: new Date(),
+        decidedAt: new Date(),
+        decidedById: user.id,
+      },
+    }),
+  ]);
   // redirect(
   //   redirectUrl || `/admin/inspections/ppc-inspections/${applicationId}`,
   // );

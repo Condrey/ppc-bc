@@ -153,7 +153,7 @@ const Content = ({
         >
           Edit fee
         </ButtonAddEditFeeAssessment>
-        <ButtonAddEditPayment feeAssessmentId={id} size={"sm"}>
+        <ButtonAddEditPayment feeAssessment={item} size={"sm"}>
           Pay fee
         </ButtonAddEditPayment>
       </ItemFooter>

@@ -13,6 +13,7 @@ import { getApplicationFee } from "@/lib/utils";
 import {
   ParentApplicationSchema,
   parentApplicationSchema,
+  WorkflowSchema,
 } from "@/lib/validation";
 
 export async function upsertPpaForm1ForLandApplication(
@@ -28,8 +29,6 @@ export async function upsertPpaForm1ForLandApplication(
     ppaForm1,
     site,
   } = parentApplicationSchema.parse(input);
-
-  const isLandApplication = application?.type === "LAND";
 
   const currentYear = new Date().getFullYear();
   const { user } = await validateRequest();
@@ -70,6 +69,16 @@ export async function upsertPpaForm1ForLandApplication(
                 status: ApplicationStatus.SUBMITTED,
                 owners: application?.owners ?? "",
                 applicant: { connect: { id: application?.applicant.id } },
+                workflowStages: {
+                  createMany: {
+                    data: initialWorkflowStages.map((d) => ({
+                      ...d,
+                      startedAt: new Date(),
+                      decidedById: user.id,
+                      decidedAt: new Date(),
+                    })),
+                  },
+                },
               },
             },
             address: {
@@ -230,6 +239,16 @@ export async function upsertPpaForm1ForBuildingApplication(
                 status: ApplicationStatus.SUBMITTED,
                 owners: application?.owners ?? "",
                 applicant: { connect: { id: application?.applicant.id } },
+                workflowStages: {
+                  createMany: {
+                    data: initialWorkflowStages.map((d) => ({
+                      ...d,
+                      startedAt: new Date(),
+                      decidedAt: new Date(),
+                      decidedById: user.id,
+                    })),
+                  },
+                },
               },
             },
             address: {
@@ -340,3 +359,62 @@ export async function upsertPpaForm1ForBuildingApplication(
     });
   }
 }
+
+const initialWorkflowStages: WorkflowSchema[] = [
+  {
+    stage: "SUBMISSION",
+    step: 1,
+    group: "SUBMISSION-PPA FORM1",
+    remarks:
+      "Filling the Physical planning Act(PPA) Form1 and submitting as required by the guidelines.",
+    status: "PENDING",
+  },
+  {
+    stage: "SUBMISSION",
+    step: 2,
+    group: "SUBMISSION-FEE ASSESSMENT",
+    remarks:
+      "Processing and paying application fee to the authority. Issuing of a PRN to facilitate application fee payments. This may also include additional fee assessments besides application fees.",
+    status: "PENDING",
+  },
+  {
+    stage: "TECHNICAL_REVIEW",
+    step: 3,
+    group: "TECHNICAL REVIEW: LAND INSPECTION",
+    remarks:
+      "Carrying out Site inspection & making a survey report by the surveyor. The surveyor and the inspection team checks to see if the site meets the minimum guidelines.",
+    status: "PENDING",
+  },
+  {
+    stage: "TECHNICAL_REVIEW",
+    step: 4,
+    group: "TECHNICAL REVIEW: PARCEL AND PLOTTING",
+    remarks:
+      "Plotting the geometry(coordinates) of the site and verifying it's parcel number by the Physical Planner.",
+    status: "PENDING",
+  },
+  {
+    stage: "PPC_REVIEW",
+    step: 5,
+    group: "",
+    remarks:
+      "Physical Planning Committee sitting in a meeting to decide on the application. They can either defer, approve, or reject your application.",
+    status: "PENDING",
+  },
+  {
+    stage: "COUNCIL_APPROVAL",
+    step: 6,
+    group: "",
+    remarks:
+      "Notification on the decision made by the committee. The Returning Officer offers you a signed and stamped development permission. This permission is not a building permit, obtaining it does not imply commencement of construction.",
+    status: "PENDING",
+  },
+  {
+    stage: "BC_REVIEW",
+    step: 7,
+    group: "",
+    remarks:
+      "Building Control creates metadata for your application. The metadata is required by the Building Information Management System(BIMS) for your approved development permission. ",
+    status: "PENDING",
+  },
+];

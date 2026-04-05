@@ -11,6 +11,8 @@ import {
   NatureOfInterestInLand,
   PaymentMethod,
   Role,
+  WorkflowStageStatus,
+  WorkflowStageType,
 } from "./generated/prisma/enums";
 import { formatPersonName } from "./utils";
 const requiredString = z.string().trim();
@@ -508,6 +510,17 @@ export const meetingSchema = z
     }
   });
 export type MeetingSchema = z.infer<typeof meetingSchema>;
+
+// Workflow
+export const workflowSchema = z.object({
+  id: z.string().optional().describe("a random UUIDv4"),
+  stage: z.enum(WorkflowStageType, { error: "Please select a type of stage" }),
+  step: z.number({ error: "Please choose a valid number" }),
+  status: z.enum(WorkflowStageStatus, { error: "Please select a status" }),
+  group: z.string().nullish(),
+  remarks: z.string().optional().nullable(),
+});
+export type WorkflowSchema = z.infer<typeof workflowSchema>;
 
 // miscellaneous
 export const emailSchema = z.object({ email: z.email().trim() });

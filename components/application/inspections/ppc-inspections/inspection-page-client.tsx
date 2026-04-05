@@ -20,6 +20,7 @@ import { cn, formatNumber } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { formatDate } from "date-fns";
 import { DownloadIcon } from "lucide-react";
+import ButtonAddInspection from "./button-add-inspection";
 
 interface Props {
   application: ApplicationData;
@@ -59,6 +60,21 @@ export function InspectionPageClient({
   const numberOfInspections = inspections.length;
   const manyInspections = numberOfInspections > 3;
   const isLandApplication = type === ApplicationType.LAND;
+  if (!inspections.length) {
+    return (
+      <EmptyContainer
+        title="No site inspections"
+        description="No field visits concerning the inspection of the applicant's land was registered"
+      >
+        <ButtonAddInspection
+          applicationId={applicationId}
+          variant={"secondary"}
+        >
+          Register inspection
+        </ButtonAddInspection>
+      </EmptyContainer>
+    );
+  }
   const inspection = inspections[0];
   return (
     <Tabs

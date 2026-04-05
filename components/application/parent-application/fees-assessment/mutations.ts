@@ -15,14 +15,17 @@ export function useUpsertFeeAssessmentMutation() {
         "application",
         variables.applicationId,
       ];
+      const queryKey3: QueryKey = ["parent-application"];
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
+      await queryClient.cancelQueries({ queryKey: queryKey3 });
       if (typeof data === "string") {
         toast.warning(data);
         return;
       } else {
         queryClient.invalidateQueries({ queryKey });
         queryClient.invalidateQueries({ queryKey: queryKey2 });
+        queryClient.invalidateQueries({ queryKey: queryKey3 });
 
         toast.success("success", {
           description: !variables.id

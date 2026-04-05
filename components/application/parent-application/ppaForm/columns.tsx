@@ -89,13 +89,15 @@ export const usePpaForm1Columns = (
     },
     cell({ row }) {
       const {
-        landUse: { acreage, landUseType },
+        landUse: { acreage, landUseType, otherLandUseType },
         site,
       } = row.original;
       const { formDesc } = landUseTypes[landUseType];
       return (
         <div>
-          <div className="text-center">{formDesc}</div>
+          <div className="text-center">
+            {landUseType === "OTHERS" ? otherLandUseType : formDesc}
+          </div>
           <div className="text-center">
             <span className="text-muted-foreground">Acreage: </span>
             {acreage}

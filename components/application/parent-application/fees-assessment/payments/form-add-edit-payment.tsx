@@ -18,6 +18,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { FeeAssessment } from "@/lib/generated/prisma/client";
 import { PaymentData } from "@/lib/types";
 import { PaymentSchema, paymentSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,16 +29,17 @@ import { useUpsertPaymentMutation } from "./mutations";
 
 interface Props {
   payment?: PaymentData;
-  feeAssessmentId: string;
+  feeAssessment: FeeAssessment;
   open: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
 }
 export default function FormAddEditPayment({
   payment,
-  feeAssessmentId,
+  feeAssessment,
   open,
   onOpenChange,
 }: Props) {
+  const { id: feeAssessmentId, applicationId } = feeAssessment;
   const form = useForm<PaymentSchema>({
     resolver: zodResolver(paymentSchema),
     values: {
@@ -51,12 +53,15 @@ export default function FormAddEditPayment({
   });
   const { mutate, isPending } = useUpsertPaymentMutation();
   function submitForm(input: PaymentSchema) {
-    mutate(input, {
-      onSuccess: () => {
-        form.reset();
-        onOpenChange(false);
+    mutate(
+      { input, applicationId },
+      {
+        onSuccess: () => {
+          form.reset();
+          onOpenChange(false);
+        },
       },
-    });
+    );
   }
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>

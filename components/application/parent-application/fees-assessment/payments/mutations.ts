@@ -20,20 +20,24 @@ export function useUpsertPaymentMutation() {
           "application",
           data.feeAssessment.applicationId,
         ];
+        const queryKey3: QueryKey = ["parent-application"];
         await queryClient.cancelQueries({ queryKey });
         await queryClient.cancelQueries({ queryKey: queryKey2 });
+        await queryClient.cancelQueries({ queryKey: queryKey3 });
         queryClient.setQueryData<PaymentData[]>(queryKey, (oldData) => {
           if (!oldData) return;
-          if (!variables.id) {
+          if (!variables.input.id) {
             return [data, ...oldData];
           } else {
             return oldData.map((d) => (d.id === data.id ? data : d));
           }
         });
         queryClient.invalidateQueries({ queryKey: queryKey2 });
-
+        queryClient.invalidateQueries({ queryKey: queryKey3 });
         toast.success("success", {
-          description: !variables.id ? "Payment added" : "Payment updated",
+          description: !variables.input.id
+            ? "Payment added"
+            : "Payment updated",
         });
       }
     },

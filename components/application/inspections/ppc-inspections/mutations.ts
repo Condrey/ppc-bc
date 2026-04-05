@@ -20,9 +20,11 @@ export function useAddInspectionMutation() {
         variables.applicationId,
       ];
       const queryKey3: QueryKey = ["meeting"];
+      const queryKey4: QueryKey = ["parent-application"];
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
       await queryClient.cancelQueries({ queryKey: queryKey3 });
+      await queryClient.cancelQueries({ queryKey: queryKey4 });
       if (typeof data === "string") {
         toast.warning(data);
         return;
@@ -30,6 +32,7 @@ export function useAddInspectionMutation() {
         queryClient.invalidateQueries({ queryKey });
         queryClient.invalidateQueries({ queryKey: queryKey2 });
         queryClient.invalidateQueries({ queryKey: queryKey3 });
+        queryClient.invalidateQueries({ queryKey: queryKey4 });
 
         toast.success("success", {
           description: "Inspection added",
@@ -54,9 +57,12 @@ export function useEditLandInspectionMutation() {
         variables.landApplication.application?.id,
       ];
       const queryKey3: QueryKey = ["meeting"];
+      const queryKey4: QueryKey = ["parent-application"];
+
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
       await queryClient.cancelQueries({ queryKey: queryKey3 });
+      await queryClient.cancelQueries({ queryKey: queryKey4 });
       if (typeof data === "string") {
         toast.warning(data);
         return;
@@ -64,6 +70,7 @@ export function useEditLandInspectionMutation() {
         queryClient.invalidateQueries({ queryKey });
         queryClient.invalidateQueries({ queryKey: queryKey2 });
         queryClient.invalidateQueries({ queryKey: queryKey3 });
+        queryClient.invalidateQueries({ queryKey: queryKey4 });
 
         toast.success("success", {
           description: "Inspection completed",

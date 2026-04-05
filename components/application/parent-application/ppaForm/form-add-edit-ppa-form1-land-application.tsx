@@ -92,6 +92,7 @@ export default function FormAddEditPpaForm1LandApplication({
       parcel: {
         ...landApplication?.parcel,
         geometry: landApplication?.parcel?.geometry || undefined,
+        centroid: landApplication?.parcel?.centroid || undefined,
       } as ParcelSchema,
     },
   });

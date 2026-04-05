@@ -34,6 +34,8 @@ export default function SectionWorkflowStages({
               decidedAt,
               remarks,
               decidedBy,
+              status,
+              group,
             } = step;
             const { title: workflowStage } = workflowStageTypes[stage];
             return (
@@ -83,7 +85,8 @@ export default function SectionWorkflowStages({
                           : "text-muted-foreground",
                       )}
                     >
-                      {workflowStage}
+                      {group || workflowStage}{" "}
+                      <span className="font-normal">({status})</span>
                     </p>
                     <DecisionBadge decision={decision} />
                   </div>
@@ -100,7 +103,7 @@ export default function SectionWorkflowStages({
                       <div className="">
                         <p>
                           <span className="italic text-destructive">
-                            Decided:
+                            Ended:
                           </span>{" "}
                           {formatDate(new Date(decidedAt), "PPP p")}
                         </p>

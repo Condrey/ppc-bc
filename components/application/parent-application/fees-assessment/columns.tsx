@@ -177,7 +177,7 @@ export const useApplicationFeeAssessmentsColumns: ColumnDef<FeeAssessmentData>[]
         return <DataTableColumnHeader column={column} title="Actions" />;
       },
       cell({ row }) {
-        const { application, assessmentType, id } = row.original;
+        const { application, assessmentType } = row.original;
         return (
           <div className="flex items-center gap-2">
             <ButtonAddEditFeeAssessment
@@ -189,7 +189,7 @@ export const useApplicationFeeAssessmentsColumns: ColumnDef<FeeAssessmentData>[]
             >
               <Edit2Icon />
             </ButtonAddEditFeeAssessment>
-            <ButtonAddEditPayment feeAssessmentId={id} size={"sm"}>
+            <ButtonAddEditPayment feeAssessment={row.original} size={"sm"}>
               <PlusIcon /> Pay
             </ButtonAddEditPayment>
           </div>

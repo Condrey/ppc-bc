@@ -3,6 +3,7 @@
 import { useSession } from "@/app/(auth)/session-provider";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { myPrivileges } from "@/lib/enums";
+import { FeeAssessment } from "@/lib/generated/prisma/client";
 import { Role } from "@/lib/generated/prisma/enums";
 import { PaymentData } from "@/lib/types";
 import { useState } from "react";
@@ -10,11 +11,11 @@ import FormAddEditPayment from "./form-add-edit-payment";
 
 interface Props extends ButtonProps {
   payment?: PaymentData;
-  feeAssessmentId: string;
+  feeAssessment: FeeAssessment;
 }
 export default function ButtonAddEditPayment({
   payment,
-  feeAssessmentId,
+  feeAssessment,
   ...props
 }: Props) {
   const { user } = useSession();
@@ -33,7 +34,7 @@ export default function ButtonAddEditPayment({
       )}
       <FormAddEditPayment
         payment={payment}
-        feeAssessmentId={feeAssessmentId}
+        feeAssessment={feeAssessment}
         open={open}
         onOpenChange={setOpen}
       />

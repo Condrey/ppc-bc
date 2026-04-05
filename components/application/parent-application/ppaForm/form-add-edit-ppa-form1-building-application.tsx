@@ -88,6 +88,7 @@ export default function FormAddEditPpaForm1BuildingApplication({
       parcel: {
         ...buildingApplication?.parcel,
         geometry: buildingApplication?.parcel?.geometry || undefined,
+        centroid: buildingApplication?.parcel?.centroid || undefined,
       } as ParcelSchema,
       access: buildingApplication?.access || {
         existingPath: false,

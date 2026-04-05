@@ -358,7 +358,7 @@ model WorkflowStage {
 
   createdAt DateTime @default(now())
 
-  @@index([applicationId, step])
+  @@unique([applicationId, step])
 }
 
 /**
