@@ -10,7 +10,7 @@ export function useUpsertParcelMutation() {
   return useMutation({
     mutationFn: upsertParcel,
     async onSuccess(data, variables) {
-      const queryKey2: QueryKey = ["parcel", variables.parcel?.id];
+      const queryKey2: QueryKey = ["parcel", variables.input.parcel?.id];
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
       if (typeof data === "string") {
@@ -20,7 +20,7 @@ export function useUpsertParcelMutation() {
         queryClient.invalidateQueries({ queryKey: queryKey2 });
 
         toast.success("success", {
-          description: variables.id ? "Parcel updated" : "Parcel added",
+          description: variables.input.id ? "Parcel updated" : "Parcel added",
         });
       }
     },

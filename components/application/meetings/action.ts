@@ -106,6 +106,7 @@ export async function startMeeting(meetingId: string) {
     },
   });
 }
+
 export async function postponeMeeting({
   meetingId,
   postponedOn,
@@ -164,6 +165,25 @@ export async function decideApplication({
     where: { id },
     data: {
       status: decision,
+      workflowStages: {
+        update: {
+          where: { applicationId_step: { step: 5, applicationId: id } },
+          data: {
+            status: "COMPLETED",
+            decision:
+              decision === "APPROVED"
+                ? "APPROVED"
+                : decision === "DEFERRED"
+                  ? "DEFERRED"
+                  : decision === "REJECTED"
+                    ? "REJECTED"
+                    : "PENDING",
+            decidedById: user.id,
+            decidedAt: new Date(),
+            createdAt: new Date(),
+          },
+        },
+      },
     },
   });
 }

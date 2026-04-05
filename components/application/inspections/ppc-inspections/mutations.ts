@@ -95,9 +95,12 @@ export function useEditBuildingInspectionMutation() {
         variables.buildingApplication.application?.id,
       ];
       const queryKey3: QueryKey = ["meeting"];
+      const queryKey4: QueryKey = ["parent-application"];
+
       await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: queryKey2 });
       await queryClient.cancelQueries({ queryKey: queryKey3 });
+      await queryClient.cancelQueries({ queryKey: queryKey4 });
       if (typeof data === "string") {
         toast.warning(data);
         return;
@@ -105,6 +108,7 @@ export function useEditBuildingInspectionMutation() {
         queryClient.invalidateQueries({ queryKey });
         queryClient.invalidateQueries({ queryKey: queryKey2 });
         queryClient.invalidateQueries({ queryKey: queryKey3 });
+        queryClient.invalidateQueries({ queryKey: queryKey4 });
 
         toast.success("success", {
           description: "Inspection completed",

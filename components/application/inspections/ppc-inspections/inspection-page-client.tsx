@@ -36,6 +36,7 @@ export function InspectionPageClient({
     queryKey: ["inspection", "applicationId", applicationId],
     queryFn: () => getApplicationInspections(applicationId),
     initialData,
+    refetchOnWindowFocus: false,
   });
   const { data: application, status } = query;
   if (status === "error") {
@@ -126,8 +127,9 @@ export function InspectionPageClient({
                   <ButtonEditLandInspection
                     inspection={i}
                     landApplication={landApplication!}
+                    variant={decision === "PENDING" ? "destructive" : "default"}
                   >
-                    Update inspection
+                    {decision === "PENDING" ? "Finish" : "Update"} inspection
                   </ButtonEditLandInspection>
                 ) : (
                   <ButtonEditBuildingInspection

@@ -1,5 +1,6 @@
 "use client";
 
+import UserAvatar from "@/app/(auth)/user-avatar";
 import { TypographyH3 } from "@/components/headings";
 import { LeafletMarker } from "@/components/leaflet-marker";
 import { EmptyContainer } from "@/components/query-container/empty-container";
@@ -28,7 +29,6 @@ import {
   LocateIcon,
   MapPinIcon,
   RefreshCcwIcon,
-  SlashIcon,
   UserIcon,
 } from "lucide-react";
 import { useState } from "react";
@@ -58,7 +58,12 @@ export default function PlottingContainer({
   const {
     buildingApplication,
     landApplication,
-    applicant: { name: applicantName },
+    applicant: {
+      name: applicantName,
+      contact,
+      email,
+      user: { avatarUrl },
+    },
   } = application;
   const parentApplication = buildingApplication ?? landApplication!;
   const { address, parcel } = parentApplication;
@@ -103,7 +108,7 @@ export default function PlottingContainer({
         ) : queryStatus === "pending" ? (
           <EmptyContainer
             title=""
-            description="...loading parcels"
+            description="...loading parcel presets"
             className="[&_svg]:hidden p-0 md:p-0"
           />
         ) : null}
@@ -155,12 +160,6 @@ export default function PlottingContainer({
                 subdomains={["mt0", "mt1", "mt2", "mt3"]}
               />
             </LayersControl.BaseLayer>
-            {/* Location marker  */}
-            <LayersControl.Overlay name="Current position" checked>
-              <LeafletMarker position={centroid} iconLabel={parcelNumber}>
-                <Popup>This is the centroid of the land parcel.</Popup>
-              </LeafletMarker>
-            </LayersControl.Overlay>
 
             {/* Other sites  */}
 
@@ -168,8 +167,9 @@ export default function PlottingContainer({
               <LayerGroup>
                 {allOtherParcels &&
                   allOtherParcels.map((item) => {
+                    const address = getLocation(item.address);
                     const {
-                      user: { name: landOwner },
+                      user: { name: landOwner, avatarUrl },
                       contact,
                       email,
                     } = item.applicant;
@@ -188,11 +188,21 @@ export default function PlottingContainer({
                           sticky
                           className="max-w-xs"
                         >
-                          <p className="text-sm md:text-lg">{landOwner}</p>
+                          <div className="flex gap-2 items-center">
+                            <UserAvatar avatarUrl={avatarUrl} />
+                            <div>
+                              <p className="text-sm md:text-lg">{landOwner}</p>
+                              <p className="font-bold">{contact}</p>
+                            </div>
+                          </div>
+
                           {email && <p>{email}</p>}
-                          <p className="font-bold">{contact}</p>
+
+                          <p>
+                            <MapPinIcon className="inline size-3.5" /> {address}
+                          </p>
                         </Tooltip>
-                        {_geometry.map((point, index) => (
+                        {/* {_geometry.map((point, index) => (
                           <LeafletMarker
                             key={index}
                             position={point}
@@ -201,11 +211,38 @@ export default function PlottingContainer({
                             animate={false}
                             className=" -rotate-45 *:no-underline text-destructive"
                           />
-                        ))}
+                        ))} */}
                       </Polygon>
                     );
                   })}
               </LayerGroup>
+            </LayersControl.Overlay>
+
+            {/* Location marker  */}
+            <LayersControl.Overlay name="Current position" checked>
+              <LeafletMarker position={centroid} iconLabel={parcelNumber}>
+                <Popup>
+                  <div className="gap-1 space-y-1">
+                    <div className="flex gap-2 items-center">
+                      <UserAvatar avatarUrl={avatarUrl} />
+                      <div className="flex flex-col">
+                        <span className="font-bold">
+                          Site area for {applicantName}.
+                        </span>
+                        <span className="font-normal">{email}</span>
+                        <span className="font-bold text-lg text-warning">
+                          {contact}
+                        </span>
+                      </div>
+                    </div>
+
+                    <span>
+                      <MapPinIcon className="inline text-destructive fill-destructive/50 size-5" />{" "}
+                      {addressLocation}
+                    </span>
+                  </div>
+                </Popup>
+              </LeafletMarker>
             </LayersControl.Overlay>
 
             {/* current parcel  */}
@@ -215,21 +252,7 @@ export default function PlottingContainer({
                   <Polygon
                     pathOptions={redOptions}
                     positions={parcel.geometry as LatLngExpression[]}
-                  >
-                    <Tooltip
-                      direction="bottom"
-                      offset={[0, 20]}
-                      opacity={1}
-                      permanent
-                      className="max-s"
-                    >
-                      <p>Site area for {applicantName}.</p>
-                      <p>
-                        <MapPinIcon className="inline size-3.5" />{" "}
-                        {addressLocation}
-                      </p>
-                    </Tooltip>
-                  </Polygon>
+                  />
                 )}
               </LayerGroup>
             </LayersControl.Overlay>

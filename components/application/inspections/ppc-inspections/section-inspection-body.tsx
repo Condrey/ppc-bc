@@ -62,12 +62,16 @@ export default function SectionInspectionBody({
   const { carriedOn, decision, visitReport, inspectors } = inspection;
   const { title: decisionMade } = applicationDecisions[decision];
   const fieldClassName =
-    "flex-1 text-muted-foreground min-h-9 h-auto bg-success/10 md:text-xl font-semibold font-sans md:outline md:outline-success inline h-9 w-auto min-w-sm rounded-md p-1";
+    "flex-1 text-success  min-h-9 h-auto bg-success/10 md:text-xl font-semibold font-sans md:outline md:outline-success inline h-9 w-auto min-w-sm rounded-md p-1";
   const checkboxClassName = " md:size-8 border-foreground md:*:[&_svg]:size-8";
 
   return (
     <div
-      className={cn("max-w-4xl  space-y-8", manyInspections && "max-w-none")}
+      className={cn(
+        "max-w-4xl  space-y-8",
+        decision === "PENDING" && "mx-auto ",
+        manyInspections && "max-w-none",
+      )}
     >
       <div className="space-y-2.5 max-w-3xl">
         <ButtonDownloadInspectionReport
@@ -80,30 +84,32 @@ export default function SectionInspectionBody({
           <DownloadIcon className="inline mr-2 " /> inspection report
         </ButtonDownloadInspectionReport>
 
-        <p className=" tracking-wide leading-loose text-justify hyphens-auto ">
-          <span className="max-w-prose">
-            This inspection was carried out on{" "}
-            <strong>{formatDate(carriedOn, "PPPp")}.</strong>
-          </span>
-          <span className="max-w-prose inline">
-            {" "}
-            The decision made by the inspectors is that the application with
-            application number{" "}
-            <strong className="slashed-zero font-mono">
-              {getApplicationNumber(applicationNo, year, type)}
-            </strong>{" "}
-            <strong
-              className={cn(
-                "",
-                (decision === ApplicationDecision.DEFERRED ||
-                  decision === ApplicationDecision.REJECTED) &&
-                  "text-destructive",
-              )}
-            >
-              {decisionMade}.
-            </strong>
-          </span>
-        </p>
+        {decision !== "PENDING" && (
+          <p className=" tracking-wide leading-loose text-justify hyphens-auto ">
+            <span className="max-w-prose">
+              This inspection was carried out on{" "}
+              <strong>{formatDate(carriedOn, "PPPp")}.</strong>
+            </span>
+            <span className="max-w-prose inline">
+              {" "}
+              The decision made by the inspectors is that the application with
+              application number{" "}
+              <strong className="slashed-zero font-mono">
+                {getApplicationNumber(applicationNo, year, type)}
+              </strong>{" "}
+              <strong
+                className={cn(
+                  "",
+                  (decision === ApplicationDecision.DEFERRED ||
+                    decision === ApplicationDecision.REJECTED) &&
+                    "text-destructive",
+                )}
+              >
+                {decisionMade}.
+              </strong>
+            </span>
+          </p>
+        )}
       </div>
       {!visitReport ? (
         <EmptyContainer
@@ -435,7 +441,7 @@ export default function SectionInspectionBody({
           <TipTapViewer content={visitReport} />
         </div>
       )}
-      {!!inspectors.length && (
+      {!!inspectors.length && decision !== "PENDING" && (
         <div>
           <TypographyH3 text="Inspectors" className="underline" />
           <ol className="list-decimal lining-nums list-inside">

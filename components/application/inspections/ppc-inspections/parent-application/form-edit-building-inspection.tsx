@@ -73,6 +73,7 @@ export default function FormAddEditBuildingInspection({
       parcel: {
         ...buildingApplication.parcel,
         geometry: buildingApplication.parcel?.geometry || undefined,
+        centroid: buildingApplication.parcel?.centroid || undefined,
         blockNumber: buildingApplication.parcel?.blockNumber || "",
         plotNumber: buildingApplication.parcel?.plotNumber || "",
       } as ParcelSchema,

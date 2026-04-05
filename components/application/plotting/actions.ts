@@ -32,6 +32,7 @@ async function allOtherParcels(exceptionId: string) {
               },
             },
           },
+          address: true,
         },
       },
       landApplication: {
@@ -47,6 +48,7 @@ async function allOtherParcels(exceptionId: string) {
               },
             },
           },
+          address: true,
         },
       },
     },
@@ -54,15 +56,23 @@ async function allOtherParcels(exceptionId: string) {
   return data.map((d) => {
     const parentApplication = d.landApplication ?? d.buildingApplication!;
     const applicant = parentApplication.application.applicant;
+    const address = parentApplication.address;
     return {
       ...(d as Parcel),
       applicant,
+      address,
     };
   });
 }
 export const getAllOtherParcels = cache(allOtherParcels);
 
-export async function upsertParcel(input: ParentApplicationSchema) {
+export async function upsertParcel({
+  input,
+  applicationId,
+}: {
+  input: ParentApplicationSchema;
+  applicationId: string;
+}) {
   const { user } = await validateRequest();
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
@@ -74,25 +84,41 @@ export async function upsertParcel(input: ParentApplicationSchema) {
   const centroid = getPolygonCentroid(geometry!);
   const { sqm, acres } = getPolygonArea(geometry!);
 
-  await prisma.parcel.upsert({
-    where: { id },
-    create: {
-      blockNumber,
-      plotNumber,
-      geometry,
-      parcelNumber,
-      centroid: centroid ?? undefined,
-      areaSqMeters: sqm,
-      areaAcres: acres,
-    },
-    update: {
-      blockNumber,
-      plotNumber,
-      geometry,
-      parcelNumber,
-      centroid: centroid ?? undefined,
-      areaSqMeters: sqm,
-      areaAcres: acres,
-    },
-  });
+  await Promise.all([
+    await prisma.parcel.upsert({
+      where: { id },
+      create: {
+        blockNumber,
+        plotNumber,
+        geometry,
+        parcelNumber,
+        centroid: centroid ?? undefined,
+        areaSqMeters: sqm,
+        areaAcres: acres,
+      },
+      update: {
+        blockNumber,
+        plotNumber,
+        geometry,
+        parcelNumber,
+        centroid: centroid ?? undefined,
+        areaSqMeters: sqm,
+        areaAcres: acres,
+      },
+    }),
+    await prisma.workflowStage.update({
+      where: { applicationId_step: { applicationId, step: 4 } },
+      data: {
+        status: "COMPLETED",
+        decidedAt: new Date(),
+        decidedById: user.id,
+      },
+    }),
+    await prisma.workflowStage.update({
+      where: { applicationId_step: { applicationId, step: 5 } },
+      data: {
+        status: "IN_PROGRESS",
+      },
+    }),
+  ]);
 }

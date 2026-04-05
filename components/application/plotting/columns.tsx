@@ -17,7 +17,7 @@ import {
   naturesOfInterestInLand,
 } from "@/lib/enums";
 import { ParentApplicationData } from "@/lib/types";
-import { getApplicationNumber } from "@/lib/utils";
+import { formatNumber, getApplicationNumber } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns";
 import { DotIcon, Edit3Icon } from "lucide-react";
@@ -146,7 +146,7 @@ export const useParcelsColumns: ColumnDef<ParentApplicationData>[] = [
       const { title: landInterest } = naturesOfInterestInLand[natureOfInterest];
 
       return (
-        <div className="max-w-36 *:text-wrap">
+        <div className="max-w-xs *:text-wrap">
           <div>
             {isLAndApplication ? (
               <>Application for {landInterest} certificate</>
@@ -182,7 +182,12 @@ export const useParcelsColumns: ColumnDef<ParentApplicationData>[] = [
               <div className="flex items-center text-xs text-muted-foreground">
                 Plot {parcel.plotNumber} <DotIcon /> Block {parcel.blockNumber}
               </div>
-              {parcel.areaSqMeters && <div>{parcel.areaSqMeters}sq meters</div>}
+              {parcel.areaSqMeters && (
+                <div>
+                  {formatNumber(parcel.areaSqMeters)} meters<sup>2</sup> (
+                  {formatNumber(parcel.areaAcres || 0)} acres)
+                </div>
+              )}
             </>
           )}
         </div>

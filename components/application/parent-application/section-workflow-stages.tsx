@@ -39,7 +39,7 @@ export default function SectionWorkflowStages({
             } = step;
             const { title: workflowStage } = workflowStageTypes[stage];
             return (
-              <div key={id} className="flex  gap-4">
+              <div key={id} className="flex max-w-4xl gap-4">
                 {/* indicator   */}
                 <div className="flex flex-col items-center">
                   <div
@@ -95,7 +95,7 @@ export default function SectionWorkflowStages({
                     {state !== "upcoming" && (
                       <p>
                         <span className="italic text-success">Started:</span>{" "}
-                        {formatDate(new Date(startedAt), "PPP p")}
+                        {formatDate(new Date(startedAt), "PPPPp")}
                       </p>
                     )}
 
@@ -105,7 +105,7 @@ export default function SectionWorkflowStages({
                           <span className="italic text-destructive">
                             Ended:
                           </span>{" "}
-                          {formatDate(new Date(decidedAt), "PPP p")}
+                          {formatDate(new Date(decidedAt), "PPPPp")}
                         </p>
                         {decidedBy && (
                           <div className="mt-3 text-sm flex gap-2">
@@ -124,7 +124,7 @@ export default function SectionWorkflowStages({
                   </div>
                   {/* Remarks  */}
                   {remarks && (
-                    <p className="mt-2  border-l border-l-warning pl-3 text-sm text-muted-foreground">
+                    <p className="mt-2 max-w-prose  border-l border-l-warning pl-3 text-sm text-muted-foreground">
                       {remarks}
                     </p>
                   )}

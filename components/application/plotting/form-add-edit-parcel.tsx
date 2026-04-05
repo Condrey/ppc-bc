@@ -51,12 +51,15 @@ export default function FormAddEditParentApplication({
   });
   const { mutate, isPending } = useUpsertParcelMutation();
   function submitForm(input: ParentApplicationSchema) {
-    mutate(input, {
-      onSuccess: () => {
-        form.reset();
-        onOpenChange(false);
+    mutate(
+      { input, applicationId: parentApplication.applicationId },
+      {
+        onSuccess: () => {
+          form.reset();
+          onOpenChange(false);
+        },
       },
-    });
+    );
   }
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -70,7 +73,7 @@ export default function FormAddEditParentApplication({
           </SheetHeader>
           <Form {...form}>
             <div className="space-y-6 p-3 w-fit md:w-lg ">
-              <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre>
+              {/* <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre> */}
               <FormField
                 control={form.control}
                 name="parcel.plotNumber"

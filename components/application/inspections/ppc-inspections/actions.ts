@@ -60,7 +60,6 @@ export async function addInspection({
       data: {
         status: "IN_PROGRESS",
         startedAt: new Date(),
-        decidedAt: new Date(),
         decidedById: user.id,
       },
     }),
@@ -87,7 +86,6 @@ export async function editLandInspection({
     inspection,
   } = parentApplicationSchema.parse(landApplication);
   const {
-    applicationId,
     carriedOn,
     decision,
     inspectorsIds,
@@ -126,6 +124,22 @@ export async function editLandInspection({
             status: ApplicationStatus.INSPECTED,
             owners: application?.owners ?? "",
             applicant: { connect: { id: application?.applicant.id } },
+            workflowStages: {
+              update: {
+                where: {
+                  applicationId_step: {
+                    applicationId: application?.id || "",
+                    step: 3,
+                  },
+                },
+                data: {
+                  status: "COMPLETED",
+                  decidedBy: { connect: { id: user.id } },
+                  decidedAt: new Date(),
+                  decision,
+                },
+              },
+            },
           },
         },
         address: {
@@ -190,7 +204,6 @@ export async function editBuildingInspection({
     access,
   } = parentApplicationSchema.parse(buildingApplication);
   const {
-    applicationId,
     carriedOn,
     decision,
     inspectorsIds,
@@ -229,6 +242,22 @@ export async function editBuildingInspection({
             status: ApplicationStatus.INSPECTED,
             owners: application?.owners ?? "",
             applicant: { connect: { id: application?.applicant.id } },
+            workflowStages: {
+              update: {
+                where: {
+                  applicationId_step: {
+                    applicationId: application?.id || "",
+                    step: 3,
+                  },
+                },
+                data: {
+                  status: "COMPLETED",
+                  decidedBy: { connect: { id: user.id } },
+                  decidedAt: new Date(),
+                  decision,
+                },
+              },
+            },
           },
         },
         address: {

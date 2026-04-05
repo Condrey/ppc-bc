@@ -87,7 +87,9 @@ export default function LandUseSection({ form, applicationType }: Props) {
           name="site.percentageSizeOfBuildingAvailableSpace"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Size/ scale of available space for building</FormLabel>
+              <FormLabel>
+                Percentage Size/ scale of available space for building
+              </FormLabel>
               <FormControl>
                 <NumberInput
                   placeholder="e.g 60"
