@@ -16,13 +16,13 @@ export default function Container({
   ...props
 }: Props) {
   return (
-    <div className="size-full ">
+    <div className="size-full  ">
       {!!breadcrumbs && (
         <Suspense>
           <ResponsiveBreadcrumb
             items={breadcrumbs}
             ITEMS_TO_DISPLAY={ITEMS_TO_DISPLAY}
-            className="sticky top-0 bg-background hidden sm:block"
+            className="sticky top-0 bg-background hidden sm:block mt-4"
           />
         </Suspense>
       )}
@@ -31,7 +31,7 @@ export default function Container({
         className={cn(
           "max-w-9xl w-full   overflow-clip py-16   p-3     space-y-4   mx-auto",
           "sm:pt-12 sm:pb-4",
-          "md:max-h-none md:space-y-6 md:pb-12 ",
+          "md:max-h-none md:space-y-6 md:pb-12  ",
           className,
         )}
         {...props}

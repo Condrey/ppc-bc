@@ -65,6 +65,14 @@ async function userById(id: string) {
 }
 export const getUserById = cache(userById);
 
+async function userByUsername(username: string) {
+  return await prisma.user.findFirst({
+    where: { username: { equals: username, mode: "insensitive" } },
+    select: userDataSelect,
+  });
+}
+export const getUserByUsername = cache(userByUsername);
+
 export async function upsertUser(
   input: SignUpSchema,
 ): Promise<string | UserData> {

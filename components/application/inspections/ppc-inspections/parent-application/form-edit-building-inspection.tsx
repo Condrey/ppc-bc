@@ -16,12 +16,13 @@ import {
   SiteSchema,
 } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useEditBuildingInspectionMutation } from "../mutations";
 import AccessSection from "./form-components/access-section";
 import ApplicantSection from "./form-components/applicant-section";
 import DistanceSection from "./form-components/distance-section";
+import DocumentUploadSection from "./form-components/document-upload-section";
 import InspectorsSection from "./form-components/inspectors-section";
 import LandUseSection from "./form-components/land-use-section";
 import VisitReportSection from "./form-components/visit-report-section";
@@ -41,9 +42,13 @@ export default function FormAddEditBuildingInspection({
   const {
     id: applicationId,
     site,
-    application: { applicant },
+    application: { applicant, documents },
     access,
   } = buildingApplication;
+
+  const prevMediaIds = documents.map((m) => m.id);
+  const [mediaIds, setMediaIds] = useState<string[]>(prevMediaIds || []);
+
   const form = useForm<ParentApplicationSchema>({
     resolver: zodResolver(parentApplicationSchema),
     values: {
@@ -83,7 +88,7 @@ export default function FormAddEditBuildingInspection({
 
   function submitForm(input: ParentApplicationSchema) {
     mutate(
-      { buildingApplication: input },
+      { buildingApplication: input, mediaIds },
       {
         onSuccess: () => {
           form.reset();
@@ -113,6 +118,10 @@ export default function FormAddEditBuildingInspection({
                   <DistanceSection form={form} shouldWrap />
                   <AccessSection form={form} shouldWrap />
                   <VisitReportSection form={form} />
+                  <DocumentUploadSection
+                    applicationId={applicationId}
+                    mediaIds={(ids) => setMediaIds(ids)}
+                  />
                 </div>
               </div>
             </form>

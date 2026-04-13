@@ -253,7 +253,7 @@ export const useParcelsColumns: ColumnDef<ParentApplicationData>[] = [
       return <DataTableColumnHeader column={column} title="Actions" />;
     },
     cell({ row }) {
-      const { applicationId } = row.original;
+      const { applicationId, application } = row.original;
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const [isPending, startTransition] = useTransition();
       const { getNavigationLinkWithPathnameWithoutUpdate } =
@@ -265,10 +265,7 @@ export const useParcelsColumns: ColumnDef<ParentApplicationData>[] = [
       );
       return (
         <div className="flex gap-2 items-center">
-          <ButtonAddEditParcel
-            parentApplication={row.original}
-            size={"icon-sm"}
-          >
+          <ButtonAddEditParcel application={application} size={"icon-sm"}>
             <Edit3Icon />
           </ButtonAddEditParcel>
           <Link

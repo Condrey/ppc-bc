@@ -4,17 +4,14 @@ import { useSession } from "@/app/(auth)/session-provider";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { myPrivileges } from "@/lib/enums";
 import { Role } from "@/lib/generated/prisma/enums";
-import { ParentApplicationData } from "@/lib/types";
+import { ApplicationData } from "@/lib/types";
 import { useState } from "react";
 import FormAddEditParcel from "./form-add-edit-parcel";
 
 interface Props extends ButtonProps {
-  parentApplication: ParentApplicationData;
+  application: ApplicationData;
 }
-export default function ButtonAddEditParcel({
-  parentApplication,
-  ...props
-}: Props) {
+export default function ButtonAddEditParcel({ application, ...props }: Props) {
   const { user } = useSession();
   const isAuthorized =
     user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
@@ -30,7 +27,7 @@ export default function ButtonAddEditParcel({
         />
       )}
       <FormAddEditParcel
-        parentApplication={parentApplication}
+        application={application}
         open={open}
         onOpenChange={setOpen}
       />

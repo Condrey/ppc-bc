@@ -1,8 +1,9 @@
 import { getUserById } from "@/components/application/users/action";
+import Container from "@/components/container";
 import { roles } from "@/lib/enums";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import PageClient from "./page-client";
+import UserPageClient from "../../../../../components/application/users/user-page-client";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -31,5 +32,15 @@ export default async function Page({ params }: Props) {
   const user = await getUserById(userId);
   if (!user) return notFound();
 
-  return <PageClient initialData={user} />;
+  return (
+    <Container
+      breadcrumbs={[
+        { title: "Home", href: "/admin" },
+        { title: "All Users", href: "/admin/users" },
+        { title: user.name },
+      ]}
+    >
+      <UserPageClient initialData={user} />
+    </Container>
+  );
 }

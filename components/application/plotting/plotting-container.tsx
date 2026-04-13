@@ -25,6 +25,7 @@ import { cn, formatNumber, getLocation } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { LatLngExpression, LatLngLiteral, PathOptions } from "leaflet";
 import {
+  Edit3Icon,
   ExpandIcon,
   LocateIcon,
   MapPinIcon,
@@ -44,6 +45,7 @@ import {
 } from "react-leaflet";
 import { toast } from "sonner";
 import { getAllOtherParcels } from "./actions";
+import ButtonAddEditParcel from "./button-add-edit-parcel";
 
 const DEFAULT_ZOOM = 25;
 export default function PlottingContainer({
@@ -87,10 +89,16 @@ export default function PlottingContainer({
       <div
         className={cn("gap-2 flex flex-col size-full ", isExpanded && "h-dvh")}
       >
-        <TypographyH3
-          text="Plotting and Parcel for the land"
-          className={cn(isExpanded && "mx-4")}
-        />
+        <div className="flex gap-2 items-center">
+          <ButtonAddEditParcel application={application} variant={"ghost"}>
+            <Edit3Icon />
+          </ButtonAddEditParcel>
+          <TypographyH3
+            text="Plotting and Parcel for the land"
+            className={cn(isExpanded && "mx-4")}
+          />
+        </div>
+
         {/* header */}
         <MapHeaderSection
           application={application}

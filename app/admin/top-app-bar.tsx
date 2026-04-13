@@ -2,7 +2,9 @@
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn, siteConfig, webName } from "@/lib/utils";
+import {} from "@radix-ui/react-dropdown-menu";
 import Image from "next/image";
+import { NavUser } from "./nav-user";
 
 interface TopAppBarProps {
   className?: string;
@@ -20,6 +22,7 @@ export default function TopAppBar({ className }: TopAppBarProps) {
           <span className="hidden md:inline">{siteConfig.name}</span>
         </p>
       </div>
+      <NavUser />
       <SidebarTrigger
         className="md:hidden"
         size={"xl"}

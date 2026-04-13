@@ -303,11 +303,13 @@ model Document {
   applicationId String?
   inspectionId  String?
 
-  type    DocumentType
-  title   String
-  fileUrl String
-  version Int            @default(1)
-  status  DocumentStatus
+  extension String
+  type      DocumentType?
+  mediaType MediaType       @default(PDF)
+  title     String?
+  fileUrl   String
+  version   Int             @default(1)
+  status    DocumentStatus?
 
   createdById String
   createdBy   User   @relation(fields: [createdById], references: [id])
@@ -514,6 +516,12 @@ model Agenda {
 /**
  * ===================== ENUMS =====================
  */
+
+enum MediaType {
+  VIDEO
+  PDF
+  IMAGE
+}
 
 enum Committee {
   PPC

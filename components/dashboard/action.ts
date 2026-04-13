@@ -91,7 +91,11 @@ async function dashboardInfo() {
   return {
     admins,
     applicants,
-    feesAssessment: { fees, start, end },
+    feesAssessment: {
+      fees: fees.map((f) => ({ ...f, month: String(f.month) })),
+      start,
+      end,
+    },
     landUsage,
     meeting: { recentMeeting, count },
 

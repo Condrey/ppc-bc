@@ -15,7 +15,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { ParentApplicationData } from "@/lib/types";
+import { ApplicationData } from "@/lib/types";
 import {
   ParcelSchema,
   parentApplicationSchema,
@@ -28,15 +28,17 @@ import GeometrySection from "./geometry-section";
 import { useUpsertParcelMutation } from "./mutations";
 
 interface Props {
-  parentApplication: ParentApplicationData;
+  application: ApplicationData;
   open: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
 }
 export default function FormAddEditParentApplication({
-  parentApplication,
+  application,
   open,
   onOpenChange,
 }: Props) {
+  const parentApplication =
+    application.landApplication || application.buildingApplication!;
   const form = useForm<ParentApplicationSchema>({
     resolver: zodResolver(parentApplicationSchema),
     values: {
@@ -52,7 +54,7 @@ export default function FormAddEditParentApplication({
   const { mutate, isPending } = useUpsertParcelMutation();
   function submitForm(input: ParentApplicationSchema) {
     mutate(
-      { input, applicationId: parentApplication.applicationId },
+      { input, applicationId: application.id },
       {
         onSuccess: () => {
           form.reset();

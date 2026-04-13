@@ -68,7 +68,9 @@ export type InspectionData = Prisma.InspectionGetPayload<{
 
 //Inspection Land application
 export const inspectionLandApplicationDataInclude = {
-  application: { include: { applicant: { include: applicantDataInclude } } },
+  application: {
+    include: { applicant: { include: applicantDataInclude }, documents: true },
+  },
   address: true,
   landUse: true,
   parcel: true,
@@ -83,7 +85,9 @@ export type InspectionLandApplicationData = Prisma.LandApplicationGetPayload<{
 
 //Inspection Building application
 export const inspectionBuildingApplicationDataInclude = {
-  application: { include: { applicant: { include: applicantDataInclude } } },
+  application: {
+    include: { applicant: { include: applicantDataInclude }, documents: true },
+  },
   address: true,
   landUse: true,
   parcel: true,
@@ -278,3 +282,10 @@ export type DashboardItems = {
     count: number;
   };
 };
+
+export interface Attachment {
+  file: File;
+  extension?: string;
+  mediaId?: string;
+  isUploading: boolean;
+}

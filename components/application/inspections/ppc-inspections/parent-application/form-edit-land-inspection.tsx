@@ -17,11 +17,12 @@ import {
   SiteSchema,
 } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useEditLandInspectionMutation } from "../mutations";
 import ApplicantSection from "./form-components/applicant-section";
 import DistanceSection from "./form-components/distance-section";
+import DocumentUploadSection from "./form-components/document-upload-section";
 import InspectorsSection from "./form-components/inspectors-section";
 import LandUseSection from "./form-components/land-use-section";
 import VisitReportSection from "./form-components/visit-report-section";
@@ -41,8 +42,12 @@ export default function FormAddEditLandInspection({
   const {
     id: applicationId,
     site,
-    application: { applicant },
+    application: { applicant, documents },
   } = landApplication;
+
+  const prevMediaIds = documents.map((m) => m.id);
+  const [mediaIds, setMediaIds] = useState<string[]>(prevMediaIds || []);
+
   const form = useForm<ParentApplicationSchema>({
     resolver: zodResolver(parentApplicationSchema),
     values: {
@@ -74,7 +79,7 @@ export default function FormAddEditLandInspection({
 
   function submitForm(input: ParentApplicationSchema) {
     mutate(
-      { landApplication: input },
+      { landApplication: input, mediaIds },
       {
         onSuccess: () => {
           form.reset();
@@ -103,6 +108,10 @@ export default function FormAddEditLandInspection({
                   <AddressSection form={form} shouldWrap />
                   <DistanceSection form={form} shouldWrap />
                   <VisitReportSection form={form} />
+                  <DocumentUploadSection
+                    applicationId={applicationId}
+                    mediaIds={(ids) => setMediaIds(ids)}
+                  />
                 </div>
               </div>
             </form>
