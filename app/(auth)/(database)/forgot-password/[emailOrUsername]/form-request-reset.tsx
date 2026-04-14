@@ -12,6 +12,7 @@ import { Form, FormFooter } from "@/components/ui/form";
 import LoadingButton from "@/components/ui/loading-button";
 import { passwordResetSchema, PasswordResetSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -29,6 +30,7 @@ export default function FormRequestReset({
   emailUsername,
   isValidEmail,
 }: Props) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [step, setStep] = useState<number>(isValidEmail ? 2 : 1);
   const form = useForm<PasswordResetSchema>({
@@ -49,20 +51,30 @@ export default function FormRequestReset({
       let result;
       if (action === "step-1") {
         result = await validateEmail({ input });
-        if (!result.error) setStep(2);
+        if (!result.error) {
+          setStep(2);
+          toast.success(
+            "A request to rest the password has been successfully sent",
+          );
+        } else {
+          toast.error(result.error);
+        }
       } else if (action === "step-2") {
         result = await verifyOtp({ input });
-        if (!result.error) setStep(3);
+        if (!result.error) {
+          setStep(3);
+          toast.success("OTP verified, now reset your password");
+          router.push(`/forgot-password/${emailUsername}?isValidEmail=yes`);
+        } else {
+          toast.error(result.error);
+        }
       } else if (action === "step-3") {
         result = await resetPasswordAndLogin({ input });
-      }
-
-      if (result?.error) {
-        toast.error(result.error);
-      } else {
-        toast.success(
-          "A request to rest the password has been successfully sent",
-        );
+        if (!result.error) {
+          router.push("/admin");
+        } else {
+          toast.error(result.error);
+        }
       }
     });
   }
@@ -82,6 +94,7 @@ export default function FormRequestReset({
             onSubmit={form.handleSubmit(submit)}
             className=" w-full space-y-4"
           >
+            {/* <pre>{JSON.stringify(form.watch(), null, 2)}</pre> */}
             {step === 1 && <SectionSubmitEmailUsername form={form} />}
             {step === 2 && (
               <SectionSubmitOtp

@@ -3,6 +3,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { PasswordInput } from "@/components/ui/password-input";
 import { PasswordResetSchema } from "@/lib/validation";
@@ -28,6 +29,7 @@ export default function SectionSubmitPassword({ form }: Props) {
                 value={field.value!}
               />
             </FormControl>
+            <FormMessage />
           </FormItem>
         )}
       />
@@ -45,6 +47,7 @@ export default function SectionSubmitPassword({ form }: Props) {
                 value={field.value!}
               />
             </FormControl>
+            <FormMessage />
           </FormItem>
         )}
       />

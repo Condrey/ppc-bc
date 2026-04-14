@@ -8,7 +8,6 @@ import {
 import prisma from "@/lib/prisma";
 import { passwordResetSchema, PasswordResetSchema } from "@/lib/validation";
 import { hash } from "@node-rs/argon2";
-import { redirect } from "next/navigation";
 import { sendAlphaNumericOtp } from "./email";
 import {
   generateOtpVerificationToken,
@@ -80,7 +79,7 @@ export async function resetPasswordAndLogin({
     const { error } = await verifyOtp({ input });
 
     if (error) {
-      return { error: "Failed to verify otp" };
+      return { error: `${error}` };
     }
     const existingUser = await prisma.user.findFirst({
       where: {
@@ -110,8 +109,10 @@ export async function resetPasswordAndLogin({
     const sessionToken = generateSessionToken();
     const session = await createSession(sessionToken, existingUser.id);
     await setSessionTokenCookie(sessionToken, session.expiresAt);
-    return redirect(`/admin`);
-  } catch {
-    return { error: "Failed to reset password. Contact your administrator" };
+    return { error: null };
+  } catch (error) {
+    return {
+      error: `Failed to reset password. Contact your administrator: ${error}`,
+    };
   }
 }

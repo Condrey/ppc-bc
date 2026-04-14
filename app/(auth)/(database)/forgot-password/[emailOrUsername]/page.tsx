@@ -17,7 +17,7 @@ export default async function Page({ params, searchParams }: PageProps) {
     <div className="max-w-5xl mx-auto py-6 flex flex-col h-dvh overflow-y-auto items-center ">
       <h1>Forgot Password for {emailOrUsername}</h1>
       <div className="flex-1 size-full flex flex-col justify-center items-center">
-        <pre>{JSON.stringify({ encodedEmailOrUsername }, null, 2)}</pre>
+        {/* <pre>{JSON.stringify({ encodedEmailOrUsername }, null, 2)}</pre> */}
         <div className="w-full">
           <FormRequestReset
             emailUsername={emailOrUsername}

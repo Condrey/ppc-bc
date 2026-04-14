@@ -127,7 +127,7 @@ export const passwordResetSchema = z
     }
     if (val.newPassword !== val.repeatPassword) {
       ctx.addIssue({
-        path: ["newPassword"],
+        path: ["repeatPassword"],
         message:
           "There is a password mismatch in the current and repeated password.",
         code: "custom",

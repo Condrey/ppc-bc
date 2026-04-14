@@ -33,7 +33,7 @@ export const validateOtpVerificationToken = async (otp: string) => {
         });
         if (!storedToken) throw new Error("Invalid OTP verification code");
         await tx.passwordResetToken.deleteMany({
-          where: { userId: storedToken.userId },
+          where: { userId: storedToken.userId, id: { not: hashOtp(otp) } },
         });
         return storedToken;
       },
