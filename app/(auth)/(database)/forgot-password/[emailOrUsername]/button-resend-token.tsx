@@ -1,8 +1,11 @@
 import LoadingButton from "@/components/ui/loading-button";
+import { PasswordResetSchema } from "@/lib/validation";
 import { addSeconds, intervalToDuration, isBefore } from "date-fns";
 import { RefreshCwIcon } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
+import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
+import { validateEmail } from "./action";
 
 const BASE_DELAY = 60; // seconds
 const MAX_ATTEMPTS = 5;
@@ -11,9 +14,9 @@ const getDelay = (attempt: number) => {
 };
 
 interface Props {
-  handleSubmit: () => void;
+  form: UseFormReturn<PasswordResetSchema>;
 }
-export default function ButtonResendToken({ handleSubmit }: Props) {
+export default function ButtonResendToken({ form }: Props) {
   const [, forceUpdate] = useState(0);
   const [attempts, setAttempts] = useState(() => {
     if (typeof window === "undefined") return 1;
@@ -71,16 +74,14 @@ export default function ButtonResendToken({ handleSubmit }: Props) {
     setAttempts(nextAttempts);
     setResendExpiry(addedSeconds);
 
-    //   startTransition(async () => {
-    //     const { error } = await validateEmail({ input });
-
-    //     if (error) {
-    //       toast.error(error);
-    //     } else {
-    //       toast.success("OTP resent successfully");
-    //     }
-    //   });
-    startTransition(handleSubmit);
+    startTransition(async () => {
+      const { error } = await validateEmail({ input: form.watch() });
+      if (error) {
+        toast.error(error);
+      } else {
+        toast.success("OTP resent successfully");
+      }
+    });
   };
   const now = new Date();
 
@@ -98,7 +99,7 @@ export default function ButtonResendToken({ handleSubmit }: Props) {
   };
   return (
     <LoadingButton
-      type="button"
+      type="submit"
       variant="link"
       size="lg"
       value="step-1"

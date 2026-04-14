@@ -110,9 +110,7 @@ export default function FormRequestReset({
               )}
               {step === 2 && (
                 <>
-                  <ButtonResendToken
-                    handleSubmit={() => form.handleSubmit(submit)()}
-                  />
+                  <ButtonResendToken form={form} />
                   <LoadingButton
                     value="step-2"
                     name="action"
