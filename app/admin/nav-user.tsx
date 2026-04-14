@@ -33,7 +33,12 @@ import { useTransition } from "react";
 import { useSession } from "../(auth)/session-provider";
 import UserAvatar from "../(auth)/user-avatar";
 
-export function NavUser({ inSideBar = false }: { inSideBar?: boolean }) {
+interface Props {
+  inSideBar?: boolean;
+  className?: string;
+}
+
+export function NavUser({ inSideBar = false, className }: Props) {
   const [isPending, startTransition] = useTransition();
   const { isMobile } = useSidebar();
   const { setTheme } = useTheme();
@@ -57,7 +62,7 @@ export function NavUser({ inSideBar = false }: { inSideBar?: boolean }) {
     <>
       {!user ? (
         <Link href={loginUrl}>
-          <SidebarMenuButton>
+          <SidebarMenuButton className={className}>
             <LogInIcon />
             Login now
           </SidebarMenuButton>
@@ -72,6 +77,7 @@ export function NavUser({ inSideBar = false }: { inSideBar?: boolean }) {
                 inSideBar
                   ? "data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground "
                   : "max-w-fit rounded-full",
+                className,
               )}
             >
               <UserAvatar avatarUrl={user.avatarUrl} />

@@ -489,3 +489,29 @@ export const workflowStageTypes: Record<
     icon: GavelIcon,
   },
 };
+
+export const ppcMemberships: Record<
+  Membership,
+  {
+    title: string;
+  }
+> = {
+  CIVILIAN: {
+    title: "an applicant and not member",
+  },
+  CO_OPTED: {
+    title: "a co-opted member",
+  },
+  MEMBER: {
+    title: "a member",
+  },
+  INTERN: {
+    title: "an internee",
+  },
+  LG: {
+    title: "is from the Government and not member",
+  },
+  PROFESSIONAL: {
+    title: "a professional and not member",
+  },
+};

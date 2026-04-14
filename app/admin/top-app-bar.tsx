@@ -22,7 +22,7 @@ export default function TopAppBar({ className }: TopAppBarProps) {
           <span className="hidden md:inline">{siteConfig.name}</span>
         </p>
       </div>
-      <NavUser />
+      <NavUser className={"hidden md:flex"} />
       <SidebarTrigger
         className="md:hidden"
         size={"xl"}

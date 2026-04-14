@@ -64,6 +64,78 @@ export const verifyUserSchema = z.object({
 });
 export type VerifyUserSchema = z.infer<typeof verifyUserSchema>;
 
+// Update password
+export const updatePasswordSchema = z
+  .object({
+    currentPassword: z
+      .email()
+      .min(8, "Password must be at least 8 characters")
+      .describe("Password for the user."),
+    newPassword: z
+      .email()
+      .min(8, "Password must be at least 8 characters")
+      .describe("Password for the user."),
+    repeatPassword: z
+      .email()
+      .min(8, "Password must be at least 8 characters")
+      .describe("Password for the user."),
+  })
+  .superRefine((val, ctx) => {
+    if (val.newPassword === val.currentPassword) {
+      ctx.addIssue({
+        path: ["newPassword"],
+        message: "Enter a password different from the current password.",
+        code: "custom",
+      });
+    }
+    if (val.newPassword !== val.repeatPassword) {
+      ctx.addIssue({
+        path: ["newPassword"],
+        message:
+          "There is a password mismatch in the current and repeated password.",
+        code: "custom",
+      });
+    }
+  });
+export type UpdatePasswordSchema = z.infer<typeof updatePasswordSchema>;
+
+// Password reset
+export const passwordResetSchema = z
+  .object({
+    emailUsername: z
+      .email()
+      .min(1, "Please provide your email")
+      .describe("Email or username for the user."),
+    otp: z.string().nullish(),
+    newPassword: z.string().nullish().describe("Password for the user."),
+    repeatPassword: z.string().nullish().describe("Password for the user."),
+  })
+  .superRefine((val, ctx) => {
+    if (val.newPassword && val.newPassword.length < 8) {
+      ctx.addIssue({
+        path: ["newPassword"],
+        message: "Password must be at least 8 characters",
+        code: "custom",
+      });
+    }
+    if (val.repeatPassword && val.repeatPassword.length < 8) {
+      ctx.addIssue({
+        path: ["repeatPassword"],
+        message: "Password must be at least 8 characters",
+        code: "custom",
+      });
+    }
+    if (val.newPassword !== val.repeatPassword) {
+      ctx.addIssue({
+        path: ["newPassword"],
+        message:
+          "There is a password mismatch in the current and repeated password.",
+        code: "custom",
+      });
+    }
+  });
+export type PasswordResetSchema = z.infer<typeof passwordResetSchema>;
+
 //Utility
 export const utilitySchema = z.object({
   id: z.string().optional().describe("a random UUIDv4"),
