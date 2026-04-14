@@ -17,6 +17,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { resetPasswordAndLogin, validateEmail, verifyOtp } from "./action";
+import ButtonResendToken from "./button-resend-token";
 import SectionSubmitEmailUsername from "./section-submit-email-username";
 import SectionSubmitOtp from "./section-submit-otp";
 import SectionSubmitPassword from "./section-submit-password";
@@ -56,6 +57,7 @@ export default function FormRequestReset({
           toast.success(
             "A request to rest the password has been successfully sent",
           );
+          router.push(`/forgot-password/${emailUsername}?isValidEmail=yes`);
         } else {
           toast.error(result.error);
         }
@@ -64,7 +66,6 @@ export default function FormRequestReset({
         if (!result.error) {
           setStep(3);
           toast.success("OTP verified, now reset your password");
-          router.push(`/forgot-password/${emailUsername}?isValidEmail=yes`);
         } else {
           toast.error(result.error);
         }
@@ -84,8 +85,11 @@ export default function FormRequestReset({
       <CardHeader>
         <CardTitle>Resetting password for {emailUsername}</CardTitle>
         <CardDescription className="text-muted-foreground ">
-          To request a password reset token, please enter your email or username
-          below
+          {step === 1
+            ? "To request a password reset token, please enter your email or username below"
+            : step === 2
+              ? "Enter the verification code that was sent to your email. If you no longer have access to this email, contact the administrators for further assistance."
+              : "You are almost done, enter a new password and repeat it in the next field."}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -96,23 +100,27 @@ export default function FormRequestReset({
           >
             {/* <pre>{JSON.stringify(form.watch(), null, 2)}</pre> */}
             {step === 1 && <SectionSubmitEmailUsername form={form} />}
-            {step === 2 && (
-              <SectionSubmitOtp
-                form={form}
-                handleSubmit={() => form.handleSubmit(submit)()}
-              />
-            )}
+            {step === 2 && <SectionSubmitOtp form={form} />}
             {step === 3 && <SectionSubmitPassword form={form} />}
-            <FormFooter>
+            <FormFooter className="justify-between">
               {step === 1 && (
                 <LoadingButton value="step-1" name="action" loading={isPending}>
                   Request Reset
                 </LoadingButton>
               )}
               {step === 2 && (
-                <LoadingButton value="step-2" name="action" loading={isPending}>
-                  Submit OTP
-                </LoadingButton>
+                <>
+                  <ButtonResendToken
+                    handleSubmit={() => form.handleSubmit(submit)()}
+                  />
+                  <LoadingButton
+                    value="step-2"
+                    name="action"
+                    loading={isPending}
+                  >
+                    Submit OTP
+                  </LoadingButton>
+                </>
               )}
               {step === 3 && (
                 <LoadingButton value="step-3" name="action" loading={isPending}>
