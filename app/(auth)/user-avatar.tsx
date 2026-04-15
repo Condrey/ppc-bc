@@ -9,15 +9,15 @@ interface UserAvatarProps {
 
 export default function UserAvatar({
   avatarUrl,
-  size,
+  size = 48,
   className,
 }: UserAvatarProps) {
   return (
     <Image
       src={avatarUrl || AvatarPlaceHolder}
       alt="User avatar"
-      width={size ?? 48}
-      height={size ?? 48}
+      width={size}
+      height={size}
       className={cn(
         "aspect-square h-fit flex-none rounded-full bg-secondary object-cover",
         className,

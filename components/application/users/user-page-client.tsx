@@ -19,11 +19,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ButtonAddSingleAttachment } from "@/components/uploadthing/button-add-attachment";
+import { useProfileImageUpload } from "@/hooks/use-media-upload";
 import { ppcMemberships, roles } from "@/lib/enums";
 import { UserData } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { MailIcon } from "lucide-react";
 import { notFound } from "next/navigation";
+import { useState } from "react";
 import { FormUpdatePassword } from "./form-update-password";
 
 export default function UserPageClient({
@@ -68,17 +71,40 @@ function User({ user }: { user: UserData }) {
     username,
     ppcMembership: _ppcMembership,
   } = user;
+
+  const [imageUrl, setImageUrl] = useState(avatarUrl);
   const role = roles[_role].title;
   const ppcMembership = ppcMemberships[_ppcMembership].title;
+  const { startUpload, isUploading, uploadProgress } = useProfileImageUpload();
   return (
     <>
       <Card className="max-w-md">
         <CardHeader className="items-center justify-center">
-          <UserAvatar avatarUrl={avatarUrl} size={100} />
           <ButtonAddSingleAttachment
             disabled={false}
-            onFilesSelected={() => {}}
-          />
+            variant={"ghost"}
+            className="rounded-full h-full max-h-fit p-0 px-0"
+            onFilesSelected={(files) => {
+              const file = files?.[0];
+              const url = URL.createObjectURL(file);
+
+              setImageUrl(url);
+              if (!file) return;
+              startUpload(files);
+            }}
+          >
+            <UserAvatar
+              avatarUrl={imageUrl}
+              size={160}
+              className={cn(isUploading && "animate-pulse")}
+            />
+          </ButtonAddSingleAttachment>
+          <CardDescription>
+            {isUploading && (
+              <span className="inline mr-2 font-bold">{uploadProgress}%</span>
+            )}
+            <span>{`Click on image to change profile <4MBs`}</span>
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <CardTitle>{name}</CardTitle>

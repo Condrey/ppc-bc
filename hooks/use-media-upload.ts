@@ -1,24 +1,49 @@
 import { MAX_ATTACHMENTS } from "@/lib/constants";
 import { Attachment } from "@/lib/types";
 import { useUploadThing } from "@/lib/uploadthing";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import FileResizer from "react-image-file-resizer";
 import { toast } from "sonner";
+
+function resizeImage(file: File): Promise<File> {
+  return new Promise((resolve) => {
+    FileResizer.imageFileResizer(
+      file,
+      1024,
+      1024,
+      "WEBP",
+      100,
+      0,
+      (resized) => resolve(resized as File),
+      "file",
+    );
+  });
+}
 
 export function useFileDocumentUploads() {
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [uploadProgress, setUploadProgress] = useState<number>();
 
   const { startUpload, isUploading } = useUploadThing("fileDocumentRouter", {
-    onBeforeUploadBegin(files) {
+    async onBeforeUploadBegin(files) {
+      const processedFiles = await Promise.all(
+        files.map(async (file) => {
+          if (file.type.startsWith("image")) {
+            return await resizeImage(file);
+          }
+          return file;
+        }),
+      );
       setAttachments((prev) => [
         ...prev,
-        ...files.map((file) => ({
+        ...processedFiles.map((file) => ({
           file,
           isUploading: true,
           extension: file.name.split(".").pop(),
         })),
       ]);
-      return files;
+      return processedFiles;
     },
     onUploadProgress: setUploadProgress,
     onClientUploadComplete(res) {
@@ -88,12 +113,21 @@ export function useFileDocumentUploads() {
 }
 
 export function useProfileImageUpload() {
+  const router = useRouter();
   const [profileImages, setProfileImages] = useState<Attachment[]>([]);
   const [uploadProgress, setUploadProgress] = useState<number>();
 
   const { startUpload, isUploading } = useUploadThing("avatar", {
-    onBeforeUploadBegin(files) {
-      const renamedFiles = files.map((file) => {
+    async onBeforeUploadBegin(files) {
+      const processedFiles = await Promise.all(
+        files.map(async (file) => {
+          if (file.type.startsWith("image")) {
+            return await resizeImage(file);
+          }
+          return file;
+        }),
+      );
+      const renamedFiles = processedFiles.map((file) => {
         const extension = file.name.split(".").pop();
         return new File([file], `profile_${crypto.randomUUID()}.${extension}`, {
           type: file.type,
@@ -124,6 +158,7 @@ export function useProfileImageUpload() {
           };
         }),
       );
+      router.refresh();
     },
     onUploadError(e) {
       setProfileImages((prev) => prev?.filter((a) => !a.isUploading));

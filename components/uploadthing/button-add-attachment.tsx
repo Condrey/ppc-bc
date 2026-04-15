@@ -5,7 +5,6 @@ interface ButtonAddMultipleAttachmentsProps extends ButtonProps {
   onFilesSelected: (files: File[]) => void;
   disabled: boolean;
 }
-
 export function ButtonAddMultipleAttachments({
   onFilesSelected,
   disabled,
@@ -24,11 +23,7 @@ export function ButtonAddMultipleAttachments({
 
       <input
         type="file"
-        accept="
-    image/*,
-    video/*,
-    application/pdf,
-  "
+        accept="image/*,video/*,application/pdf"
         multiple
         ref={fileInputRef}
         className="sr-only hidden"
@@ -61,16 +56,19 @@ export function ButtonAddSingleAttachment({
         type="button"
         disabled={disabled}
         onClick={() => fileInputRef.current?.click()}
+        className="h-fit"
         {...props}
       />
 
       <input
         type="file"
         accept="image/*"
+        multiple
         ref={fileInputRef}
         className="sr-only hidden"
         onChange={(e) => {
           const files = Array.from(e.target.files || []);
+          console.log({ files });
           if (files.length) {
             onFilesSelected(files);
             e.target.value = "";
