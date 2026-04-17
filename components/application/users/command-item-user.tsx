@@ -12,7 +12,7 @@ import {
 import { roles } from "@/lib/enums";
 import { UserData } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { CheckIcon, MailIcon } from "lucide-react";
+import { CheckIcon, VerifiedIcon } from "lucide-react";
 
 interface Props {
   user: UserData;
@@ -23,7 +23,7 @@ interface Props {
   title?: string;
 }
 export default function CommandItemUser({
-  user: { avatarUrl, email, name, role },
+  user: { avatarUrl, email, name, role, isVerified },
   avatarSize,
   isChecked,
   className,
@@ -47,13 +47,17 @@ export default function CommandItemUser({
       </ItemContent>
       <ItemContent className="gap-0">
         {title && <ItemTitle className="font-bold">{title}</ItemTitle>}
-        <ItemTitle className="line-clamp-1">{name}</ItemTitle>
+        <ItemTitle className="line-clamp-1">
+          {isVerified && (
+            <VerifiedIcon className="inline size-5 fill-success text-success-foreground" />
+          )}
+          {name}
+        </ItemTitle>
         <div className="flex gap-0.5 text-muted-foreground  items-center">
-          <MailIcon className="" />
           <span>{email}</span>
         </div>
         <ItemDescription className="line-clamp-1 text-xs">
-          {userRole}
+          The {userRole}
         </ItemDescription>
       </ItemContent>
       <ItemActions>

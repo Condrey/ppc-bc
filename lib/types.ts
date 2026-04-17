@@ -12,6 +12,7 @@ export const userDataSelect = {
   name: true,
   avatarUrl: true,
   email: true,
+  isVerified: true,
   username: true,
   role: true,
   ppcMembership: true,
@@ -289,3 +290,88 @@ export interface Attachment {
   mediaId?: string;
   isUploading: boolean;
 }
+
+// Comprehensive user'
+const includeApplicant = {
+  applicant: true,
+} satisfies Prisma.ApplicationInclude;
+
+const includeApplications = {
+  application: { include: { applicant: true } },
+} satisfies Prisma.InspectionInclude;
+
+const includeMeetingChairpersonSecretary = {
+  meeting: true,
+  chairedBy: { select: userDataSelect },
+  writtenBy: { select: userDataSelect },
+};
+
+const includePayments = {
+  feeAssessment: true,
+  receivedBy: { select: userDataSelect },
+} satisfies Prisma.PaymentInclude;
+
+const includeFeesAssessment = {
+  application: true,
+  assessedBy: { select: userDataSelect },
+} satisfies Prisma.FeeAssessmentInclude;
+
+export const comprehensiveUserDataSelect = {
+  ...userDataSelect,
+  inspections: { include: includeApplications },
+  feeAssessments: {
+    include: includeFeesAssessment,
+  },
+  payments: {
+    include: includePayments,
+  },
+  documents: { include: includeApplications },
+  // appeals: { include: includeApplications },
+
+  chairedMinutes: {
+    include: includeMeetingChairpersonSecretary,
+  },
+  writtenMinutes: {
+    include: includeMeetingChairpersonSecretary,
+  },
+  minutesPresent: {
+    include: includeMeetingChairpersonSecretary,
+  },
+  minutesAbsentWithApology: {
+    include: includeMeetingChairpersonSecretary,
+  },
+  applicants: {
+    include: {
+      appeals: { include: includeApplications },
+      applications: { include: { applicant: true } },
+      resubmissions: { include: includeApplications },
+    },
+  },
+} satisfies Prisma.UserSelect;
+export type ComprehensiveUserData = Prisma.UserGetPayload<{
+  select: typeof comprehensiveUserDataSelect;
+}>;
+
+export type ComprehensiveUserInspectionData = Prisma.InspectionGetPayload<{
+  include: typeof includeApplications;
+}>;
+export type ComprehensiveUserFeeAssessmentData =
+  Prisma.FeeAssessmentGetPayload<{ include: typeof includeFeesAssessment }>;
+export type ComprehensiveUserPaymentData = Prisma.PaymentGetPayload<{
+  include: typeof includePayments;
+}>;
+export type ComprehensiveUserDocumentData = Prisma.DocumentGetPayload<{
+  include: typeof includeApplications;
+}>;
+export type ComprehensiveUserAppealData = Prisma.AppealGetPayload<{
+  include: typeof includeApplications;
+}>;
+export type ComprehensiveUserResubmissionData = Prisma.ResubmissionGetPayload<{
+  include: typeof includeApplications;
+}>;
+export type ComprehensiveUserApplicationData = Prisma.ApplicationGetPayload<{
+  include: typeof includeApplicant;
+}>;
+export type ComprehensiveUserMinuteData = Prisma.MinuteGetPayload<{
+  include: typeof includeMeetingChairpersonSecretary;
+}>;

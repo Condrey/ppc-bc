@@ -5,7 +5,11 @@ import { DEFAULT_PASSWORD } from "@/lib/constants";
 import { myPrivileges } from "@/lib/enums";
 import { Role } from "@/lib/generated/prisma/enums";
 import prisma from "@/lib/prisma";
-import { UserData, userDataSelect } from "@/lib/types";
+import {
+  comprehensiveUserDataSelect,
+  UserData,
+  userDataSelect,
+} from "@/lib/types";
 import { slugify } from "@/lib/utils";
 import {
   signUpSchema,
@@ -66,14 +70,17 @@ async function allRoleBasedUsers(role: Role) {
 export const getAllRoleBasedUsers = cache(allRoleBasedUsers);
 
 async function userById(id: string) {
-  return await prisma.user.findFirst({ where: { id }, select: userDataSelect });
+  return await prisma.user.findFirst({
+    where: { id },
+    select: comprehensiveUserDataSelect,
+  });
 }
 export const getUserById = cache(userById);
 
 async function userByUsername(username: string) {
   return await prisma.user.findFirst({
     where: { username: { equals: username, mode: "insensitive" } },
-    select: userDataSelect,
+    select: comprehensiveUserDataSelect,
   });
 }
 export const getUserByUsername = cache(userByUsername);

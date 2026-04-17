@@ -74,7 +74,7 @@ export const applicationStatuses: Record<
   INSPECTED: {
     title: "Inspected",
     variant: "warning",
-    verb: "inspec",
+    verb: "inspect",
   },
   APPROVED: {
     title: "Approved",

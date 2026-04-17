@@ -3,7 +3,7 @@ import Container from "@/components/container";
 import { roles } from "@/lib/enums";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
-import UserPageClient from "../../../../components/application/users/user-page-client";
+import UserPageClient from "../../../../components/application/users/comprehensive-user/user-page-client";
 
 type Props = {
   params: Promise<{ username: string }>;
