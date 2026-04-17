@@ -63,7 +63,7 @@ export function ButtonAddSingleAttachment({
       <input
         type="file"
         accept="image/*"
-        multiple
+        multiple={false}
         ref={fileInputRef}
         className="sr-only hidden"
         onChange={(e) => {

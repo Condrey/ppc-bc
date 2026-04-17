@@ -297,8 +297,11 @@ const includeApplicant = {
 } satisfies Prisma.ApplicationInclude;
 
 const includeApplications = {
-  application: { include: { applicant: true } },
+  application: { include: includeApplicant },
 } satisfies Prisma.InspectionInclude;
+const comprehensiveUserDocumentInclude = {
+  createdBy: { select: userDataSelect },
+} satisfies Prisma.DocumentInclude;
 
 const includeMeetingChairpersonSecretary = {
   meeting: true,
@@ -361,7 +364,7 @@ export type ComprehensiveUserPaymentData = Prisma.PaymentGetPayload<{
   include: typeof includePayments;
 }>;
 export type ComprehensiveUserDocumentData = Prisma.DocumentGetPayload<{
-  include: typeof includeApplications;
+  include: typeof comprehensiveUserDocumentInclude;
 }>;
 export type ComprehensiveUserAppealData = Prisma.AppealGetPayload<{
   include: typeof includeApplications;

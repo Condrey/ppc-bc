@@ -1,4 +1,4 @@
-import { TypographyH3 } from "@/components/headings";
+import { TypographyH3, TypographyH4 } from "@/components/headings";
 import { EmptyContainer } from "@/components/query-container/empty-container";
 import TipTapViewer from "@/components/tip-tap-editor/tip-tap-viewer";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -23,6 +23,7 @@ import ButtonAddInspection from "./button-add-inspection";
 import ButtonDownloadInspectionReport from "./parent-application/button-download-inspection-report";
 import ButtonEditBuildingInspection from "./parent-application/button-edit-building-inspection";
 import ButtonEditLandInspection from "./parent-application/button-edit-land-inspection";
+import SupportingMedia from "./supporting-media";
 
 interface Props {
   inspection: InspectionData | undefined;
@@ -42,10 +43,14 @@ export default function SectionInspectionBody({
     owners,
     inspections,
     id: applicationId,
+    documents,
   } = application;
   const numberOfInspections = inspections.length;
   const manyInspections = numberOfInspections > 3;
   const isLandApplication = type === ApplicationType.LAND;
+  const inspectionMedia = documents.filter(
+    (d) => d.type === "LAND_INSPECTION_REPORT",
+  );
   if (!inspection) {
     return (
       <EmptyContainer
@@ -91,7 +96,6 @@ export default function SectionInspectionBody({
               <strong>{formatDate(carriedOn, "PPPp")}.</strong>
             </span>
             <span className="max-w-prose inline">
-              {" "}
               The decision made by the inspectors is that the application with
               application number{" "}
               <strong className="slashed-zero font-mono">
@@ -456,6 +460,23 @@ export default function SectionInspectionBody({
           </ol>
         </div>
       )}
+
+      <div className="space-y-3">
+        <TypographyH4 text="Supporting Media" className="underline" />
+        <div className="grid sm:grid-cols-2 gap-2">
+          {!inspectionMedia.length ? (
+            <EmptyContainer
+              title="No media to show"
+              description="No inspection media was attached. Edit inspection to add supporting media."
+              className="[&_svg]:hidden py-0"
+            />
+          ) : (
+            inspectionMedia.map((document) => (
+              <SupportingMedia key={document.id} document={document} />
+            ))
+          )}
+        </div>
+      </div>
     </div>
   );
 }

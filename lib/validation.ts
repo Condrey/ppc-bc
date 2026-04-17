@@ -106,25 +106,28 @@ export const passwordResetSchema = z
       .email()
       .min(1, "Please provide your email")
       .describe("Email or username for the user."),
-    otp: z.string().nullish(),
-    newPassword: z.string().nullish().describe("Password for the user."),
-    repeatPassword: z.string().nullish().describe("Password for the user."),
+    otp: z.string().optional(),
+    newPassword: z.string().optional().describe("Password for the user."),
+    repeatPassword: z.string().optional().describe("Password for the user."),
   })
   .superRefine((val, ctx) => {
-    if (val.newPassword && val.newPassword.length < 8) {
-      ctx.addIssue({
-        path: ["newPassword"],
-        message: "Password must be at least 8 characters",
-        code: "custom",
-      });
+    if (!!val.otp) {
+      if ((!val.newPassword && val.newPassword?.length) || 0 < 8) {
+        ctx.addIssue({
+          path: ["newPassword"],
+          message: "Password must be at least 8 characters",
+          code: "custom",
+        });
+      }
+      if ((!val.repeatPassword && val.repeatPassword?.length) || 0 < 8) {
+        ctx.addIssue({
+          path: ["repeatPassword"],
+          message: "Password must be at least 8 characters",
+          code: "custom",
+        });
+      }
     }
-    if (val.repeatPassword && val.repeatPassword.length < 8) {
-      ctx.addIssue({
-        path: ["repeatPassword"],
-        message: "Password must be at least 8 characters",
-        code: "custom",
-      });
-    }
+
     if (val.newPassword !== val.repeatPassword) {
       ctx.addIssue({
         path: ["repeatPassword"],
