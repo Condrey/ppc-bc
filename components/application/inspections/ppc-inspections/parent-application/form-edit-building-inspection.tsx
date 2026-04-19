@@ -18,11 +18,11 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
+import UploadMultipleDocumentSection from "../../../document/upload-multiple-document-section";
 import { useEditBuildingInspectionMutation } from "../mutations";
 import AccessSection from "./form-components/access-section";
 import ApplicantSection from "./form-components/applicant-section";
 import DistanceSection from "./form-components/distance-section";
-import DocumentUploadSection from "./form-components/document-upload-section";
 import InspectorsSection from "./form-components/inspectors-section";
 import LandUseSection from "./form-components/land-use-section";
 import VisitReportSection from "./form-components/visit-report-section";
@@ -118,7 +118,8 @@ export default function FormAddEditBuildingInspection({
                   <DistanceSection form={form} shouldWrap />
                   <AccessSection form={form} shouldWrap />
                   <VisitReportSection form={form} />
-                  <DocumentUploadSection
+                  <UploadMultipleDocumentSection
+                    previousMedia={documents}
                     applicationId={applicationId}
                     mediaIds={(ids) => setMediaIds(ids)}
                   />

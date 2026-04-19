@@ -41,9 +41,13 @@ export default function UserItem({
               "--bg-gradient": BG_GRADIENT,
             } as React.CSSProperties
           }
-          className="size-(--avatar-size)"
+          className="size-(--avatar-size) "
         >
-          <AvatarImage src={avatarUrl!} alt="user profile" />
+          <AvatarImage
+            src={avatarUrl!}
+            alt="user profile"
+            className="rounded-full bg-muted border"
+          />
           <AvatarFallback className="bg-radial to-(--bg-gradient) from-(--bg-gradient)/50 text-(--bg-gradient) text-xl font-bold">
             {getNameInitials(fullName)}
           </AvatarFallback>

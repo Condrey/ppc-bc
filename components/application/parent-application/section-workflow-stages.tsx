@@ -10,10 +10,11 @@ import { formatDate } from "date-fns";
 import { CheckIcon, ClockIcon, PauseCircleIcon, XIcon } from "lucide-react";
 
 export default function SectionWorkflowStages({
-  workflowStages,
+  workflowStages: _workflowStages,
 }: {
   workflowStages: WorkflowStageData[];
 }) {
+  const workflowStages = _workflowStages.sort((a, b) => a.step - b.step);
   return (
     <>
       {!workflowStages.length ? (

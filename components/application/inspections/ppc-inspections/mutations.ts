@@ -5,7 +5,6 @@ import {
   addInspection,
   editBuildingInspection,
   editLandInspection,
-  removeInspectionMedia,
 } from "./actions";
 
 const queryKey: QueryKey = ["parent-applications"];
@@ -62,10 +61,12 @@ export function useEditLandInspectionMutation() {
       const queryKey3: QueryKey = ["meeting"];
       const queryKey4: QueryKey = ["parent-application"];
 
-      await queryClient.cancelQueries({ queryKey });
-      await queryClient.cancelQueries({ queryKey: queryKey2 });
-      await queryClient.cancelQueries({ queryKey: queryKey3 });
-      await queryClient.cancelQueries({ queryKey: queryKey4 });
+      await Promise.all([
+        await queryClient.cancelQueries({ queryKey }),
+        await queryClient.cancelQueries({ queryKey: queryKey2 }),
+        await queryClient.cancelQueries({ queryKey: queryKey3 }),
+        await queryClient.cancelQueries({ queryKey: queryKey4 }),
+      ]);
       if (typeof data === "string") {
         toast.warning(data);
         return;
@@ -127,42 +128,4 @@ export function useEditBuildingInspectionMutation() {
       toast.error("Failed to manipulate inspection");
     },
   });
-}
-
-export function useDeleteInspectionMediaMutation() {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: removeInspectionMedia,
-    onSuccess: async (data, variables) => {
-      const queryKey2: QueryKey = ["inspection", "applicationId"];
-      const queryKey3: QueryKey = ["meeting"];
-      const queryKey4: QueryKey = ["parent-application"];
-
-      await Promise.all([
-        await queryClient.cancelQueries({ queryKey }),
-        await queryClient.cancelQueries({ queryKey: queryKey2 }),
-        await queryClient.cancelQueries({ queryKey: queryKey3 }),
-        await queryClient.cancelQueries({ queryKey: queryKey4 }),
-      ]);
-
-      queryClient.invalidateQueries({ queryKey });
-      queryClient.invalidateQueries({ queryKey: queryKey2 });
-      queryClient.invalidateQueries({ queryKey: queryKey3 });
-      queryClient.invalidateQueries({ queryKey: queryKey4 });
-
-      // Return a context with the previous state to rollback in case of error
-      toast.success("Success", {
-        description: "inspection media deleted successfully",
-      });
-    },
-    onError(error, variables, context) {
-      console.error(error);
-      toast.error("Failed", {
-        description: "Something went wrong. Please try again.",
-      });
-    },
-  });
-
-  return mutation;
 }

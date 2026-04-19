@@ -42,10 +42,12 @@ export function ButtonAddMultipleAttachments({
 interface ButtonAddSingleAttachmentProps extends ButtonProps {
   onFilesSelected: (files: File[]) => void;
   disabled: boolean;
+  acceptedMedia?: string;
 }
 export function ButtonAddSingleAttachment({
   onFilesSelected,
   disabled,
+  acceptedMedia,
   ...props
 }: ButtonAddSingleAttachmentProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -62,7 +64,7 @@ export function ButtonAddSingleAttachment({
 
       <input
         type="file"
-        accept="image/*"
+        accept={acceptedMedia || "image/*,video/*,application/pdf"}
         multiple={false}
         ref={fileInputRef}
         className="sr-only hidden"

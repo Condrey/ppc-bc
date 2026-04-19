@@ -1,3 +1,4 @@
+"use client";
 import {
   Form,
   FormControl,
@@ -22,8 +23,9 @@ import {
   ParentApplicationSchema,
 } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
+import UploadSingleDocumentSection from "../document/upload-single-document-section";
 import GeometrySection from "./geometry-section";
 import { useUpsertParcelMutation } from "./mutations";
 
@@ -39,6 +41,10 @@ export default function FormAddEditParentApplication({
 }: Props) {
   const parentApplication =
     application.landApplication || application.buildingApplication!;
+  const media = application.documents.find(
+    (d) => d.type === "PARCEL_AND_PLOTTING",
+  );
+  const [mediaId, setMediaId] = useState<string | undefined>(media?.id);
   const form = useForm<ParentApplicationSchema>({
     resolver: zodResolver(parentApplicationSchema),
     values: {
@@ -54,7 +60,7 @@ export default function FormAddEditParentApplication({
   const { mutate, isPending } = useUpsertParcelMutation();
   function submitForm(input: ParentApplicationSchema) {
     mutate(
-      { input, applicationId: application.id },
+      { input, applicationId: application.id, mediaId },
       {
         onSuccess: () => {
           form.reset();
@@ -67,12 +73,13 @@ export default function FormAddEditParentApplication({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="sm:max-w-fit overflow-y-auto scroll-smooth h-dvh"
+        className="sm:max-w-fit overflow-y-auto scroll-smooth h-dvh z-1000"
       >
         <div className="max-w-7xl space-y-6 mx-auto w-full  ">
           <SheetHeader className="w-full">
             <SheetTitle className="text-center">Parcel and Plotting</SheetTitle>
           </SheetHeader>
+
           <Form {...form}>
             <div className="space-y-6 p-3 w-fit md:w-lg ">
               {/* <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre> */}
@@ -147,6 +154,14 @@ export default function FormAddEditParentApplication({
                       <GeometrySection form={form} />
                     </FormItem>
                   );
+                }}
+              />
+
+              <UploadSingleDocumentSection
+                previousMedia={media}
+                applicationId={application.id}
+                mediaIds={(urls) => {
+                  setMediaId(urls[0]);
                 }}
               />
 

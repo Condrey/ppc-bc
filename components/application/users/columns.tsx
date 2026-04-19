@@ -3,7 +3,8 @@
 
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { useCustomSearchParams } from "@/hooks/use-custom-search-param";
 import { memberships, roles } from "@/lib/enums";
 import { UserData } from "@/lib/types";
@@ -11,6 +12,7 @@ import { formatNumber } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit3Icon } from "lucide-react";
 import Link from "next/link";
+import { useTransition } from "react";
 import ButtonAddEditUser from "./button-add-edit-user";
 import UserItem from "./user-item";
 
@@ -74,6 +76,7 @@ export const useUsersColumns: ColumnDef<UserData>[] = [
       <DataTableColumnHeader column={column} title="Actions" />
     ),
     cell: ({ row }) => {
+      const [isPending, startTransition] = useTransition();
       const { getNavigationLinkWithPathnameWithoutUpdate } =
         useCustomSearchParams();
       const url = getNavigationLinkWithPathnameWithoutUpdate(
@@ -84,9 +87,12 @@ export const useUsersColumns: ColumnDef<UserData>[] = [
           <ButtonAddEditUser user={row.original} variant={"secondary"}>
             <Edit3Icon />
           </ButtonAddEditUser>
-          <Link href={url} className={buttonVariants()}>
-            View More
-          </Link>
+          <Button onClick={() => startTransition(() => {})} asChild>
+            <Link href={url} className={buttonVariants()}>
+              {isPending && <Spinner className="inline mr-2 size-4" />} View
+              More
+            </Link>
+          </Button>
         </div>
       );
     },

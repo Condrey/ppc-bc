@@ -69,9 +69,11 @@ export const getAllOtherParcels = cache(allOtherParcels);
 export async function upsertParcel({
   input,
   applicationId,
+  mediaId,
 }: {
   input: ParentApplicationSchema;
   applicationId: string;
+  mediaId: string | undefined;
 }) {
   const { user } = await validateRequest();
   const isAuthorized =
@@ -114,11 +116,18 @@ export async function upsertParcel({
         decidedById: user.id,
       },
     }),
-    await prisma.workflowStage.update({
-      where: { applicationId_step: { applicationId, step: 5 } },
-      data: {
-        status: "IN_PROGRESS",
-      },
-    }),
+    ...(mediaId
+      ? [
+          await prisma.document.update({
+            where: { id: mediaId },
+            data: {
+              applicationId,
+              type: "PARCEL_AND_PLOTTING",
+              createdById: user.id,
+              status: "FINAL",
+            },
+          }),
+        ]
+      : []),
   ]);
 }

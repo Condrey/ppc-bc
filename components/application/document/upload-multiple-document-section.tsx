@@ -1,29 +1,32 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { FormItem, FormLabel } from "@/components/ui/form";
-import { Spinner } from "@/components/ui/spinner";
 import { AttachmentPreviews } from "@/components/uploadthing/attachment-previews";
 import { ButtonAddMultipleAttachments } from "@/components/uploadthing/button-add-attachment";
 import { useFileDocumentUploads } from "@/hooks/use-media-upload";
 import { MAX_ATTACHMENTS } from "@/lib/constants";
+import { Document } from "@/lib/generated/prisma/client";
 import { cn } from "@/lib/utils";
 import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useDropzone } from "@uploadthing/react";
 import { UploadCloudIcon } from "lucide-react";
-import { ClipboardEvent, useEffect } from "react";
-import { useDeleteInspectionMediaMutation } from "../../mutations";
+import { ClipboardEvent, useEffect, useLayoutEffect } from "react";
+import { useDeleteMediaMutation } from "./mutation";
+import { multipleMediaToAttachments } from "./utility";
 
 interface Props {
   applicationId: string;
   mediaIds: (ids: string[]) => void;
+  previousMedia: Document[];
 }
 
-export default function DocumentUploadSection({
+export default function UploadMultipleDocumentSection({
   applicationId,
+  previousMedia,
   mediaIds: setMediaIds,
 }: Props) {
-  const { mutate } = useDeleteInspectionMediaMutation();
+  const { mutate, isPending: isDeleting } = useDeleteMediaMutation();
 
   const {
     startUpload,
@@ -37,6 +40,25 @@ export default function DocumentUploadSection({
   useEffect(() => {
     setMediaIds(attachments.map((a) => a.mediaId!).filter(Boolean) as string[]);
   }, [attachments]);
+  useLayoutEffect(() => {
+    if (!previousMedia.length) return;
+
+    let cancelled = false;
+
+    async function fetchInitialMedia() {
+      const attachments = await multipleMediaToAttachments(previousMedia);
+
+      if (!cancelled) {
+        addInitialAttachments(attachments);
+      }
+    }
+
+    fetchInitialMedia();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [previousMedia]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: startUpload,
@@ -113,22 +135,19 @@ export default function DocumentUploadSection({
           )}
           {!!attachments.length && (
             <AttachmentPreviews
+              uploadProgress={uploadProgress}
+              isDeleting={isDeleting}
               attachments={attachments}
               onRemoveClicked={(attachment) => {
-                removeAttachment(attachment.file.name);
-                mutate({
-                  applicationId,
-                  mediaId: attachment.mediaId!,
-                });
+                mutate(
+                  {
+                    applicationId,
+                    mediaId: attachment.mediaId!,
+                  },
+                  { onSuccess: () => removeAttachment(attachment.file.name) },
+                );
               }}
             />
-          )}
-          {}
-          {isUploading && (
-            <>
-              <span className="text-sm">{uploadProgress ?? 0}</span>
-              <Spinner className="size-5 text-primary" />
-            </>
           )}
         </FormItem>
       </CardContent>

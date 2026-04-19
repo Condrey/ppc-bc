@@ -19,11 +19,11 @@ import { ApplicationData, InspectionData } from "@/lib/types";
 import { cn, getApplicationNumber } from "@/lib/utils";
 import { formatDate } from "date-fns";
 import { AlertTriangle, DownloadIcon } from "lucide-react";
+import SupportingMedia from "../../document/supporting-media";
 import ButtonAddInspection from "./button-add-inspection";
 import ButtonDownloadInspectionReport from "./parent-application/button-download-inspection-report";
 import ButtonEditBuildingInspection from "./parent-application/button-edit-building-inspection";
 import ButtonEditLandInspection from "./parent-application/button-edit-land-inspection";
-import SupportingMedia from "./supporting-media";
 
 interface Props {
   inspection: InspectionData | undefined;
@@ -49,7 +49,7 @@ export default function SectionInspectionBody({
   const manyInspections = numberOfInspections > 3;
   const isLandApplication = type === ApplicationType.LAND;
   const inspectionMedia = documents.filter(
-    (d) => d.type === "LAND_INSPECTION_REPORT",
+    (d) => d.type === "INSPECTION_REPORT",
   );
   if (!inspection) {
     return (

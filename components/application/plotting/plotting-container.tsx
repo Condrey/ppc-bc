@@ -25,6 +25,7 @@ import { cn, formatNumber, getLocation } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { LatLngExpression, LatLngLiteral, PathOptions } from "leaflet";
 import {
+  DownloadIcon,
   Edit3Icon,
   ExpandIcon,
   LocateIcon,
@@ -44,6 +45,7 @@ import {
   useMap,
 } from "react-leaflet";
 import { toast } from "sonner";
+import { ButtonDownloadMediaItem } from "../document/button-download-media";
 import { getAllOtherParcels } from "./actions";
 import ButtonAddEditParcel from "./button-add-edit-parcel";
 
@@ -126,7 +128,7 @@ export default function PlottingContainer({
           center={centroid}
           zoom={DEFAULT_ZOOM}
           scrollWheelZoom={false}
-          style={{ minHeight: "50vh", height: "100%" }}
+          style={{ minHeight: "50vh", height: "100%", zIndex: 0 }}
         >
           <TileLayer
             // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -299,11 +301,13 @@ export function MapHeaderSection({
   const parentApplication = buildingApplication ?? landApplication!;
   const { address, parcel } = parentApplication;
   const addressLocation = getLocation(address);
-
+  const hardCopyMedia = application.documents.find(
+    (d) => d.type === "PARCEL_AND_PLOTTING",
+  );
   return (
     <Item variant={isExpanded ? "muted" : "outline"} className={className}>
       <ItemContent className={cn(isExpanded && "hidden md:flex")}>
-        <ItemTitle>
+        <ItemTitle className="hidden md:block">
           <UserIcon className="inline size-4" />
           {`${applicantName} and owned by`}{" "}
           <strong className="text-warning">{owners}</strong>
@@ -352,7 +356,7 @@ export function MapHeaderSection({
 
             {parcel.geometry ? (
               <ShadCnTooTip>
-                <TooltipTrigger asChild>
+                <TooltipTrigger asChild className="hidden md:block">
                   <Button
                     variant={"link"}
                     onClick={() => {
@@ -373,6 +377,16 @@ export function MapHeaderSection({
                 <TooltipContent>Click to copy Geometry</TooltipContent>
               </ShadCnTooTip>
             ) : null}
+
+            {/* download button for the hard copy pdf  */}
+            {hardCopyMedia && (
+              <ButtonDownloadMediaItem
+                media={hardCopyMedia}
+                variant={"secondary"}
+              >
+                <DownloadIcon className="inline mr-2" /> Hard Copy
+              </ButtonDownloadMediaItem>
+            )}
           </ItemMedia>
         )}
       </ItemContent>

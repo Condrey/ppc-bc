@@ -64,7 +64,12 @@ const file_document = f({
         createdById: metadata.user.id,
         extension: extension!,
         title: file.name,
-        mediaType: file.type.startsWith("image") ? "IMAGE" : "VIDEO",
+        mediaType:
+          file.type === "application/pdf"
+            ? "PDF"
+            : file.type.startsWith("image")
+              ? "IMAGE"
+              : "VIDEO",
       },
     });
     return { fileUrl, mediaId: media.id };

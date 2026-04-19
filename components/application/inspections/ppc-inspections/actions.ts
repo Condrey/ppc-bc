@@ -31,10 +31,8 @@ export const getCommitteeMembers = cache(committeeMembers);
 
 export async function addInspection({
   applicationId,
-  redirectUrl,
 }: {
   applicationId: string;
-  redirectUrl?: string;
 }) {
   const { user } = await validateRequest();
   const isAuthorized =
@@ -64,9 +62,6 @@ export async function addInspection({
       },
     }),
   ]);
-  // redirect(
-  //   redirectUrl || `/admin/inspections/ppc-inspections/${applicationId}`,
-  // );
 }
 
 export async function editLandInspection({
@@ -101,8 +96,6 @@ export async function editLandInspection({
   const isAuthorized =
     !!user && myPrivileges[user.role].includes(Role.SURVEYOR);
   if (!isAuthorized) return "Unauthorized";
-
-  const media = mediaIds?.map((mediaId) => ({ id: mediaId })) ?? [];
 
   await Promise.all([
     await prisma.landApplication.update({
@@ -191,8 +184,7 @@ export async function editLandInspection({
       where: { id: { in: mediaIds } },
       data: {
         applicationId: application?.id,
-        type: "LAND_INSPECTION_REPORT",
-        title: "Inspection Media",
+        type: "INSPECTION_REPORT",
         status: "FINAL",
       },
     }),
@@ -326,30 +318,9 @@ export async function editBuildingInspection({
       where: { id: { in: mediaIds } },
       data: {
         applicationId: application?.id,
-        type: "BUILDING_INSPECTION_REPORT",
-        title: "Inspection Media",
+        type: "INSPECTION_REPORT",
         status: "FINAL",
       },
     }),
   ]);
-}
-
-export async function removeInspectionMedia(input: {
-  applicationId: string;
-  mediaId: string;
-}) {
-  const { user } = await validateRequest();
-  if (!user) throw Error("Unauthorized");
-
-  const { applicationId, mediaId } = input;
-
-  const data = await prisma.application.update({
-    where: { id: applicationId },
-    data: {
-      documents: {
-        disconnect: { id: mediaId },
-      },
-    },
-  });
-  return data;
 }

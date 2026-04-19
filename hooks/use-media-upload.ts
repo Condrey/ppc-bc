@@ -92,6 +92,7 @@ export function useFileDocumentUploads() {
     setAttachments([]);
     setUploadProgress(undefined);
   }
+
   function addAttachment(attachments: Attachment[]) {
     // Create a Map to remove duplicates and keep only one instance per mediaId
     const uniqueAttachmentsMap = new Map(
