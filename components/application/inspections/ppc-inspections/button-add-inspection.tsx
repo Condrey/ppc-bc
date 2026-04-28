@@ -21,7 +21,7 @@ export default function ButtonAddInspection({
 
   const { mutate, isPending } = useAddInspectionMutation();
   function onButtonClick() {
-    mutate({ applicationId, redirectUrl });
+    mutate({ applicationId });
   }
 
   return (
