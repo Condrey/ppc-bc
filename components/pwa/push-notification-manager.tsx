@@ -50,7 +50,7 @@ export function PushNotificationManager() {
   async function unsubscribeFromPush() {
     await subscription?.unsubscribe();
     setSubscription(null);
-    await unsubscribeUser();
+    await unsubscribeUser(subscription?.endpoint || "");
   }
 
   if (!isSupported) {
@@ -72,7 +72,7 @@ export function PushNotificationManager() {
           />
           <Button
             onClick={async () => {
-              await sendWebPushNotification({ message });
+              await sendWebPushNotification({ message, recipientUserIds: [] });
               setMessage("");
             }}
           >

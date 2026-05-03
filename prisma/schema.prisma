@@ -25,11 +25,11 @@ model User {
   isWelcomed    Boolean?   @default(false)
   emailVerified Boolean    @default(false)
 
-  subscription Json?
-
   emailVerificationTokens EmailVerificationToken[]
   passwordResetTokens     PasswordResetToken[]
   sessions                Session[]
+
+  pushSubscriptions PushSubscription[]
 
   inspections              Inspection[]    @relation("InspectionTeam")
   documents                Document[]
@@ -46,6 +46,17 @@ model User {
   writtenMinutes           Minute[]        @relation("wrote_minutes")
   minutesPresent           Minute[]        @relation("minute_present")
   minutesAbsentWithApology Minute[]        @relation("minute_absent_with_apology")
+}
+
+model PushSubscription {
+  id        String   @id @default(uuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 model EmailVerificationToken {

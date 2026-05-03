@@ -89,6 +89,7 @@ export const sendInvitationMessages = async ({
         title: isAnUpdate ? "Updated meeting" : "Created Meeting",
         url,
         tag: "Meeting",
+        recipientUserIds: committeeMembers.map((i) => i.id),
       }),
     ]);
   } catch (error) {
@@ -166,6 +167,7 @@ export const sendPostponementNotification = async ({
         title: "PostPoned Meeting",
         url,
         tag: "Meeting",
+        recipientUserIds: committeeMembers.map((i) => i.id),
       }),
     ]);
   } catch (error) {
