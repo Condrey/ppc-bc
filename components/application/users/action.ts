@@ -17,7 +17,7 @@ import {
   updatePasswordSchema,
   UpdatePasswordSchema,
 } from "@/lib/validation";
-import { hash, verify } from "@node-rs/argon2";
+import { hash, verify } from "argon2";
 import { cache } from "react";
 
 async function allUsers() {
@@ -100,8 +100,9 @@ export async function upsertUser(
   const passwordHash = await hash(password, {
     memoryCost: 19456,
     timeCost: 2,
-    outputLen: 32,
+    // outputLen: 32,
     parallelism: 1,
+    hashLength: 32,
   });
   const existingUserName = await prisma.user.findFirst({
     where: {
@@ -173,10 +174,10 @@ export async function updatePassword({
     existingUser.passwordHash!,
     currentPassword,
     {
-      memoryCost: 19456,
-      timeCost: 2,
-      outputLen: 32,
-      parallelism: 1,
+      // memoryCost: 19456,
+      // timeCost: 2,
+      // outputLen: 32,
+      // parallelism: 1,
     },
   );
   if (!validPassword) {
@@ -190,8 +191,9 @@ export async function updatePassword({
   const passwordHash = await hash(repeatPassword, {
     memoryCost: 19456,
     timeCost: 2,
-    outputLen: 32,
+    // outputLen: 32,
     parallelism: 1,
+    hashLength: 32,
   });
   await prisma.user.update({
     where: { id: _userId },

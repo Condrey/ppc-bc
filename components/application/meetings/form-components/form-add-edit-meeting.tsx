@@ -58,12 +58,18 @@ export default function FormAddEditMeeting({
   });
   const { mutate, isPending } = useUpsertMeetingMutation();
   function submitForm(input: MeetingSchema) {
-    mutate(input, {
-      onSuccess: () => {
-        form.reset();
-        onOpenChange(false);
+    mutate(
+      {
+        ...input,
+        happeningOn: input.happeningOn || meeting?.happeningOn || new Date(),
       },
-    });
+      {
+        onSuccess: () => {
+          form.reset();
+          onOpenChange(false);
+        },
+      },
+    );
   }
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -110,7 +116,7 @@ export default function FormAddEditMeeting({
                     </FormItem>
                   )}
                 />
-                <FieldHappeningOnDate form={form} />
+                <FieldHappeningOnDate disabled={!!meeting} form={form} />
               </div>
               <FieldSendInvitations form={form} />
 

@@ -10,7 +10,7 @@ import {
   naturesOfInterestInLand,
 } from "@/lib/enums";
 import { ParentApplicationData } from "@/lib/types";
-import { getApplicationNumber } from "@/lib/utils";
+import { cn, getApplicationNumber } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "date-fns";
 import {
@@ -104,12 +104,21 @@ export const usePpaForm1Columns = (
           </div>
           {!!site && (
             <div className="flex justify-center w-full gap-0.5">
-              {site.hasElectricity && (
-                <LightbulbIcon className="fill-amber-300 text-amber-500" />
-              )}
-              {site.hasNationalWater && (
-                <DropletsIcon className="fill-cyan-300 text-cyan-500" />
-              )}
+              <LightbulbIcon
+                className={cn(
+                  site.hasElectricity
+                    ? "fill-amber-300 text-amber-500"
+                    : "fill-muted-foreground/50 text-muted-foreground",
+                )}
+              />
+
+              <DropletsIcon
+                className={cn(
+                  site.hasNationalWater
+                    ? "fill-cyan-300 text-cyan-500"
+                    : "fill-muted-foreground/50 text-muted-foreground",
+                )}
+              />
             </div>
           )}
         </div>
@@ -135,14 +144,14 @@ export const usePpaForm1Columns = (
       const isLandApplication = type === "LAND";
       const { title } = naturesOfInterestInLand[natureOfInterest];
       return (
-        <div className="text-center  ">
+        <div className="text-center max-w-2xs   ">
           {isLandApplication ? (
-            <p className="inline *:inline">
-              <strong>{title}</strong> Land Application certificate
+            <p className="inline *:inline text-wrap">
+              Application for <strong>{title}</strong> Land certificate.
             </p>
           ) : (
-            <p className="inline *:inline line-clamp-1">
-              Applicant is a <strong>{title}</strong> owner
+            <p className="  *:inline inline max-w-2xs text-wrap  text-ellipsis  ">
+              <strong>{title}</strong> applying for a development permission.
             </p>
           )}
         </div>

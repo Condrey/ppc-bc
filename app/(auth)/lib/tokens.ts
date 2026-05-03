@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { addMilliseconds } from "date-fns";
+import { addMilliseconds, formatDate } from "date-fns";
 import { cookies } from "next/headers";
 import {
   ACTIVITY_CHECK_INTERVAL_MILLISECONDS,
@@ -52,7 +52,9 @@ export async function validateSessionToken(
   }
 
   if (now.getTime() >= session.expiresAt.getTime()) {
-    console.info(`Session ${sessionId} has expired.`);
+    console.info(
+      `Session ${sessionId} has already expired on ${formatDate(session.expiresAt, "PPPpp")}.`,
+    );
     await deleteSessionById(sessionId);
     return { session: null, user: null };
   }
@@ -80,15 +82,23 @@ export async function validateSessionToken(
     now.getTime() >=
     session.expiresAt.getTime() - SESSION_EXPIRY_MILLISECONDS
   ) {
-    console.log(`Session ${sessionId} is about to expire, extending it.`);
-    session.expiresAt = addMilliseconds(now, SESSION_EXPIRY_MILLISECONDS); // To expire in 30 days
+    console.log(
+      `Session ${sessionId} is about to expire on ${formatDate(session.expiresAt, "PPPpp")}, extending it.`,
+    );
+    session.expiresAt = addMilliseconds(
+      now,
+      SESSION_EXPIRY_MILLISECONDS + SESSION_EXPIRY_MILLISECONDS,
+    ); // To expire in 30 days
     session.lastVerifiedAt = now;
     console.log(
       `Extending session ${sessionId} expiry to ${session.expiresAt}`,
     );
     await prisma.session.update({
       where: { id: sessionId },
-      data: { expiresAt: session.expiresAt, lastVerifiedAt: now },
+      data: {
+        expiresAt: session.expiresAt,
+        lastVerifiedAt: session.lastVerifiedAt,
+      },
     });
   }
   console.log(`Session ${sessionId} validated successfully.`);

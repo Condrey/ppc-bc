@@ -33,7 +33,7 @@ export const useApplicationFeeAssessmentsColumns: ColumnDef<FeeAssessmentData>[]
           <div>
             <div>
               <Icon className="inline mr-2 size-5" />
-              {title + " fee"}
+              {title}
             </div>
           </div>
         );

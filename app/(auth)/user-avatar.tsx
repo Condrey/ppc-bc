@@ -9,7 +9,7 @@ interface UserAvatarProps {
 
 export default function UserAvatar({
   avatarUrl,
-  size = 48,
+  size = 500,
   className,
 }: UserAvatarProps) {
   return (

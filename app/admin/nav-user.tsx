@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  BellIcon,
+  BellOffIcon,
   ChevronsUpDown,
   LogInIcon,
   LogOutIcon,
@@ -9,6 +11,8 @@ import {
 } from "lucide-react";
 
 import LogoutButton from "@/app/(auth)/(database)/logout/logout-button";
+import ButtonSubscribeUnsubscribeWebPush from "@/components/pwa/button-subscribe-unsubscribe-webpush";
+import { buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,13 +27,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import { Spinner } from "@/components/ui/spinner";
+import { Switch } from "@/components/ui/switch";
 import { useCustomSearchParams } from "@/hooks/use-custom-search-param";
 import { REDIRECT_TO_URL_SEARCH_PARAMS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useTransition } from "react";
+import { Suspense, useState, useTransition } from "react";
 import { useSession } from "../(auth)/session-provider";
 import UserAvatar from "../(auth)/user-avatar";
 
@@ -40,6 +45,7 @@ interface Props {
 
 export function NavUser({ inSideBar = false, className }: Props) {
   const [isPending, startTransition] = useTransition();
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const { isMobile } = useSidebar();
   const { setTheme } = useTheme();
 
@@ -80,7 +86,7 @@ export function NavUser({ inSideBar = false, className }: Props) {
                 className,
               )}
             >
-              <UserAvatar avatarUrl={user.avatarUrl} />
+              <UserAvatar avatarUrl={user.avatarUrl} className="size-12" />
 
               {inSideBar ? (
                 <>
@@ -100,8 +106,8 @@ export function NavUser({ inSideBar = false, className }: Props) {
             sideOffset={4}
           >
             <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <UserAvatar avatarUrl={user.avatarUrl} />
+              <div className="flex flex-wrap items-center gap-2 px-1 py-1.5 text-left text-sm">
+                <UserAvatar avatarUrl={user.avatarUrl} className="size-36" />
 
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{user.name}</span>
@@ -110,10 +116,11 @@ export function NavUser({ inSideBar = false, className }: Props) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
+            <div className="flex flex-col w-full items-start">
               <Link
                 href={userSettingUrl}
                 onClick={() => startTransition(() => {})}
+                className={buttonVariants({ variant: "ghost" })}
               >
                 {isPending ? (
                   <Spinner className="mr-2 size-4" />
@@ -122,7 +129,32 @@ export function NavUser({ inSideBar = false, className }: Props) {
                 )}{" "}
                 User settings
               </Link>
-            </DropdownMenuItem>
+              <Suspense>
+                <div className="relative flex items-center w-full">
+                  <ButtonSubscribeUnsubscribeWebPush
+                    setSubscribed={setIsSubscribed}
+                    variant={"ghost"}
+                    className="w-full flex flex-row justify-start   ps-2"
+                  >
+                    {isSubscribed ? (
+                      <>
+                        <BellOffIcon className="inline mr-3" /> Unsubscribe from
+                        notifications
+                      </>
+                    ) : (
+                      <>
+                        <BellIcon className="inline mr-3" /> Subscribe to
+                        notifications
+                      </>
+                    )}
+                  </ButtonSubscribeUnsubscribeWebPush>
+                  <Switch
+                    checked={isSubscribed}
+                    className="ms-auto flex-1 absolute touch-none pointer-events-none right-2"
+                  />
+                </div>
+              </Suspense>
+            </div>
             {/* <DropdownMenuGroup>             
               <DropdownMenuItem>
                 <Bell />

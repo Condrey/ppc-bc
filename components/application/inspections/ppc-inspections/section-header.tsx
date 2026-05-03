@@ -1,4 +1,4 @@
-import { ApplicationData } from "@/lib/types";
+import { ApplicationData, FeeAssessmentData } from "@/lib/types";
 
 import CommandItemApplicant from "@/components/application/parent-application/application/applicant/command-item-applicant";
 import { Badge } from "@/components/ui/badge";
@@ -15,7 +15,10 @@ import {
   feesAssessmentTypes,
 } from "@/lib/enums";
 import { Address } from "@/lib/generated/prisma/client";
-import { ApplicationType } from "@/lib/generated/prisma/enums";
+import {
+  ApplicationType,
+  FeeAssessmentType,
+} from "@/lib/generated/prisma/enums";
 import {
   cn,
   formatCurrency,
@@ -44,6 +47,24 @@ export default function SectionHeader({ application }: Props) {
   const { title: applicationType } = applicationTypes[type];
   const { title: applicationStatus } = applicationStatuses[status];
 
+  const groupFeesAssessment = () => {
+    const grouped = feeAssessments.reduce(
+      (acc, item) => {
+        const key = item.assessmentType;
+        if (!acc[key]) {
+          acc[key] = [];
+        }
+        acc[key].push(item);
+        return acc;
+      },
+      {} as Record<string, FeeAssessmentData[]>,
+    );
+    return Object.entries(grouped).map(([assessmentType, items]) => ({
+      assessmentType,
+      items,
+    }));
+  };
+
   return (
     <div className="flex-col sm:flex-row flex flex-wrap *:flex-1 gap-3">
       <Item variant={"muted"}>
@@ -70,45 +91,56 @@ export default function SectionHeader({ application }: Props) {
         title="APPLICANT"
       />
       <Fragment>
-        {feeAssessments.map(
-          ({ id, amountAssessed, currency, assessmentType, payments }) => {
-            const { title } = feesAssessmentTypes[assessmentType];
-            const amountPaid = payments.reduce(
-              (amount, total) => amount + total.amountPaid,
-              0,
-            );
-            const balance = amountAssessed - amountPaid;
-            const hasBalance = balance > 0;
-            return (
-              <Item key={id} variant={"muted"} className="hidden md:flex">
-                <ItemContent>
-                  <ItemTitle className="font-bold">{title}</ItemTitle>
-                  <ItemTitle className="font-mono oldstyle-nums slashed-zero">
-                    {formatCurrency(amountAssessed, currency, true)}
-                  </ItemTitle>
-                  <ItemDescription className="font-mono oldstyle-nums slashed-zero">
-                    Paid: {formatCurrency(amountPaid, currency, true)}
-                  </ItemDescription>
-                  <ItemDescription
-                    className={cn(
-                      hasBalance &&
-                        " font-mono oldstyle-nums slashed-zero text-destructive",
-                    )}
-                  >
-                    {hasBalance ? (
-                      `Bal: ${formatCurrency(balance, currency, true)}`
-                    ) : (
-                      <span className="text-success font-semibold">
-                        <CheckIcon className="inline" />
-                        Fully paid
-                      </span>
-                    )}
-                  </ItemDescription>
-                </ItemContent>
-              </Item>
-            );
-          },
-        )}
+        {groupFeesAssessment().map(({ assessmentType, items }) => {
+          const { title } =
+            feesAssessmentTypes[assessmentType as FeeAssessmentType];
+          const amountAssessed = items.reduce(
+            (sum, total) => sum + total.amountAssessed,
+            0,
+          );
+          const currency = items[0].currency;
+          const amountPaid = items
+            .flatMap((i) => i.payments)
+            .reduce((amount, total) => amount + total.amountPaid, 0);
+          const balance = amountAssessed - amountPaid;
+          const hasBalance = balance > 0;
+          const numberOfItems = items.length;
+
+          return (
+            <Item
+              key={assessmentType}
+              variant={"muted"}
+              className="hidden md:flex"
+            >
+              <ItemContent>
+                <ItemTitle className="font-bold">
+                  {title} {numberOfItems > 1 && <span>({numberOfItems})</span>}
+                </ItemTitle>
+                <ItemTitle className="font-mono oldstyle-nums slashed-zero">
+                  {formatCurrency(amountAssessed, currency, true)}
+                </ItemTitle>
+                <ItemDescription className="font-mono oldstyle-nums slashed-zero">
+                  Paid: {formatCurrency(amountPaid, currency, true)}
+                </ItemDescription>
+                <ItemDescription
+                  className={cn(
+                    hasBalance &&
+                      " font-mono oldstyle-nums slashed-zero text-destructive",
+                  )}
+                >
+                  {hasBalance ? (
+                    `Bal: ${formatCurrency(balance, currency, true)}`
+                  ) : (
+                    <span className="text-success font-semibold">
+                      <CheckIcon className="inline" />
+                      Fully paid
+                    </span>
+                  )}
+                </ItemDescription>
+              </ItemContent>
+            </Item>
+          );
+        })}
       </Fragment>
       <AddressDetails
         address={

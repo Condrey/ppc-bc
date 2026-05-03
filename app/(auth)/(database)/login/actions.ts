@@ -3,7 +3,7 @@
 import { REDIRECT_TO_URL_SEARCH_PARAMS } from "@/lib/constants";
 import prisma from "@/lib/prisma";
 import { loginSchema, LoginSchema } from "@/lib/validation";
-import { verify } from "@node-rs/argon2";
+import { verify } from "argon2";
 import { redirect } from "next/navigation";
 import { createSession } from "../../lib/session";
 import { generateSessionToken, setSessionTokenCookie } from "../../lib/tokens";
@@ -30,10 +30,10 @@ export async function loginAction(
   }
 
   const validPassword = await verify(existingUser.passwordHash!, password, {
-    memoryCost: 19456,
-    timeCost: 2,
-    outputLen: 32,
-    parallelism: 1,
+    // memoryCost: 19456,
+    // timeCost: 2,
+    // outputLen: 32,
+    // parallelism: 1,
   });
   if (!validPassword) {
     console.error("Wrong password input, ", password);

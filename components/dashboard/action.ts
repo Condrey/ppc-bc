@@ -86,7 +86,7 @@ async function dashboardInfo() {
     amount: number;
   }[];
   const agent = await getUserAgent();
-  console.log({ agent });
+  console.log({ agent: JSON.stringify(agent, null, 2) });
   after(() => {});
   return {
     admins,

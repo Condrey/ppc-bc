@@ -7,7 +7,7 @@ import {
 } from "@/app/(auth)/lib/tokens";
 import prisma from "@/lib/prisma";
 import { passwordResetSchema, PasswordResetSchema } from "@/lib/validation";
-import { hash } from "@node-rs/argon2";
+import { hash } from "argon2";
 import { sendAlphaNumericOtp } from "./email";
 import {
   generateOtpVerificationToken,
@@ -99,8 +99,9 @@ export async function resetPasswordAndLogin({
     const passwordHash = await hash(newPassword!, {
       memoryCost: 19456,
       timeCost: 2,
-      outputLen: 32,
+      // outputLen: 32,
       parallelism: 1,
+      hashLength: 32,
     });
     await prisma.user.update({
       where: { id: existingUser.id },

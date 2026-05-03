@@ -256,12 +256,12 @@ export const feesAssessmentTypes: Record<
   }
 > = {
   LAND_APPLICATION: {
-    title: "Land Application",
+    title: "Land Application fee",
     description: "Fee from land applications",
     icon: MapPinnedIcon,
   },
   BUILDING_APPLICATION: {
-    title: "Building Application",
+    title: "Building Application fee",
     description: "Fee from building applications",
     icon: BuildingIcon,
   },

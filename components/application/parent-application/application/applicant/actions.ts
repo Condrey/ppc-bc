@@ -6,7 +6,7 @@ import prisma from "@/lib/prisma";
 import { applicantDataInclude } from "@/lib/types";
 import { slugify } from "@/lib/utils";
 import { applicantSchema, ApplicantSchema } from "@/lib/validation";
-import { hash } from "@node-rs/argon2";
+import { hash } from "argon2";
 import { cache } from "react";
 
 async function allApplicants() {
@@ -20,8 +20,9 @@ export async function upsertApplicant(input: ApplicantSchema) {
   const passwordHash = await hash(DEFAULT_PASSWORD, {
     memoryCost: 19456,
     timeCost: 2,
-    outputLen: 32,
+    // outputLen: 32,
     parallelism: 1,
+    hashLength: 32,
   });
   const username = slugify(name);
 

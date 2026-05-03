@@ -2,6 +2,7 @@
 
 import { useSession } from "@/app/(auth)/session-provider";
 import UserAvatar from "@/app/(auth)/user-avatar";
+import ButtonSubscribeUnsubscribeWebPush from "@/components/pwa/button-subscribe-unsubscribe-webpush";
 import {
   Accordion,
   AccordionContent,
@@ -21,7 +22,7 @@ import { useProfileImageUpload } from "@/hooks/use-media-upload";
 import { ppcMemberships, roles } from "@/lib/enums";
 import { UserData } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { MailIcon } from "lucide-react";
+import { BellIcon, BellOffIcon, MailIcon } from "lucide-react";
 import { useState } from "react";
 import { FormUpdatePassword } from "../form-update-password";
 
@@ -35,6 +36,7 @@ export function SectionUserDetails({ user }: { user: UserData }) {
     username,
     ppcMembership: _ppcMembership,
   } = user;
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const { user: sessionUser } = useSession();
   const isOwner = sessionUser?.id === user.id;
   const [imageUrl, setImageUrl] = useState(avatarUrl);
@@ -96,8 +98,33 @@ export function SectionUserDetails({ user }: { user: UserData }) {
           Planning Committee.
         </p>
       </CardFooter>
+
       {isOwner && (
-        <CardFooter className="border-t">
+        <CardFooter className="border-t flex-col space-y-6">
+          <div className="w-full space-y-2">
+            <p className="text-muted-foreground text-xs">
+              {isSubscribed
+                ? "You have subscribed to receive push notifications"
+                : "Click the button below to receive push notifications"}
+            </p>
+            <ButtonSubscribeUnsubscribeWebPush
+              variant={"default"}
+              setSubscribed={setIsSubscribed}
+              className="w-full"
+            >
+              {isSubscribed ? (
+                <>
+                  <BellOffIcon className="text-muted-foreground fill-muted-foreground/50 inline mr-2" />
+                  Unsubscribe from Push Notifications
+                </>
+              ) : (
+                <>
+                  <BellIcon className="text-amber-300 animate-pulse fill-amber-300 inline mr-2" />
+                  Subscribe to push Notifications
+                </>
+              )}
+            </ButtonSubscribeUnsubscribeWebPush>
+          </div>
           <Accordion
             type="single"
             collapsible

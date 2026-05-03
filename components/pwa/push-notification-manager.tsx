@@ -3,7 +3,11 @@
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { sendNotification, subscribeUser, unsubscribeUser } from "./action";
+import {
+  sendWebPushNotification,
+  subscribeUser,
+  unsubscribeUser,
+} from "./action";
 import { urlBase64ToUint8Array } from "./helper";
 
 export function PushNotificationManager() {
@@ -68,7 +72,7 @@ export function PushNotificationManager() {
           />
           <Button
             onClick={async () => {
-              await sendNotification(message);
+              await sendWebPushNotification({ message });
               setMessage("");
             }}
           >

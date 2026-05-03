@@ -145,7 +145,7 @@ model Application {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  meeting   Meeting? @relation(fields: [meetingId], references: [id])
+  meeting   Meeting? @relation(fields: [meetingId], references: [id], onDelete: SetNull)
   meetingId String?
 
   @@unique([applicationNo, year, type])
@@ -498,7 +498,7 @@ model Meeting {
 model Minute {
   id String @id @default(uuid())
 
-  meeting   Meeting @relation(fields: [meetingId], references: [id])
+  meeting   Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
   meetingId String  @unique
 
   chairedBy   User   @relation("chaired_minutes", fields: [chairId], references: [id])

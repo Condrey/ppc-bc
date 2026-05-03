@@ -38,7 +38,7 @@ const itemVariants = cva(
         default: "bg-transparent",
         outline: "border-border",
         muted: "bg-muted/50",
-        destructive: "bg-destructive/50",
+        destructive: "bg-destructive/10",
         success: "bg-success/5 ",
         warning: "bg-warning/5 ",
       },

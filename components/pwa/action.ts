@@ -62,7 +62,21 @@ export async function unsubscribeUser() {
   }
 }
 
-export async function sendNotification(message: string) {
+export async function sendWebPushNotification({
+  message,
+  title,
+  image,
+  tag,
+  url,
+  isImportant,
+}: {
+  message: string;
+  title?: string;
+  tag?: string;
+  image?: string;
+  url?: string;
+  isImportant?: boolean;
+}) {
   const { user } = await validateRequest();
   if (!user) {
     throw Error("Unauthorized!");
@@ -79,12 +93,12 @@ export async function sendNotification(message: string) {
       await webpush.sendNotification(
         sub,
         JSON.stringify({
-          title: "💬 New Message",
+          title: title || "New Message",
           body: message,
-          image: "landing-page.jpg",
-          tag: "chat-john",
-          url: "/chat/john",
-          important: false,
+          image: image || "landing-page.jpg",
+          tag: tag || "chat-john",
+          url: url || "/",
+          important: isImportant || false,
         }),
       );
       return { success: true };

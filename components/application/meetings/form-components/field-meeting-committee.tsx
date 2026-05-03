@@ -36,7 +36,7 @@ export default function FieldMeetingCommittee({ form }: Props) {
             <SelectTrigger className="w-full">
               <FormControl>
                 <SelectValue
-                  placeholder={"Please choose an meeting committee"}
+                  placeholder={"Please choose a meeting committee"}
                   className="w-full"
                 />
               </FormControl>

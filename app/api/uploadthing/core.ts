@@ -44,7 +44,8 @@ const file_document = f({
 })
   .middleware(async () => {
     const { user } = await validateRequest();
-    if (!user) throw new UploadThingError("Unauthorized");
+    if (!user)
+      throw new UploadThingError("Unauthorized. Seems your session expired");
     return { user };
   })
 

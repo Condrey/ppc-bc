@@ -12,7 +12,9 @@ import {
 import prisma from "@/lib/prisma";
 import { meetingDataInclude } from "@/lib/types";
 import { meetingSchema, MeetingSchema } from "@/lib/validation";
+import { after } from "next/server";
 import { cache } from "react";
+import { sendInvitationMessages, sendPostponementNotification } from "./email";
 
 async function allMeetings() {
   return await prisma.meeting.findMany({
@@ -56,7 +58,7 @@ export async function upsertMeeting(input: MeetingSchema) {
     !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
   if (!isAuthorized) return "Unauthorized";
 
-  return await prisma.$transaction(
+  const data = await prisma.$transaction(
     async (tx) => {
       const applications = await tx.application.findMany({
         where: {
@@ -65,7 +67,7 @@ export async function upsertMeeting(input: MeetingSchema) {
         },
       });
 
-      await tx.meeting.upsert({
+      return await tx.meeting.upsert({
         where: { id },
         create: {
           committee,
@@ -91,6 +93,12 @@ export async function upsertMeeting(input: MeetingSchema) {
     },
     { maxWait: 18000, timeout: 18000 },
   );
+  after(() => {
+    if (sendInvitations && data) {
+      sendInvitationMessages({ meeting: data, isAnUpdate: !!id });
+    }
+  });
+  return data;
 }
 
 export async function startMeeting(meetingId: string) {
@@ -119,13 +127,19 @@ export async function postponeMeeting({
     !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
   if (!isAuthorized) return "Unauthorized";
 
-  await prisma.meeting.update({
+  const data = await prisma.meeting.update({
     where: { id: meetingId },
     data: {
       status: MeetingStatus.POSTPONED,
       postponedOn,
     },
   });
+  after(() => {
+    if (data) {
+      sendPostponementNotification({ meeting: data });
+    }
+  });
+  return data;
 }
 
 export async function endMeeting({
@@ -186,4 +200,33 @@ export async function decideApplication({
       },
     },
   });
+}
+
+export async function addMoreMeetingApplications(meetingId: string) {
+  const { user } = await validateRequest();
+  const isAuthorized =
+    !!user && myPrivileges[user.role].includes(Role.PHYSICAL_PLANNER);
+  if (!isAuthorized) return "Unauthorized";
+
+  return await prisma.$transaction(
+    async (tx) => {
+      const applications = await tx.application.findMany({
+        where: {
+          meetingId: { equals: null },
+          // status: { in: ["INSPECTED", "SUBMITTED", "UNDER_REVIEW"] },
+        },
+      });
+      if (!applications.length) {
+        return "There are no pending applications to be added. Start by creating new applications first or completing the necessary workflows to make applications viable for a meeting.";
+      }
+      await tx.meeting.update({
+        where: { id: meetingId },
+        data: {
+          status: MeetingStatus.PENDING,
+          applications: { connect: applications.map((a) => ({ id: a.id })) },
+        },
+      });
+    },
+    { maxWait: 18000, timeout: 18000 },
+  );
 }

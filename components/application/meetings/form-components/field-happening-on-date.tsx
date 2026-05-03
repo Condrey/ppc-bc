@@ -27,8 +27,12 @@ import { UseFormReturn } from "react-hook-form";
 
 interface Props {
   form: UseFormReturn<MeetingSchema>;
+  disabled?: boolean;
 }
-export default function FieldHappeningOnDate({ form }: Props) {
+export default function FieldHappeningOnDate({
+  form,
+  disabled = false,
+}: Props) {
   const [open, setOpen] = useState(false);
   const date = form.getValues("happeningOn");
   const dateValue = date ? new Date(date) : new Date();
@@ -42,6 +46,7 @@ export default function FieldHappeningOnDate({ form }: Props) {
     <FormField
       control={form.control}
       name="happeningOn"
+      disabled={disabled}
       render={({ field }) => (
         <FormItem>
           <FormLabel required>Date of meeting</FormLabel>
@@ -53,6 +58,7 @@ export default function FieldHappeningOnDate({ form }: Props) {
                   type="button"
                   role="combobox"
                   aria-expanded={open}
+                  disabled={disabled}
                   className="w-full justify-between font-normal"
                 >
                   {field.value

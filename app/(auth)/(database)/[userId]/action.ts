@@ -1,12 +1,12 @@
 "use server";
 
 import { REDIRECT_TO_URL_SEARCH_PARAMS } from "@/lib/constants";
+import prisma from "@/lib/prisma";
 import { verifyUserSchema, VerifyUserSchema } from "@/lib/validation";
-import { hash } from "@node-rs/argon2";
+import { hash } from "argon2";
 import { redirect } from "next/navigation";
 import { generateEmailVerificationToken } from "../email-verification/[token]/token";
 import { sendEmailVerificationLink } from "./email";
-import prisma from "@/lib/prisma";
 
 export async function verifyUser({
   input,
@@ -21,8 +21,9 @@ export async function verifyUser({
     const passwordHash = await hash(password, {
       memoryCost: 19456,
       timeCost: 2,
-      outputLen: 32,
+      // outputLen: 32,
       parallelism: 1,
+      hashLength: 32,
     });
 
     const error = await prisma.$transaction(

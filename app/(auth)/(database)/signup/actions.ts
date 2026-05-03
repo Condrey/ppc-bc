@@ -3,7 +3,7 @@
 import prisma from "@/lib/prisma";
 import { slugify } from "@/lib/utils";
 import { applicantSchema, ApplicantSchema } from "@/lib/validation";
-import { hash } from "@node-rs/argon2";
+import { hash } from "argon2";
 import { redirect } from "next/navigation";
 import { createSession } from "../../lib/session";
 import { generateSessionToken, setSessionTokenCookie } from "../../lib/tokens";
@@ -17,8 +17,9 @@ export async function signUp(
   const passwordHash = await hash(password!, {
     memoryCost: 19456,
     timeCost: 2,
-    outputLen: 32,
+    // outputLen: 32,
     parallelism: 1,
+    hashLength: 32,
   });
   const existingUserName = await prisma.user.findFirst({
     where: {

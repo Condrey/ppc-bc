@@ -59,6 +59,9 @@ export default function ButtonPostponeMeeting({ meeting, ...props }: Props) {
   const meetingNumber = getMeetingNumber(meetingNo, date);
   const form = useForm<SingleContentDateSchema>({
     resolver: zodResolver(singleContentDateSchema),
+    defaultValues: {
+      singleContentDate: date,
+    },
   });
   function handleSubmit(input: SingleContentDateSchema) {
     mutate(

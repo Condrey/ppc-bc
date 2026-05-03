@@ -68,15 +68,15 @@ export type VerifyUserSchema = z.infer<typeof verifyUserSchema>;
 export const updatePasswordSchema = z
   .object({
     currentPassword: z
-      .email()
+      .string()
       .min(8, "Password must be at least 8 characters")
       .describe("Password for the user."),
     newPassword: z
-      .email()
+      .string()
       .min(8, "Password must be at least 8 characters")
       .describe("Password for the user."),
     repeatPassword: z
-      .email()
+      .string()
       .min(8, "Password must be at least 8 characters")
       .describe("Password for the user."),
   })

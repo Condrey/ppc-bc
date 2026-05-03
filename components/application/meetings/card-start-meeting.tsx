@@ -12,9 +12,10 @@ import {
 import { meetingStatuses } from "@/lib/enums";
 import { MeetingStatus } from "@/lib/generated/prisma/enums";
 import { MeetingData } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { calculateDuration, cn } from "@/lib/utils";
 import { formatDate } from "date-fns";
 import { AlarmClockIcon, DotIcon, MapPinIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import ButtonEndMeeting from "./session/button-end-meeting";
 import ButtonPostponeMeeting from "./session/button-postpone-meeting";
 import ButtonStartMeeting from "./session/button-start-meeting";
@@ -47,7 +48,7 @@ export default function CardStartMeeting({ meeting, className }: Props) {
     >
       <ItemContent>
         <ItemTitle>
-          <Badge variant={"outline"}>{committee} meeting</Badge>-
+          <Badge variant={"secondary"}>{committee} meeting</Badge>:
           <Badge variant={variant}>{meetingStatus}</Badge>
         </ItemTitle>
         <ItemDescription>
@@ -84,21 +85,41 @@ export default function CardStartMeeting({ meeting, className }: Props) {
             Postpone
           </ButtonPostponeMeeting>
         )}
-        <div className="flex sm:flex-col flex-row gap-2 items-center">
-          {meetingNotStarted && (
-            <span>
-              <AlarmClockIcon className="inline size-4 mr-2" />
-              44 mins
-            </span>
-          )}
-          <ButtonStartMeeting meeting={meeting} disabled={!applications.length}>
-            {meetingNotStarted ? "Start meeting" : "Resume Meeting"}
-          </ButtonStartMeeting>
-        </div>
-        <ButtonEndMeeting meeting={meeting} variant={"destructive"}>
-          End Meeting
-        </ButtonEndMeeting>
+
+        <ButtonStartMeeting meeting={meeting} disabled={!applications.length}>
+          {meetingNotStarted ? "Start meeting" : "Resume Meeting"}
+        </ButtonStartMeeting>
+        {!meetingNotStarted && (
+          <ButtonEndMeeting meeting={meeting} variant={"destructive"}>
+            End Meeting
+          </ButtonEndMeeting>
+        )}
       </ItemActions>
+      {meetingNotStarted && (
+        <ItemFooter className="border-t pt-2">
+          <Duration happeningOn={postponedOn ?? happeningOn} />
+        </ItemFooter>
+      )}
     </Item>
+  );
+}
+
+function Duration({ happeningOn }: { happeningOn: Date }) {
+  const [eta, setEta] = useState<string>("");
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newEta: string = calculateDuration({
+        startDate: new Date(),
+        endDate: happeningOn,
+      });
+      setEta(newEta);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [happeningOn]);
+  return (
+    <div className="flex gap-1.5 items-center">
+      <AlarmClockIcon className="inline size-4" />
+      Remaining {eta}
+    </div>
   );
 }

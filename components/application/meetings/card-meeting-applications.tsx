@@ -1,7 +1,6 @@
 "use client";
 
 import { EmptyContainer } from "@/components/query-container/empty-container";
-import { Button } from "@/components/ui/button";
 import {
   Item,
   ItemContent,
@@ -11,7 +10,13 @@ import {
 import { ApplicationType } from "@/lib/generated/prisma/enums";
 import { MeetingData } from "@/lib/types";
 import { cn, formatNumber } from "@/lib/utils";
-import { Building2Icon, LandPlotIcon, ShapesIcon } from "lucide-react";
+import {
+  Building2Icon,
+  LandPlotIcon,
+  PlusIcon,
+  ShapesIcon,
+} from "lucide-react";
+import ButtonAddApplications from "./button-add-applications";
 
 interface Props {
   meeting: MeetingData;
@@ -50,14 +55,32 @@ export default function CardMeetingApplications({ meeting, className }: Props) {
       className={cn("", className)}
     >
       <ItemContent>
-        {hasApplications && <ItemTitle>Available applications</ItemTitle>}
+        {hasApplications && (
+          <div className="flex items-center justify-start gap-2 flex-wrap">
+            <ButtonAddApplications
+              meetingId={meeting.id}
+              size={"icon"}
+              variant={"ghost"}
+              title="Add more applications"
+            >
+              <PlusIcon />
+            </ButtonAddApplications>
+            <ItemTitle>Available applications</ItemTitle>
+          </div>
+        )}
         {!hasApplications ? (
           <EmptyContainer
             title="No applications"
             description={"Start by adding applications to the meeting"}
             className="[&_svg]:hidden md:p-0 p-0"
           >
-            <Button>Add Applications</Button>
+            <ButtonAddApplications
+              meetingId={meeting.id}
+              variant={"destructive"}
+              title="Add applications"
+            >
+              Add Applications
+            </ButtonAddApplications>
           </EmptyContainer>
         ) : (
           <div className="flex flex-col md:flex-row gap-2 flex-wrap">
@@ -70,7 +93,7 @@ export default function CardMeetingApplications({ meeting, className }: Props) {
                 )}
               >
                 <ItemContent className="flex-row justify-between items-center md:flex-col md:items-start">
-                  <ItemTitle>
+                  <ItemTitle className="text-inherit uppercase">
                     <Icon />
                     {title}
                   </ItemTitle>

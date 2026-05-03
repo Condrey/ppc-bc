@@ -5,7 +5,7 @@ import { roles, workflowStageTypes } from "@/lib/enums";
 import { WorkflowStage } from "@/lib/generated/prisma/client";
 import { ApplicationDecision } from "@/lib/generated/prisma/enums";
 import { WorkflowStageData } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { calculateDuration, cn } from "@/lib/utils";
 import { formatDate } from "date-fns";
 import { CheckIcon, ClockIcon, PauseCircleIcon, XIcon } from "lucide-react";
 
@@ -23,7 +23,7 @@ export default function SectionWorkflowStages({
           description="There are no workflow stages registered for this application."
         />
       ) : (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col ">
           {workflowStages.map((step, index) => {
             const state = getState(step, index, workflowStages);
             const isLast = index === workflowStages.length - 1;
@@ -68,15 +68,26 @@ export default function SectionWorkflowStages({
                   {!isLast && (
                     <div
                       className={cn(
-                        "w-px flex-1 mt-0.5",
-                        state === "completed" ? "bg-success" : "bg-muted",
+                        "w-0.5 flex-1 mt-0.5",
+                        state === "completed"
+                          ? "bg-success"
+                          : "bg-muted-foreground",
                       )}
                       style={{ minHeight: 60 }}
                     />
                   )}
                 </div>
                 {/* CONTENT  */}
-                <div className="pb-6 flex-1">
+                <div
+                  className={cn(
+                    "pb-6 flex-1 border p-4 mb-6",
+                    state === "completed"
+                      ? "bg-success/5"
+                      : state === "current"
+                        ? "bg-muted-foreground/20"
+                        : "",
+                  )}
+                >
                   <div className="flex items-center justify-between">
                     <p
                       className={cn(
@@ -91,32 +102,41 @@ export default function SectionWorkflowStages({
                     </p>
                     <DecisionBadge decision={decision} />
                   </div>
+
                   {/* Timeline remarks  */}
                   <div className="mt-1 text-xs text-muted-foreground space-y-1">
+                    {decidedAt && (
+                      <span className="font-normal text-sm text-foreground capitalize">
+                        {calculateDuration({
+                          startDate: startedAt,
+                          endDate: decidedAt,
+                        })}
+                      </span>
+                    )}
                     {state !== "upcoming" && (
                       <p>
-                        <span className="italic text-success">Started:</span>{" "}
-                        {formatDate(new Date(startedAt), "PPPPp")}
+                        {formatDate(new Date(startedAt), "PPp")}
+                        {decidedAt && (
+                          <span>
+                            {" "}
+                            - {formatDate(new Date(decidedAt), "PPp")}
+                          </span>
+                        )}
                       </p>
                     )}
 
                     {decidedAt && (
                       <div className="">
-                        <p>
-                          <span className="italic text-destructive">
-                            Ended:
-                          </span>{" "}
-                          {formatDate(new Date(decidedAt), "PPPPp")}
-                        </p>
                         {decidedBy && (
-                          <div className="mt-3 text-sm flex gap-2">
+                          <div className="mt-3 text-sm flex items-center gap-2">
                             <UserAvatar
                               avatarUrl={decidedBy.avatarUrl}
-                              size={25}
+                              className="size-16"
                             />
                             <div>
+                              <p className="text-foreground">Action Officer</p>
                               <p className=" uppercase">{decidedBy.name}</p>
-                              <p>{roles[decidedBy.role].title}</p>
+                              <p>The {roles[decidedBy.role].title}</p>
                             </div>
                           </div>
                         )}
@@ -125,7 +145,16 @@ export default function SectionWorkflowStages({
                   </div>
                   {/* Remarks  */}
                   {remarks && (
-                    <p className="mt-2 max-w-prose  border-l border-l-warning pl-3 text-sm text-muted-foreground">
+                    <p
+                      className={cn(
+                        "mt-2 max-w-prose  min-h-20 border p-2 bg-warning/5 border-l-warning pl-3 text-sm text-muted-foreground",
+                        state === "completed"
+                          ? "bg-success/10 border-l-success border-l-8 text-success"
+                          : state === "current"
+                            ? "bg-muted-foreground/10 text-shadow-2xs border-l-muted-foreground border-l-8 text-muted-foreground"
+                            : "border-l-8",
+                      )}
+                    >
                       {remarks}
                     </p>
                   )}

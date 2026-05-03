@@ -234,7 +234,7 @@ export default function PlottingContainer({
                 <Popup>
                   <div className="gap-1 space-y-1">
                     <div className="flex gap-2 items-center">
-                      <UserAvatar avatarUrl={avatarUrl} />
+                      <UserAvatar avatarUrl={avatarUrl} className="size-30" />
                       <div className="flex flex-col">
                         <span className="font-bold">
                           Site area for {applicantName}.

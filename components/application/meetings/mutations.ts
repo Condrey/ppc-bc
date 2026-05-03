@@ -3,6 +3,7 @@ import { applicationStatuses } from "@/lib/enums";
 import { QueryKey, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
+  addMoreMeetingApplications,
   decideApplication,
   endMeeting,
   postponeMeeting,
@@ -35,6 +36,33 @@ export function useUpsertMeetingMutation() {
     onError(error) {
       console.error(error);
       toast.error("Failed to manipulate meeting");
+    },
+  });
+}
+
+export function useAddMoreMeetingApplicationsMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: addMoreMeetingApplications,
+    async onSuccess(data, meetingId) {
+      const queryKey2: QueryKey = ["meeting", meetingId];
+      await queryClient.cancelQueries({ queryKey });
+      await queryClient.cancelQueries({ queryKey: queryKey2 });
+      if (typeof data === "string") {
+        toast.warning(data);
+        return;
+      } else {
+        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: queryKey2 });
+
+        toast.success("success", {
+          description: "Meeting applications were successfully added.",
+        });
+      }
+    },
+    onError(error) {
+      console.error(error);
+      toast.error("Failed to add meeting applications.");
     },
   });
 }

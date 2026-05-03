@@ -45,6 +45,8 @@ export function FormUpdatePassword({ userId }: { userId?: string }) {
         toast.error(error);
       } else {
         toast.success(message);
+        form.clearErrors();
+        form.reset();
       }
     });
   }

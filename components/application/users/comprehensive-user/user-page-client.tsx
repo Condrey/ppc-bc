@@ -15,7 +15,7 @@ import { ComprehensiveUserData } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 import SectionApplications from "./applications/section-applications";
-import SectionInspectionsCarriedOut from "./inspection/section-inspections-carriedout";
+import SectionInspectionsCarriedOut from "./inspection/section-inspections-carried-out";
 import SectionMeetingMinutes from "./meeting-minutes/section-meeting-minutes";
 import SectionPayments from "./section-payments";
 import { SectionUserDetails } from "./section-user-details";
