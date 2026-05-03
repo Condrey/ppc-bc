@@ -53,7 +53,7 @@ export default function ButtonSubscribeUnsubscribeWebPush({
   async function unsubscribeFromPush() {
     await subscription?.unsubscribe();
     setSubscription(null);
-    await unsubscribeUser();
+    await unsubscribeUser(subscription?.endpoint || "");
     setSubscribed(false);
   }
 
